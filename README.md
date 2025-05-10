@@ -6,8 +6,8 @@
 - Space Shooter is a lightweight 2D game built with JavaFX. Pilot your spaceship, dodge enemy fire, collect power-ups, and defeat waves of enemies—including challenging boss encounters—as you aim for the highest score.
 
 ## Members
-- 24022272 - Nguyễn Hoàng Công.
 - 24022248 - Hoàng Hải Anh.
+- 24022272 - Nguyễn Hoàng Công.
 - 24022278 - Tạ Mạnh Cường.
 
 ## How to Play
