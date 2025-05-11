@@ -1,8 +1,11 @@
+package uet.oop.space_invaders.spaceinvaders;
+
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.image.Image;
 
 /**
- * Skeleton for Enemy. Students must implement movement, rendering,
+ * Skeleton for uet.oop.space_invaders.spaceinvaders.Enemy. Students must implement movement, rendering,
  * and death state without viewing the original implementation.
  */
 public class Enemy extends GameObject {
@@ -18,7 +21,7 @@ public class Enemy extends GameObject {
     private boolean dead;
 
     /**
-     * Constructs an Enemy at the given coordinates.
+     * Constructs an uet.oop.space_invaders.spaceinvaders.Enemy at the given coordinates.
      * @param x initial X position
      * @param y initial Y position
      */
@@ -48,8 +51,9 @@ public class Enemy extends GameObject {
     @Override
     public void render(GraphicsContext gc) {
         // TODO: draw sprite or fallback shape (e.g., colored rectangle)
-        gc.setFill(Color.RED);
-        gc.fillRect(x - width / 2, y - height / 2, width, height);
+
+        Image enemyImage = new Image(getClass().getResource("/enemy.png").toString());
+        gc.drawImage(enemyImage,x - width / 2, y - height / 2, width, height);
     }
 
     /**

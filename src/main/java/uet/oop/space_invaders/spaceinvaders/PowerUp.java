@@ -1,9 +1,10 @@
+package uet.oop.space_invaders.spaceinvaders;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 /**
- * Skeleton for PowerUp. Students must implement movement,
+ * Skeleton for uet.oop.space_invaders.spaceinvaders.PowerUp. Students must implement movement,
  * rendering, and state management.
  */
 public class PowerUp extends GameObject {
@@ -19,7 +20,7 @@ public class PowerUp extends GameObject {
     private boolean dead;
 
     /**
-     * Constructs a PowerUp at the given position.
+     * Constructs a uet.oop.space_invaders.spaceinvaders.PowerUp at the given position.
      *
      * @param x initial X position
      * @param y initial Y position

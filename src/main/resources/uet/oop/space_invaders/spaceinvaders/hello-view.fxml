@@ -14,19 +14,19 @@
   </padding>
    <Pane prefHeight="560.0" prefWidth="0.0">
       <children>
-        <Button defaultButton="true" layoutX="88.0" layoutY="328.0" onAction="#onHelloButtonClick" onMouseClicked="#onHelloButtonClick" prefHeight="35.0" prefWidth="145.0" style="-fx-background-color: linear-gradient(to left, #0070C0, #7030A0); -fx-border-color: white; -fx-border-radius: 20; -fx-border-width: 1; -fx-background-radius: 20" text="Start" textFill="WHITE">
+        <Button defaultButton="true" layoutX="88.0" layoutY="328.0" prefHeight="35.0" prefWidth="145.0" style="-fx-background-color: linear-gradient(to left, #0070C0, #7030A0); -fx-border-color: white; -fx-border-radius: 20; -fx-border-width: 1; -fx-background-radius: 20" text="Start" textFill="WHITE">
             <font>
                <Font name="System Bold" size="15.0" />
             </font></Button>
-         <Button layoutX="88.0" layoutY="382.0" onAction="#onHelloButtonClick" onMouseClicked="#onHelloButtonClick" prefHeight="35.0" prefWidth="145.0" style="-fx-background-color: white; -fx-border-color: white; -fx-border-radius: 20; -fx-border-width: 1; -fx-background-radius: 20" text="High score">
+         <Button layoutX="88.0" layoutY="382.0" prefHeight="35.0" prefWidth="145.0" style="-fx-background-color: white; -fx-border-color: white; -fx-border-radius: 20; -fx-border-width: 1; -fx-background-radius: 20" text="High score">
             <font>
                <Font name="System Bold" size="15.0" />
             </font></Button>
-         <Button layoutX="88.0" layoutY="436.0" onAction="#onHelloButtonClick" onMouseClicked="#onHelloButtonClick" prefHeight="35.0" prefWidth="145.0" style="-fx-background-color: white; -fx-border-color: white; -fx-border-radius: 20; -fx-border-width: 1; -fx-background-radius: 20" text="Instructions">
+         <Button layoutX="88.0" layoutY="436.0" onAction="#onInstructionsButtonClick" prefHeight="35.0" prefWidth="145.0" style="-fx-background-color: white; -fx-border-color: white; -fx-border-radius: 20; -fx-border-width: 1; -fx-background-radius: 20" text="Instructions">
             <font>
                <Font name="System Bold" size="15.0" />
             </font></Button>
-         <Button cancelButton="true" layoutX="88.0" layoutY="490.0" onAction="#onQuitButtonClick" onMouseClicked="#onHelloButtonClick" prefHeight="35.0" prefWidth="145.0" style="-fx-background-color: white; -fx-border-color: white; -fx-border-radius: 20; -fx-border-width: 1; -fx-background-radius: 20" text="Quit">
+         <Button cancelButton="true" layoutX="88.0" layoutY="490.0" onAction="#onQuitButtonClick" prefHeight="35.0" prefWidth="145.0" style="-fx-background-color: white; -fx-border-color: white; -fx-border-radius: 20; -fx-border-width: 1; -fx-background-radius: 20" text="Quit">
             <font>
                <Font name="System Bold" size="15.0" />
             </font></Button>

@@ -1,3 +1,4 @@
+package uet.oop.space_invaders.spaceinvaders;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -5,7 +6,7 @@ import javafx.scene.paint.Color;
 import java.util.List;
 
 /**
- * Skeleton for Player. Students must implement movement, rendering,
+ * Skeleton for uet.oop.space_invaders.spaceinvaders.Player. Students must implement movement, rendering,
  * shooting, and health/state management.
  */
 public class Player extends GameObject {
@@ -23,14 +24,14 @@ public class Player extends GameObject {
     private boolean moveForward;
     private boolean moveBackward;
 
-    // Player health
+    // uet.oop.space_invaders.spaceinvaders.Player health
     private int health;
 
     // State flag for removal
     private boolean dead;
 
     /**
-     * Constructs a Player at the given position.
+     * Constructs a uet.oop.space_invaders.spaceinvaders.Player at the given position.
      *
      * @param x initial X position
      * @param y initial Y position
@@ -139,7 +140,7 @@ public class Player extends GameObject {
      * Shoots a bullet from the player.
      */
     public void shoot(List<GameObject> newObjects) {
-        // TODO: create and add new Bullet at (x, y - HEIGHT/2)
+        // TODO: create and add new uet.oop.space_invaders.spaceinvaders.Bullet at (x, y - HEIGHT/2)
         Bullet bullet = new Bullet(x,y - height/2);
         newObjects.add(bullet);
     }

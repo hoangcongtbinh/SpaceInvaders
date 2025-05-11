@@ -1,9 +1,11 @@
+package uet.oop.space_invaders.spaceinvaders;
+
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import java.util.List;
 
 /**
- * Skeleton for BossEnemy. Students must implement behavior
+ * Skeleton for uet.oop.space_invaders.spaceinvaders.BossEnemy. Students must implement behavior
  * without viewing the original implementation.
  */
 public class BossEnemy extends Enemy {
@@ -18,11 +20,11 @@ public class BossEnemy extends Enemy {
     // Horizontal movement speed
     private double horizontalSpeed;
 
-    private static final int SCREEN_WIDTH = 800;
+    private static final int SCREEN_WIDTH = 360;
     private static final int SCREEN_HEIGHT = 600;
 
     /**
-     * Constructs a BossEnemy at the given coordinates.
+     * Constructs a uet.oop.space_invaders.spaceinvaders.BossEnemy at the given coordinates.
      * @param x initial X position
      * @param y initial Y position
      */
@@ -69,7 +71,7 @@ public class BossEnemy extends Enemy {
      * @param newObjects list to which new bullets are added
      */
     public void shoot(List<GameObject> newObjects) {
-        // TODO: implement shooting logic (spawn EnemyBullet)
+        // TODO: implement shooting logic (spawn uet.oop.space_invaders.spaceinvaders.EnemyBullet)
         EnemyBullet bullet1 = new EnemyBullet(x - 10, y + HEIGHT / 2);
         EnemyBullet bullet2 = new EnemyBullet(x + 10, y + HEIGHT / 2);
         newObjects.add(bullet1);
