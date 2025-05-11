@@ -12,9 +12,15 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class HelloController {
-
     @FXML
-    protected void onPlayButtonHover() {
+    protected void onPlayButtonClick() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("game-view.fxml"));
+        Stage popupStage = new Stage();
+        popupStage.setScene(new Scene(fxmlLoader.load(), 360, 600));
+        popupStage.setTitle("Gameplay");
+        popupStage.setResizable(false);
+        popupStage.getIcons().add(new Image(getClass().getResource("/player.jpg").toString()));
+        popupStage.show();
 
     }
 
@@ -25,7 +31,7 @@ public class HelloController {
 
     @FXML
     protected void onInstructionsButtonClick() throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("game-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("instructions-view.fxml"));
         Stage popupStage = new Stage();
         popupStage.setScene(new Scene(fxmlLoader.load(), 360, 600));
         popupStage.setTitle("Instructions");
