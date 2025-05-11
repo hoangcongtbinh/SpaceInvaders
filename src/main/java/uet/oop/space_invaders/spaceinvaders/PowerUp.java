@@ -1,6 +1,7 @@
 package uet.oop.space_invaders.spaceinvaders;
 
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 /**
@@ -51,8 +52,8 @@ public class PowerUp extends GameObject {
     @Override
     public void render(GraphicsContext gc) {
         // TODO: draw sprite or fallback (e.g., colored rectangle)
-        gc.setFill(Color.GOLDENROD);
-        gc.fillRect(x - width / 2, y - height / 2, width, height);
+        Image image = new Image(getClass().getResource("/powerup.png").toString());
+        gc.drawImage(image, x - width / 2, y - height / 2, width, height);
     }
 
     /**

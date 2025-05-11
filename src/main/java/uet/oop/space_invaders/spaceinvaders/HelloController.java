@@ -13,7 +13,7 @@ import java.io.IOException;
 
 public class HelloController {
     @FXML
-    protected void onPlayButtonClick() throws IOException {
+    protected void onPlayButtonClick(javafx.event.ActionEvent event) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("game-view.fxml"));
         Stage popupStage = new Stage();
         popupStage.setScene(new Scene(fxmlLoader.load(), 360, 600));
@@ -22,6 +22,8 @@ public class HelloController {
         popupStage.getIcons().add(new Image(getClass().getResource("/player.jpg").toString()));
         popupStage.show();
 
+        Stage currentStage = (Stage)((javafx.scene.Node)event.getSource()).getScene().getWindow();
+        currentStage.hide();
     }
 
     @FXML
