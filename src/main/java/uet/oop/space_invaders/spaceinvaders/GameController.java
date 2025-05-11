@@ -24,7 +24,7 @@ public class GameController {
     public static final int POWERUP_COUNT = 3;
 
     public static final int SPAWN_INTERVAL = 60;
-    public static final int POWERUP_INTERVAL = 30;
+    public static final int POWERUP_INTERVAL = 120;
 
     private List<Enemy> enemies;
     private List<PowerUp> powerups;
@@ -36,6 +36,9 @@ public class GameController {
 
     @FXML
     private Canvas canvas;
+
+    @FXML
+    private Label information;
 
     public GameController() {
 
@@ -55,6 +58,7 @@ public class GameController {
         gameLoop = new AnimationTimer() {
             @Override
             public void handle(long now) {
+                information.setText(String.format("Enemy: %d\nPowerup: %d", enemies.size(), powerups.size()));
                 gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight()); // Reset frame
 
                 for (Enemy enemy: enemies) {
@@ -70,15 +74,19 @@ public class GameController {
                 enemies.removeIf(Enemy::isDead);
                 powerups.removeIf(PowerUp::isDead);
 
-                if (enemies.size() < ENEMY_COUNT && interval == SPAWN_INTERVAL) {
-                    Random r = new Random();
-                    enemies.add(new Enemy(r.nextInt(360 - Enemy.WIDTH), r.nextInt(10)));
+                if (interval == SPAWN_INTERVAL) {
+                    if (enemies.size() < ENEMY_COUNT) {
+                        Random r = new Random();
+                        enemies.add(new Enemy(r.nextInt(360 - Enemy.WIDTH), r.nextInt(10)));
+                    }
                     interval = 0;
                 }
 
-                if (powerups.size() < POWERUP_COUNT && interval2 == POWERUP_INTERVAL) {
-                    Random r = new Random();
-                    powerups.add(new PowerUp(r.nextInt(360 - PowerUp.WIDTH), r.nextInt(10)));
+                if (interval2 == POWERUP_INTERVAL) {
+                    if (powerups.size() < POWERUP_COUNT) {
+                        Random r = new Random();
+                        powerups.add(new PowerUp(r.nextInt(360 - PowerUp.WIDTH), r.nextInt(10)));
+                    }
                     interval2 = 0;
                 }
 
