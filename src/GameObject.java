@@ -1,5 +1,3 @@
-package uet.oop.spaceshootergamejavafx.src;
-
 import javafx.scene.canvas.GraphicsContext;
 import javafx.geometry.Bounds;
 
@@ -14,12 +12,15 @@ public abstract class GameObject {
     protected double width;
     protected double height;
 
+    // Velocity
+    protected double velocityX = 0;
+    protected double velocityY = 0;
+
     /**
      * Constructs a GameObject at the specified position with dimensions.
-     *
-     * @param x      initial X position
-     * @param y      initial Y position
-     * @param width  object width
+     * @param x initial X position
+     * @param y initial Y position
+     * @param width object width
      * @param height object height
      */
     public GameObject(double x, double y, double width, double height) {
@@ -36,21 +37,18 @@ public abstract class GameObject {
 
     /**
      * Renders the game object on the canvas.
-     *
      * @param gc graphics context
      */
     public abstract void render(GraphicsContext gc);
 
     /**
      * Checks whether this object should be removed from the game.
-     *
      * @return true if dead/removed
      */
     public abstract boolean isDead();
 
     /**
      * Returns the current X coordinate.
-     *
      * @return x position
      */
     public double getX() {
@@ -59,16 +57,30 @@ public abstract class GameObject {
 
     /**
      * Returns the current Y coordinate.
-     *
      * @return y position
      */
     public double getY() {
         return y;
     }
 
+    public void setVelocityX(double velocityX) {
+        this.velocityX = velocityX;
+    }
+
+    public void setVelocityY(double velocityY) {
+        this.velocityY = velocityY;
+    }
+
+    public double getVelocityX() {
+        return velocityX;
+    }
+
+    public double getVelocityY() {
+        return velocityY;
+    }
+
     /**
      * Returns the bounding box for collision detection.
-     *
      * @return bounds of this object
      */
     public Bounds getBounds() {
@@ -83,14 +95,12 @@ public abstract class GameObject {
 
     /**
      * Returns the width of the object.
-     *
      * @return width
      */
     public abstract double getWidth();
 
     /**
      * Returns the height of the object.
-     *
      * @return height
      */
     public abstract double getHeight();

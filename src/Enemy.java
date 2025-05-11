@@ -1,6 +1,5 @@
-package uet.oop.spaceshootergamejavafx.src;
-
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 
 /**
  * Skeleton for Enemy. Students must implement movement, rendering,
@@ -20,13 +19,14 @@ public class Enemy extends GameObject {
 
     /**
      * Constructs an Enemy at the given coordinates.
-     *
      * @param x initial X position
      * @param y initial Y position
      */
     public Enemy(double x, double y) {
         super(x, y, WIDTH, HEIGHT);
         // TODO: load sprite if needed and initialize dead flag
+        this.dead = false;
+        this.velocityY = SPEED;
     }
 
     /**
@@ -34,22 +34,26 @@ public class Enemy extends GameObject {
      */
     @Override
     public void update() {
+        y += velocityY;
         // TODO: implement vertical movement by SPEED
+        if (y>600 + HEIGHT) {
+            dead = true;
+        }
     }
 
     /**
      * Renders the enemy on the canvas.
-     *
      * @param gc the GraphicsContext to draw on
      */
     @Override
     public void render(GraphicsContext gc) {
         // TODO: draw sprite or fallback shape (e.g., colored rectangle)
+        gc.setFill(Color.RED);
+        gc.fillRect(x - width / 2, y - height / 2, width, height);
     }
 
     /**
      * Returns the current width of the enemy.
-     *
      * @return WIDTH
      */
     @Override
@@ -60,7 +64,6 @@ public class Enemy extends GameObject {
 
     /**
      * Returns the current height of the enemy.
-     *
      * @return HEIGHT
      */
     @Override
@@ -71,16 +74,15 @@ public class Enemy extends GameObject {
 
     /**
      * Marks this enemy as dead (to be removed).
-     *
      * @param dead true if enemy should be removed
      */
     public void setDead(boolean dead) {
         // TODO: update dead flag
+        this.dead = dead;
     }
 
     /**
      * Checks if this enemy is dead.
-     *
      * @return true if dead, false otherwise
      */
     @Override
