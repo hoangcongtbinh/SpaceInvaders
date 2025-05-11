@@ -1,6 +1,6 @@
-package uet.oop.spaceshootergamejavafx.src;
 
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 
 /**
  * Skeleton for PowerUp. Students must implement movement,
@@ -27,6 +27,7 @@ public class PowerUp extends GameObject {
     public PowerUp(double x, double y) {
         super(x, y, WIDTH, HEIGHT);
         // TODO: initialize dead flag, load sprite if needed
+        this.dead = false;
     }
 
     /**
@@ -34,7 +35,11 @@ public class PowerUp extends GameObject {
      */
     @Override
     public void update() {
+        y+=SPEED;
         // TODO: move power-up vertically by SPEED
+        if(y - height / 2> 600) {
+            dead = true;
+        }
     }
 
     /**
@@ -45,6 +50,8 @@ public class PowerUp extends GameObject {
     @Override
     public void render(GraphicsContext gc) {
         // TODO: draw sprite or fallback (e.g., colored rectangle)
+        gc.setFill(Color.GOLDENROD);
+        gc.fillRect(x - width / 2, y - height / 2, width, height);
     }
 
     /**

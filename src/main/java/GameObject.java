@@ -64,6 +64,7 @@ public abstract class GameObject {
     }
 
     public void setVelocityX(double velocityX) {
+
         this.velocityX = velocityX;
     }
 

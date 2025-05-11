@@ -1,6 +1,6 @@
-package uet.oop.spaceshootergamejavafx.src;
 
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 
 import java.util.List;
 
@@ -38,41 +38,46 @@ public class Player extends GameObject {
     public Player(double x, double y) {
         super(x, y, WIDTH, HEIGHT);
         // TODO: initialize health, dead flag, load sprite if needed
+        this.health = 3;
+        this.dead = false;
     }
 
-    /**
-     * Returns the width of the player.
-     */
-    @Override
-    public double getWidth() {
-        // TODO: return width
-        return WIDTH;
-    }
+        /**
+         * Returns the width of the player.
+         */
+        @Override
+        public double getWidth () {
+            // TODO: return width
+            return WIDTH;
+        }
 
-    /**
-     * Returns the height of the player.
-     */
-    @Override
-    public double getHeight() {
-        // TODO: return height
-        return HEIGHT;
-    }
+        /**
+         * Returns the height of the player.
+         */
+        @Override
+        public double getHeight () {
+            // TODO: return height
+            return HEIGHT;
+        }
 
-    /**
-     * Returns current health of the player.
-     */
-    public int getHealth() {
-        // TODO: return health
-        return health;
-    }
+        /**
+         * Returns current health of the player.
+         */
+        public int getHealth () {
+            // TODO: return health
+            return health;
+        }
 
-    /**
-     * Sets player's health.
-     */
-    public void setHealth(int health) {
-        // TODO: update health
-        this.health = health;
-    }
+        /**
+         * Sets player's health.
+         */
+        public void setHealth ( int health){
+            // TODO: update health
+            this.health = health;
+            if (this.health <= 0) {
+                dead = true;
+            }
+        }
 
     /**
      * Updates player position based on movement flags.
@@ -80,6 +85,21 @@ public class Player extends GameObject {
     @Override
     public void update() {
         // TODO: implement movement with SPEED and screen bounds
+        if (moveLeft) {
+            x -= SPEED;
+        }
+        if (moveRight) {
+            x += SPEED;
+        }
+        if (moveForward) {
+            y -= SPEED;
+        }
+        if (moveBackward) {
+            y += SPEED;
+        }
+
+        x = Math.max(WIDTH / 2, Math.min(600 - WIDTH / 2, x));
+        y = Math.max(HEIGHT / 2, Math.min(360 - HEIGHT / 2, y));
     }
 
     /**
@@ -88,6 +108,8 @@ public class Player extends GameObject {
     @Override
     public void render(GraphicsContext gc) {
         // TODO: draw sprite or placeholder shape
+        gc.setFill(Color.GREEN);
+        gc.fillRect(x - width / 2, y - height / 2, width, height);
     }
 
     /**
@@ -118,6 +140,8 @@ public class Player extends GameObject {
      */
     public void shoot(List<GameObject> newObjects) {
         // TODO: create and add new Bullet at (x, y - HEIGHT/2)
+        Bullet bullet = new Bullet(x,y - height/2);
+        newObjects.add(bullet);
     }
 
     /**
