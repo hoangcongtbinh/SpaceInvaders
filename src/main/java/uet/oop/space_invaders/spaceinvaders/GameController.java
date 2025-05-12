@@ -1,6 +1,7 @@
 package uet.oop.space_invaders.spaceinvaders;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -10,7 +11,10 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 
 import java.util.Random;
+import java.util.Set;
+
 import javafx.scene.control.Label;
+import javafx.scene.input.KeyCode;
 
 public class GameController {
     public static final int ENEMY_COUNT = 15;
@@ -25,11 +29,12 @@ public class GameController {
     private int enemyBulletCount = 0;
 
     private List<GameObject> gameObjects;
+
     private GraphicsContext gc;
     private AnimationTimer gameLoop;
+
     private int interval = 0;
 
-    @FXML
     private Player player;
 
     @FXML
@@ -46,6 +51,8 @@ public class GameController {
     public void initialize() {
         this.gc = canvas.getGraphicsContext2D();
         this.gameObjects = new ArrayList<>();
+        this.player = new Player(canvas.getWidth() / 2, canvas.getHeight() - 50);
+        gameObjects.add(player);
         gameObjects.add(new Enemy(100, 200));
         gameObjects.add(new Enemy(200, -20));
         start();
@@ -53,8 +60,8 @@ public class GameController {
 
     public void enemyCreate() {
         if (interval % SPAWN_INTERVAL == 0 && enemyCount < ENEMY_COUNT) {
-                Random r = new Random();
-                gameObjects.add(new Enemy(r.nextInt(360 - Enemy.WIDTH), r.nextInt(10)));
+            Random r = new Random();
+            gameObjects.add(new Enemy(r.nextInt(360 - Enemy.WIDTH), r.nextInt(10)));
             enemyCount++;
         }
     }
@@ -108,6 +115,8 @@ public class GameController {
                 enemyBulletCreate();
                 powerupCreate();
                 update();
+                playerInput();
+                playerMovement();
 
                 for (GameObject object: gameObjects) {
                     object.update();
@@ -120,23 +129,27 @@ public class GameController {
         gameLoop.start();
     }
 
-    public void moveUp() {
-        player.setMoveForward(true);
+    @FXML
+    private final Set<KeyCode> pressedKeys = new HashSet<>();
+
+    private void playerInput() {
+        canvas.getScene().setOnKeyPressed(key -> {
+            pressedKeys.add(key.getCode());
+        });
+
+        canvas.getScene().setOnKeyReleased(key -> {
+            pressedKeys.remove(key.getCode());
+        });
     }
 
-    public void moveDown() {
-        player.setMoveBackward(true);
-    }
+    private void playerMovement() {
+        player.setMoveForward(pressedKeys.contains(KeyCode.W));
+        player.setMoveLeft(pressedKeys.contains(KeyCode.A));
+        player.setMoveBackward(pressedKeys.contains(KeyCode.S));
+        player.setMoveRight(pressedKeys.contains(KeyCode.D));
 
-    public void moveLeft() {
-        player.setMoveLeft(true);
-    }
-
-    public void moveRight() {
-        player.setMoveRight(true);
-    }
-
-    public void fire() {
-
+        if (pressedKeys.contains(KeyCode.SPACE)) {
+            player.shoot(gameObjects);
+        }
     }
 }
