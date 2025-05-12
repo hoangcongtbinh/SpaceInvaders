@@ -55,7 +55,29 @@ public class GameController {
         gameObjects.add(player);
         gameObjects.add(new Enemy(100, 200));
         gameObjects.add(new Enemy(200, -20));
-        start();
+
+        gameLoop = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                information.setText(String.format("Enemy: %d\nPowerup: %d\nEnemyBullet: %d", enemyCount, powerupCount, enemyBulletCount));
+                gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight()); // Reset frame
+
+                enemyCreate();
+                enemyBulletCreate();
+                powerupCreate();
+                update();
+                playerInput();
+                playerMovement();
+
+                for (GameObject object: gameObjects) {
+                    object.update();
+                    object.render(gc);
+                }
+
+                interval++;
+            }
+        };
+        gameLoop.start();
     }
 
     public void enemyCreate() {
@@ -105,28 +127,7 @@ public class GameController {
     }
 
     public void start() {
-        gameLoop = new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                information.setText(String.format("Enemy: %d\nPowerup: %d\nEnemyBullet: %d", enemyCount, powerupCount, enemyBulletCount));
-                gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight()); // Reset frame
 
-                enemyCreate();
-                enemyBulletCreate();
-                powerupCreate();
-                update();
-                playerInput();
-                playerMovement();
-
-                for (GameObject object: gameObjects) {
-                    object.update();
-                    object.render(gc);
-                }
-
-                interval++;
-            }
-        };
-        gameLoop.start();
     }
 
     @FXML
