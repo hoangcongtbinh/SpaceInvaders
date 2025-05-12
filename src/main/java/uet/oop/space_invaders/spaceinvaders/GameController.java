@@ -117,6 +117,13 @@ public class GameController {
                 update();
                 playerInput();
                 playerMovement();
+                playerCollision();
+
+                if (player.isDead()) {
+                    // Go to game over screen
+                    gc.fillText("Game Over", canvas.getWidth() / 2, canvas.getHeight() / 2);
+                    gameLoop.stop();
+                }
 
                 for (GameObject object: gameObjects) {
                     object.update();
@@ -129,6 +136,7 @@ public class GameController {
         gameLoop.start();
     }
 
+    // Keyboard input
     @FXML
     private final Set<KeyCode> pressedKeys = new HashSet<>();
 
@@ -142,6 +150,7 @@ public class GameController {
         });
     }
 
+    // Player movement
     private void playerMovement() {
         player.setMoveForward(pressedKeys.contains(KeyCode.W));
         player.setMoveLeft(pressedKeys.contains(KeyCode.A));
@@ -150,6 +159,17 @@ public class GameController {
 
         if (pressedKeys.contains(KeyCode.SPACE)) {
             player.shoot(gameObjects);
+        }
+    }
+
+    // Collision
+    public void playerCollision() {
+        for (GameObject object : gameObjects) {
+            if ((object instanceof Enemy || object instanceof EnemyBullet) && player.isColliding(object)) {
+                player.setDead(true);
+            } else if (object instanceof PowerUp && player.isColliding(object)) {
+                
+            }
         }
     }
 }

@@ -110,7 +110,6 @@ public class Player extends GameObject {
     @Override
     public void render(GraphicsContext gc) {
         // TODO: draw sprite or placeholder shape
-
         Image image = new Image(getClass().getResource("/player.png").toString());
         gc.drawImage(image, x - width / 2, y - height / 2, width, height);
     }
@@ -143,7 +142,7 @@ public class Player extends GameObject {
      */
     public void shoot(List<GameObject> newObjects) {
         // TODO: create and add new uet.oop.space_invaders.spaceinvaders.Bullet at (x, y - HEIGHT/2)
-        Bullet bullet = new Bullet(x,y - height/2);
+        Bullet bullet = new Bullet(x, y - height/2);
         newObjects.add(bullet);
     }
 
