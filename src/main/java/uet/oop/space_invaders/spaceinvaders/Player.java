@@ -100,8 +100,8 @@ public class Player extends GameObject {
             y += SPEED;
         }
 
-        x = Math.max(WIDTH / 2, Math.min(600 - WIDTH / 2, x));
-        y = Math.max(HEIGHT / 2, Math.min(360 - HEIGHT / 2, y));
+        x = Math.max(WIDTH / 2, Math.min(360 - WIDTH / 2, x));
+        y = Math.max(HEIGHT / 2, Math.min(600 - HEIGHT / 2, y));
     }
 
     /**
