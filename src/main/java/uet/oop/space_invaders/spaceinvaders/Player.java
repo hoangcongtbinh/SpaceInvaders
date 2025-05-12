@@ -1,6 +1,7 @@
 package uet.oop.space_invaders.spaceinvaders;
 
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 import java.util.List;
@@ -109,8 +110,9 @@ public class Player extends GameObject {
     @Override
     public void render(GraphicsContext gc) {
         // TODO: draw sprite or placeholder shape
-        gc.setFill(Color.GREEN);
-        gc.fillRect(x - width / 2, y - height / 2, width, height);
+
+        Image image = new Image(getClass().getResource("/player.png").toString());
+        gc.drawImage(image, x - width / 2, y - height / 2, width, height);
     }
 
     /**

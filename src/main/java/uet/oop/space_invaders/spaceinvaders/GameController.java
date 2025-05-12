@@ -1,23 +1,16 @@
 package uet.oop.space_invaders.spaceinvaders;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javafx.animation.AnimationTimer;
-import javafx.application.Application;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 
 import java.util.Random;
 import javafx.scene.control.Label;
-import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-
-import java.io.IOException;
 
 public class GameController {
     public static final int ENEMY_COUNT = 15;
@@ -25,14 +18,18 @@ public class GameController {
 
     public static final int SPAWN_INTERVAL = 60;
     public static final int POWERUP_INTERVAL = 120;
+    public static final int BULLET_INTERVAL = 140;
 
-    private List<Enemy> enemies;
-    private List<PowerUp> powerups;
+    private int enemyCount = 2;
+    private int powerupCount = 0;
+    private int enemyBulletCount = 0;
+
+    private List<GameObject> gameObjects;
+
     private GraphicsContext gc;
     private AnimationTimer gameLoop;
 
-    private int interval = 0; // for enemies
-    private int interval2 = 0; // for powerup
+    private int interval = 0;
 
     @FXML
     private Canvas canvas;
@@ -47,55 +44,101 @@ public class GameController {
     @FXML
     public void initialize() {
         this.gc = canvas.getGraphicsContext2D();
-        this.enemies = new ArrayList<>();
-        this.powerups = new ArrayList<>();
-        enemies.add(new Enemy(100, 200));
-        enemies.add(new Enemy(200, -20));
+        this.gameObjects = new ArrayList<>();
+        gameObjects.add(new Enemy(100, 200));
+        gameObjects.add(new Enemy(200, -20));
         start();
+    }
+
+    public void enemyCreate() {
+        if (interval % SPAWN_INTERVAL == 0 && enemyCount < ENEMY_COUNT) {
+                Random r = new Random();
+                gameObjects.add(new Enemy(r.nextInt(360 - Enemy.WIDTH), r.nextInt(10)));
+            enemyCount++;
+        }
+    }
+
+    public void powerupCreate() {
+        if (interval % POWERUP_INTERVAL == 0 && powerupCount < POWERUP_COUNT) {
+            Random r = new Random();
+            gameObjects.add(new PowerUp(r.nextInt(360 - PowerUp.WIDTH), r.nextInt(10)));
+            powerupCount++;
+        }
+
+    }
+
+    public void enemyBulletCreate() {
+        if (interval % BULLET_INTERVAL == 0) {
+            List<GameObject> bullets = new ArrayList<>();
+            for (GameObject enemy: gameObjects) {
+                if (enemy instanceof Enemy) {
+                    EnemyBullet enemyBullet = new EnemyBullet(enemy.getX(), enemy.getY());
+                    bullets.add(enemyBullet);
+                    enemyBulletCount++;
+                }
+            }
+            gameObjects.addAll(bullets);
+        }
+    }
+
+    public void update() {
+        /* Manage death state and object count */
+        Iterator<GameObject> it = gameObjects.iterator();
+        while (it.hasNext()) {
+            GameObject obj = it.next();
+            if (obj.isDead()) {
+                if (obj instanceof Enemy) enemyCount--;
+                else if (obj instanceof PowerUp) powerupCount--;
+                else if (obj instanceof EnemyBullet) enemyBulletCount--;
+
+                it.remove();
+            }
+        }
     }
 
     public void start() {
         gameLoop = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                information.setText(String.format("Enemy: %d\nPowerup: %d", enemies.size(), powerups.size()));
+                information.setText(String.format("Enemy: %d\nPowerup: %d\nEnemyBullet: %d", enemyCount, powerupCount, enemyBulletCount));
                 gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight()); // Reset frame
 
-                for (Enemy enemy: enemies) {
-                    enemy.update();
-                    enemy.render(gc);
-                }
+                enemyCreate();
+                enemyBulletCreate();
+                powerupCreate();
+                update();
 
-                for (PowerUp powerup : powerups) {
-                    powerup.update();
-                    powerup.render(gc);
-                }
-
-                enemies.removeIf(Enemy::isDead);
-                powerups.removeIf(PowerUp::isDead);
-
-                if (interval == SPAWN_INTERVAL) {
-                    if (enemies.size() < ENEMY_COUNT) {
-                        Random r = new Random();
-                        enemies.add(new Enemy(r.nextInt(360 - Enemy.WIDTH), r.nextInt(10)));
-                    }
-                    interval = 0;
-                }
-
-                if (interval2 == POWERUP_INTERVAL) {
-                    if (powerups.size() < POWERUP_COUNT) {
-                        Random r = new Random();
-                        powerups.add(new PowerUp(r.nextInt(360 - PowerUp.WIDTH), r.nextInt(10)));
-                    }
-                    interval2 = 0;
+                for (GameObject object: gameObjects) {
+                    object.update();
+                    object.render(gc);
                 }
 
                 interval++;
-                interval2++;
-
             }
         };
         gameLoop.start();
     }
 
+    @FXML
+    private Player player;
+
+    public void moveUp() {
+        player.setMoveForward(true);
+    }
+
+    public void moveDown() {
+        player.setMoveBackward(true);
+    }
+
+    public void moveLeft() {
+        player.setMoveLeft(true);
+    }
+
+    public void moveRight() {
+        player.setMoveRight(true);
+    }
+
+    public void fire() {
+
+    }
 }

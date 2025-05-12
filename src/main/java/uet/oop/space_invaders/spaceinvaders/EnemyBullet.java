@@ -10,8 +10,8 @@ import javafx.scene.paint.Color;
 public class EnemyBullet extends GameObject {
 
     // Dimensions of the enemy bullet
-    public static final int WIDTH = 4;
-    public static final int HEIGHT = 20;
+    public static final int WIDTH = 5;
+    public static final int HEIGHT = 5;
 
     // Movement speed of the bullet
     private static final double SPEED = 3;

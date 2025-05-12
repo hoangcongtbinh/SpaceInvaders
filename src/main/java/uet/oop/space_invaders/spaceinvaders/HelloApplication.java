@@ -1,9 +1,11 @@
 package uet.oop.space_invaders.spaceinvaders;
 
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
