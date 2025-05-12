@@ -64,6 +64,11 @@ public class SpaceShooter extends Application {
 
     }
 
+    /**
+     * <li> All of <code> Game Logics</code> and <code>States</code> have been moved to <code>GameController.java</code> to ensure clarity and expand ability. </li>
+     * <li> <strong> Sorry for inconvenience! </strong> </li>
+     */
+
     // Game mechanics stubs
 
     private void spawnEnemy() {
@@ -111,7 +116,6 @@ public class SpaceShooter extends Application {
 
     }
 
-
     private Pane createMenu() {
         // TODO: build and return main menu pane with styled buttons
         return new Pane();
@@ -134,8 +138,6 @@ public class SpaceShooter extends Application {
         // TODO: show temporary on-screen message for duration seconds
     }
 
-    // Manage death state and object count
-
     @FXML
     private void startGame(javafx.event.ActionEvent event) throws IOException {
         // TODO: set gameRunning to true and switch to game scene
@@ -144,9 +146,7 @@ public class SpaceShooter extends Application {
         currentStage.setScene(new Scene(fxmlLoader.load(), 360, 600));
 
         gameRunning = true;
-
     }
-
 
     @FXML
     private void quit() {
