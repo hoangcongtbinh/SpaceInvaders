@@ -19,10 +19,16 @@
 
 ## Screenshots
 ### Start Screen
+<p align="center" style="cursor: pointer">
+    <img src="img/Main.png" alt="Space Shooter Game Start Screen"/>
+</p>
 
 ### Gameplay
 
 ### Instructions
+<p align="center" style="cursor: pointer">
+    <img src="img/Instructions.png" alt="Space Shooter Game Start Screen"/>
+</p>
 
 ### Losing Screen
 
@@ -30,7 +36,7 @@
 
 
 ## Requirements
-- JDK 11 or higher.
+- JDK 24 or higher.
 - JavaFX SDK (version compatible with your JDK).
 - Internet connection (for scoreboard and multiplayers).
 
