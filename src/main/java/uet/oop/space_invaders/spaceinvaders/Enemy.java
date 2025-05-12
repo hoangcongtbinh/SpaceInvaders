@@ -12,7 +12,7 @@ public class Enemy extends GameObject {
 
     // Hitbox dimensions
     protected static final int WIDTH = 30;
-    protected static final int HEIGHT = 30;
+    protected static final int HEIGHT = 20;
 
     // Movement speed
     public static double SPEED = 1;
