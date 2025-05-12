@@ -143,29 +143,10 @@ public class GameController {
     }
 
     private void playerMovement() {
-        if (pressedKeys.contains(KeyCode.W)) {
-            player.setMoveForward(true);
-        } else {
-            player.setMoveForward(false);
-        }
-
-        if (pressedKeys.contains(KeyCode.S)) {
-            player.setMoveBackward(true);
-        } else {
-            player.setMoveBackward(false);
-        }
-
-        if (pressedKeys.contains(KeyCode.A)) {
-            player.setMoveLeft(true);
-        } else {
-            player.setMoveLeft(false);
-        }
-
-        if (pressedKeys.contains(KeyCode.D)) {
-            player.setMoveRight(true);
-        } else {
-            player.setMoveRight(false);
-        }
+        player.setMoveForward(pressedKeys.contains(KeyCode.W));
+        player.setMoveLeft(pressedKeys.contains(KeyCode.A));
+        player.setMoveBackward(pressedKeys.contains(KeyCode.S));
+        player.setMoveRight(pressedKeys.contains(KeyCode.D));
 
         if (pressedKeys.contains(KeyCode.SPACE)) {
             player.shoot(gameObjects);
