@@ -1,4 +1,4 @@
-package uet.oop.spaceshootergamejavafx.src;
+package uet.oop.space_invaders.spaceinvaders;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -11,8 +11,8 @@ import javafx.stage.Stage;
  */
 public class SpaceShooter extends Application {
 
-    public static final int WIDTH = 350;
-    public static final int HEIGHT = 800;
+    public static final int WIDTH = 360;
+    public static final int HEIGHT = 600;
     public static int numLives = 3;
 
     private int score;

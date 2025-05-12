@@ -25,11 +25,12 @@ public class GameController {
     private int enemyBulletCount = 0;
 
     private List<GameObject> gameObjects;
-
     private GraphicsContext gc;
     private AnimationTimer gameLoop;
-
     private int interval = 0;
+
+    @FXML
+    private Player player;
 
     @FXML
     private Canvas canvas;
@@ -118,9 +119,6 @@ public class GameController {
         };
         gameLoop.start();
     }
-
-    @FXML
-    private Player player;
 
     public void moveUp() {
         player.setMoveForward(true);
