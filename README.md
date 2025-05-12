@@ -2,7 +2,6 @@
 
 
 ## Introduction
-- A game project written in JavaFX.
 - Space Shooter is a lightweight 2D game built with JavaFX. Pilot your spaceship, dodge enemy fire, collect power-ups, and defeat waves of enemies—including challenging boss encounters—as you aim for the highest score.
 
 ## Members
