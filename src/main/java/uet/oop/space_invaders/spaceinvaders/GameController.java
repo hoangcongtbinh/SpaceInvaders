@@ -102,7 +102,6 @@ public class GameController {
                 if (obj instanceof Enemy) enemyCount--;
                 else if (obj instanceof PowerUp) powerupCount--;
                 else if (obj instanceof EnemyBullet) enemyBulletCount--;
-
                 it.remove();
             }
         }
@@ -122,6 +121,7 @@ public class GameController {
                 playerInput();
                 playerMovement();
                 objectCollision();
+                System.gc();
 
                 if (player.isDead()) {
                     // Go to game over screen
@@ -175,6 +175,7 @@ public class GameController {
         SpaceShooter losingScreen = fxmlLoader.getController();
         losingScreen.scoreLabel.setText(String.format("Score: %d", score));
 
+        System.gc();
         currentStage.setScene(scene);
     }
 
