@@ -110,6 +110,7 @@ public class GameController {
                 playerInput();
                 playerMovement();
                 objectCollision();
+                System.gc();
 
                 if (player.isDead()) {
                     // Go to game over screen
