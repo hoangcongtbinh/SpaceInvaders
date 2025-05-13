@@ -94,7 +94,7 @@
                   <Image url="@../../../../skull.png" />
                </image>
             </ImageView>
-            <Label layoutX="28.0" layoutY="291.0" prefHeight="76.0" prefWidth="232.0" text="• You will start with 3 health. &#10;Each time colliding with a bullet, your health will be reduced by 1." wrapText="true">
+            <Label layoutX="28.0" layoutY="291.0" prefHeight="76.0" prefWidth="232.0" text="• You have only 3 chances of colliding with a bullet. After that, it's game over." wrapText="true">
                <font>
                   <Font size="14.0" />
                </font>

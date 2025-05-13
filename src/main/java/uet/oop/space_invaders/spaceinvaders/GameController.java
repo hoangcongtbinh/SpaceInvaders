@@ -122,7 +122,7 @@ public class GameController {
         gameLoop = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                information.setText(String.format("Enemy: %d\nPowerup: %d\nEnemyBullet: %d\n\nScore: %d", enemyCount, powerupCount, enemyBulletCount, score));
+                information.setText(String.format("Score: %d", score));
                 gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight()); // Reset frame
 
                 enemyCreate();
