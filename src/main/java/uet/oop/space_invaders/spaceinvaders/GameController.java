@@ -30,9 +30,9 @@ public class GameController {
 
     private int enemyCount = 2;
     private int powerupCount = 0;
-    private int enemyBulletCount = 0;
 
     private List<GameObject> gameObjects;
+    private Random r;
 
     private GraphicsContext gc;
     private AnimationTimer gameLoop;
@@ -55,6 +55,7 @@ public class GameController {
     public void initialize() {
         this.gc = canvas.getGraphicsContext2D();
         this.gameObjects = new ArrayList<>();
+        this.r = new Random();
         this.player = new Player(canvas.getWidth() / 2, canvas.getHeight() - 50);
         gameObjects.add(player);
         gameObjects.add(new Enemy(100, 200));
@@ -63,34 +64,23 @@ public class GameController {
     }
 
     public void enemyCreate() {
-        if (interval % SPAWN_INTERVAL == 0 && enemyCount < ENEMY_COUNT) {
-            Random r = new Random();
             gameObjects.add(new Enemy(r.nextInt(360 - Enemy.WIDTH), r.nextInt(10)));
             enemyCount++;
-        }
     }
 
     public void powerupCreate() {
-        if (interval % POWERUP_INTERVAL == 0 && powerupCount < POWERUP_COUNT) {
-            Random r = new Random();
             gameObjects.add(new PowerUp(r.nextInt(360 - PowerUp.WIDTH), r.nextInt(10)));
             powerupCount++;
-        }
-
     }
 
     public void enemyBulletCreate() {
-        if (interval % BULLET_INTERVAL == 0) {
             List<GameObject> bullets = new ArrayList<>();
             for (GameObject enemy: gameObjects) {
                 if (enemy instanceof Enemy) {
-                    EnemyBullet enemyBullet = new EnemyBullet(enemy.getX(), enemy.getY());
-                    bullets.add(enemyBullet);
-                    enemyBulletCount++;
+                    bullets.add(new EnemyBullet(enemy.getX(), enemy.getY()));;
                 }
             }
             gameObjects.addAll(bullets);
-        }
     }
 
     public void update() {
@@ -101,8 +91,6 @@ public class GameController {
             if (obj.isDead()) {
                 if (obj instanceof Enemy) enemyCount--;
                 else if (obj instanceof PowerUp) powerupCount--;
-                else if (obj instanceof EnemyBullet) enemyBulletCount--;
-
                 it.remove();
             }
         }
@@ -112,12 +100,12 @@ public class GameController {
         gameLoop = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                information.setText(String.format("Enemy: %d\nPowerup: %d\nEnemyBullet: %d\n\nScore: %d", enemyCount, powerupCount, enemyBulletCount, score));
+                information.setText(String.format("Score: %d", score));
                 gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight()); // Reset frame
 
-                enemyCreate();
-                enemyBulletCreate();
-                powerupCreate();
+                if (interval % SPAWN_INTERVAL == 0 && enemyCount < ENEMY_COUNT) enemyCreate();
+                if (interval % BULLET_INTERVAL == 0) enemyBulletCreate();
+                if (interval % POWERUP_INTERVAL == 0 && powerupCount < POWERUP_COUNT) powerupCreate();
                 update();
                 playerInput();
                 playerMovement();
