@@ -121,7 +121,7 @@ public class GameController {
                 update();
                 playerInput();
                 playerMovement();
-                objectCollision();
+                // objectCollision();
 
                 if (player.isDead()) {
                     // Go to game over screen

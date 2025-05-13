@@ -25,6 +25,9 @@ public class Player extends GameObject {
     private boolean moveForward;
     private boolean moveBackward;
 
+    // Player image
+    private final Image PLAYER_IMAGE = new Image(getClass().getResource("/player.png").toString());
+
     // uet.oop.space_invaders.spaceinvaders.Player health
     private int health;
 
@@ -111,8 +114,7 @@ public class Player extends GameObject {
     public void render(GraphicsContext gc) {
         // TODO: draw sprite or placeholder shape
 
-        Image image = new Image(getClass().getResource("/player.png").toString());
-        gc.drawImage(image, x - width / 2, y - height / 2, width, height);
+        gc.drawImage(PLAYER_IMAGE, x - width / 2, y - height / 2, width, height);
     }
 
     /**

@@ -1,7 +1,7 @@
 package uet.oop.space_invaders.spaceinvaders;
 
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
+//import javafx.scene.paint.Color;
 import javafx.scene.image.Image;
 
 /**
@@ -19,6 +19,9 @@ public class Enemy extends GameObject {
 
     // Flag to indicate if enemy should be removed
     private boolean dead;
+
+    // Enemy image
+    private final Image ENEMY_IMAGE = new Image(getClass().getResource("/enemy.png").toString());
 
     /**
      * Constructs an uet.oop.space_invaders.spaceinvaders.Enemy at the given coordinates.
@@ -51,9 +54,7 @@ public class Enemy extends GameObject {
     @Override
     public void render(GraphicsContext gc) {
         // TODO: draw sprite or fallback shape (e.g., colored rectangle)
-
-        Image enemyImage = new Image(getClass().getResource("/enemy.png").toString());
-        gc.drawImage(enemyImage,x - width / 2, y - height / 2, width, height);
+        gc.drawImage(ENEMY_IMAGE,x - width / 2, y - height / 2, width, height);
     }
 
     /**
