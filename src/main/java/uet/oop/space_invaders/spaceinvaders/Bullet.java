@@ -10,7 +10,7 @@ import javafx.scene.paint.Color;
 public class Bullet extends GameObject {
 
     // Width and height of the bullet
-    public static final int WIDTH = 4;
+    public static final int WIDTH = 2;
     public static final int HEIGHT = 15;
 
     // Movement speed of the bullet
@@ -52,7 +52,7 @@ public class Bullet extends GameObject {
     @Override
     public void render(GraphicsContext gc) {
         // TODO: draw bullet (e.g., filled rectangle or sprite)
-        gc.setFill(Color.LIGHTBLUE);
+        gc.setFill(Color.WHITE);
         gc.fillRect(x - width / 2, y - height / 2, width, height);
     }
 

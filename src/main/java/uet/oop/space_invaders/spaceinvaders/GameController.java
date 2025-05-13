@@ -17,8 +17,11 @@ import java.util.Random;
 import java.util.Set;
 
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
+
+import javafx.scene.image.ImageView;
 
 public class GameController {
     public static final int ENEMY_COUNT = 15;
@@ -27,6 +30,7 @@ public class GameController {
     public static final int SPAWN_INTERVAL = 60;
     public static final int POWERUP_INTERVAL = 120;
     public static final int BULLET_INTERVAL = 140;
+    public static final int FIRE_INTERVAL = 10;
 
     private int enemyCount = 2;
     private int powerupCount = 0;
@@ -40,12 +44,19 @@ public class GameController {
     private int interval = 0;
     private Player player;
     private int score = 0;
+    private int health = 3;
 
     @FXML
     private Canvas canvas;
 
     @FXML
     private Label information;
+
+    @FXML
+    private ImageView heart2;
+
+    @FXML
+    private ImageView heart3;
 
     public GameController() {
 
@@ -123,12 +134,6 @@ public class GameController {
                 objectCollision();
                 System.gc();
 
-                if (player.isDead()) {
-                    // Go to game over screen
-                    gc.fillText("Game Over", canvas.getWidth() / 2, canvas.getHeight() / 2);
-                    gameLoop.stop();
-                }
-
                 for (GameObject object: gameObjects) {
                     object.update();
                     object.render(gc);
@@ -161,38 +166,46 @@ public class GameController {
         player.setMoveBackward(pressedKeys.contains(KeyCode.S));
         player.setMoveRight(pressedKeys.contains(KeyCode.D));
 
-        if (pressedKeys.contains(KeyCode.SPACE)) {
+        if (pressedKeys.contains(KeyCode.SPACE) && interval % FIRE_INTERVAL == 0) {
             player.shoot(gameObjects);
         }
     }
 
-    private void showLosingScreen() throws IOException {
+    private void showLosingScreen() {
         // TODO: display Game Over screen with score and buttons
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("gameover-view.fxml"));
-        Stage currentStage = (Stage)(canvas).getScene().getWindow();
-        Scene scene = new Scene(fxmlLoader.load(), 360, 600);
+        try {
+            player.setDead(true);
+            gameLoop.stop();
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("gameover-view.fxml"));
+            Stage currentStage = (Stage)(canvas).getScene().getWindow();
+            Scene scene = new Scene(fxmlLoader.load(), 360, 600);
 
-        SpaceShooter losingScreen = fxmlLoader.getController();
-        losingScreen.scoreLabel.setText(String.format("Score: %d", score));
+            SpaceShooter losingScreen = fxmlLoader.getController();
+            losingScreen.scoreLabel.setText(String.format("Score: %d", score));
 
-        System.gc();
-        currentStage.setScene(scene);
+            System.gc();
+            currentStage.setScene(scene);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     // Collision
+    @FXML
     public void objectCollision() {
         for (GameObject object : gameObjects) {
             // Player side
-            if ((object instanceof Enemy || object instanceof EnemyBullet) && player.isColliding(object)) {
-                player.setDead(true);
-                try {
+            if ((object instanceof Enemy && (player.isColliding(object) || object.isCollidingWithBottom(canvas.getHeight()) == true)) ||
+                    (object instanceof EnemyBullet && player.isColliding(object) && health == 1)) {
                     showLosingScreen();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
             } else if (object instanceof PowerUp && player.isColliding(object)) {
                 score += 100;
                 ((PowerUp) object).setDead(true);
+            } else if (object instanceof EnemyBullet && player.isColliding(object)) {
+                ((EnemyBullet) object).setDead(true);
+                health--;
+                if (health == 2) heart3.setImage(new Image(getClass().getResource("/badheart.png").toString()));
+                else if (health == 1) heart2.setImage(new Image(getClass().getResource("/badheart.png").toString()));
             }
 
             // Enemy side

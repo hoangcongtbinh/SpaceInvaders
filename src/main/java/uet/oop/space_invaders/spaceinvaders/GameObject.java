@@ -115,4 +115,9 @@ public abstract class GameObject {
         }
         return false;
     }
+
+    public boolean isCollidingWithBottom(double CANVAS_HEIGHT) {
+        if (this.height / 2 + this.y > CANVAS_HEIGHT) return true;
+        return false;
+    }
 }
