@@ -36,7 +36,8 @@ public class SpaceShooter extends Application {
     private boolean gameRunning;
 
     // TODO: Declare UI labels, lists of GameObjects, player, root Pane, Scene, Stage
-
+    @FXML
+    protected Label scoreLabel;
 
     public static void main(String[] args) {
         launch(args);
@@ -66,7 +67,7 @@ public class SpaceShooter extends Application {
 
     /**
      * <li> All of <code> Game Logics</code> and <code>States</code> have been moved to <code>GameController.java</code> to ensure clarity and expand ability. </li>
-     * <li> <strong> Sorry for inconvenience! </strong> </li>
+     * <li> <strong> Sorry for the inconvenience! </strong> </li>
      */
 
     // Game mechanics stubs

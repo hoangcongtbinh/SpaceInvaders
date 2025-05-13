@@ -107,4 +107,12 @@ public abstract class GameObject {
      * @return height
      */
     public abstract double getHeight();
+
+    public boolean isColliding(GameObject other) {
+        // Check if this object is colliding with another object
+        if (this.getBounds().intersects(other.getBounds())) {
+            return true;
+        }
+        return false;
+    }
 }

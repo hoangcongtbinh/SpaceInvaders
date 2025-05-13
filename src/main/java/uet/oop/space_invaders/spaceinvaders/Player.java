@@ -13,7 +13,7 @@ import java.util.List;
 public class Player extends GameObject {
 
     // Hitbox dimensions
-    private static final int WIDTH = 40;
+    private static final int WIDTH = 20;
     private static final int HEIGHT = 40;
 
     // Movement speed
