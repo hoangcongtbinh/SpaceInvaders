@@ -1,5 +1,6 @@
 package uet.oop.space_invaders.spaceinvaders;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -7,6 +8,8 @@ import java.util.List;
 
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 
@@ -15,6 +18,7 @@ import java.util.Set;
 
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
+import javafx.stage.Stage;
 
 public class GameController {
     public static final int ENEMY_COUNT = 15;
@@ -34,8 +38,8 @@ public class GameController {
     private AnimationTimer gameLoop;
 
     private int interval = 0;
-
     private Player player;
+    private int score = 0;
 
     @FXML
     private Canvas canvas;
@@ -60,8 +64,8 @@ public class GameController {
 
     public void enemyCreate() {
         if (interval % SPAWN_INTERVAL == 0 && enemyCount < ENEMY_COUNT) {
-                Random r = new Random();
-                gameObjects.add(new Enemy(r.nextInt(360 - Enemy.WIDTH), r.nextInt(10)));
+            Random r = new Random();
+            gameObjects.add(new Enemy(r.nextInt(360 - Enemy.WIDTH), r.nextInt(10)));
             enemyCount++;
         }
     }
@@ -108,7 +112,7 @@ public class GameController {
         gameLoop = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                information.setText(String.format("Enemy: %d\nPowerup: %d\nEnemyBullet: %d", enemyCount, powerupCount, enemyBulletCount));
+                information.setText(String.format("Enemy: %d\nPowerup: %d\nEnemyBullet: %d\n\nScore: %d", enemyCount, powerupCount, enemyBulletCount, score));
                 gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight()); // Reset frame
 
                 enemyCreate();
@@ -117,7 +121,7 @@ public class GameController {
                 update();
                 playerInput();
                 playerMovement();
-                playerCollision();
+                objectCollision();
 
                 if (player.isDead()) {
                     // Go to game over screen
@@ -162,13 +166,43 @@ public class GameController {
         }
     }
 
+    private void showLosingScreen() throws IOException {
+        // TODO: display Game Over screen with score and buttons
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("gameover-view.fxml"));
+        Stage currentStage = (Stage)(canvas).getScene().getWindow();
+        Scene scene = new Scene(fxmlLoader.load(), 360, 600);
+
+        SpaceShooter losingScreen = fxmlLoader.getController();
+        losingScreen.scoreLabel.setText(String.format("Score: %d", score));
+
+        currentStage.setScene(scene);
+    }
+
     // Collision
-    public void playerCollision() {
+    public void objectCollision() {
         for (GameObject object : gameObjects) {
+            // Player side
             if ((object instanceof Enemy || object instanceof EnemyBullet) && player.isColliding(object)) {
                 player.setDead(true);
+                try {
+                    showLosingScreen();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             } else if (object instanceof PowerUp && player.isColliding(object)) {
-                
+                score += 100;
+                ((PowerUp) object).setDead(true);
+            }
+
+            // Enemy side
+            if (object instanceof Bullet) {
+                for (GameObject enemy: gameObjects) {
+                    if (enemy instanceof Enemy && enemy.isColliding(object)) {
+                        ((Enemy) enemy).setDead(true);
+                        ((Bullet) object).setDead(true);
+                        score += 50;
+                    }
+                }
             }
         }
     }

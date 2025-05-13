@@ -13,7 +13,7 @@ import java.util.List;
 public class Player extends GameObject {
 
     // Hitbox dimensions
-    private static final int WIDTH = 40;
+    private static final int WIDTH = 20;
     private static final int HEIGHT = 40;
 
     // Movement speed
@@ -24,6 +24,9 @@ public class Player extends GameObject {
     private boolean moveRight;
     private boolean moveForward;
     private boolean moveBackward;
+
+    // Player image
+    private final Image PLAYER_IMAGE = new Image(getClass().getResource("/player.png").toString());
 
     // uet.oop.space_invaders.spaceinvaders.Player health
     private int health;
@@ -110,8 +113,8 @@ public class Player extends GameObject {
     @Override
     public void render(GraphicsContext gc) {
         // TODO: draw sprite or placeholder shape
-        Image image = new Image(getClass().getResource("/player.png").toString());
-        gc.drawImage(image, x - width / 2, y - height / 2, width, height);
+
+        gc.drawImage(PLAYER_IMAGE, x - width / 2, y - height / 2, width, height);
     }
 
     /**
@@ -142,7 +145,7 @@ public class Player extends GameObject {
      */
     public void shoot(List<GameObject> newObjects) {
         // TODO: create and add new uet.oop.space_invaders.spaceinvaders.Bullet at (x, y - HEIGHT/2)
-        Bullet bullet = new Bullet(x, y - height/2);
+        Bullet bullet = new Bullet(x,y - height/2);
         newObjects.add(bullet);
     }
 
