@@ -17,8 +17,11 @@ import java.util.Random;
 import java.util.Set;
 
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
+
+import javafx.scene.image.ImageView;
 
 public class GameController {
     public static final int ENEMY_COUNT = 15;
@@ -27,12 +30,13 @@ public class GameController {
     public static final int SPAWN_INTERVAL = 60;
     public static final int POWERUP_INTERVAL = 120;
     public static final int BULLET_INTERVAL = 140;
+    public static final int FIRE_INTERVAL = 10;
 
     private int enemyCount = 2;
     private int powerupCount = 0;
+    private int enemyBulletCount = 0;
 
     private List<GameObject> gameObjects;
-    private Random r;
 
     private GraphicsContext gc;
     private AnimationTimer gameLoop;
@@ -40,12 +44,19 @@ public class GameController {
     private int interval = 0;
     private Player player;
     private int score = 0;
+    private int health = 3;
 
     @FXML
     private Canvas canvas;
 
     @FXML
     private Label information;
+
+    @FXML
+    private ImageView heart2;
+
+    @FXML
+    private ImageView heart3;
 
     public GameController() {
 
@@ -55,7 +66,6 @@ public class GameController {
     public void initialize() {
         this.gc = canvas.getGraphicsContext2D();
         this.gameObjects = new ArrayList<>();
-        this.r = new Random();
         this.player = new Player(canvas.getWidth() / 2, canvas.getHeight() - 50);
         gameObjects.add(player);
         gameObjects.add(new Enemy(100, 200));
@@ -64,23 +74,34 @@ public class GameController {
     }
 
     public void enemyCreate() {
+        if (interval % SPAWN_INTERVAL == 0 && enemyCount < ENEMY_COUNT) {
+            Random r = new Random();
             gameObjects.add(new Enemy(r.nextInt(360 - Enemy.WIDTH), r.nextInt(10)));
             enemyCount++;
+        }
     }
 
     public void powerupCreate() {
+        if (interval % POWERUP_INTERVAL == 0 && powerupCount < POWERUP_COUNT) {
+            Random r = new Random();
             gameObjects.add(new PowerUp(r.nextInt(360 - PowerUp.WIDTH), r.nextInt(10)));
             powerupCount++;
+        }
+
     }
 
     public void enemyBulletCreate() {
+        if (interval % BULLET_INTERVAL == 0) {
             List<GameObject> bullets = new ArrayList<>();
             for (GameObject enemy: gameObjects) {
                 if (enemy instanceof Enemy) {
-                    bullets.add(new EnemyBullet(enemy.getX(), enemy.getY()));;
+                    EnemyBullet enemyBullet = new EnemyBullet(enemy.getX(), enemy.getY());
+                    bullets.add(enemyBullet);
+                    enemyBulletCount++;
                 }
             }
             gameObjects.addAll(bullets);
+        }
     }
 
     public void update() {
@@ -91,6 +112,7 @@ public class GameController {
             if (obj.isDead()) {
                 if (obj instanceof Enemy) enemyCount--;
                 else if (obj instanceof PowerUp) powerupCount--;
+                else if (obj instanceof EnemyBullet) enemyBulletCount--;
                 it.remove();
             }
         }
@@ -103,20 +125,14 @@ public class GameController {
                 information.setText(String.format("Score: %d", score));
                 gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight()); // Reset frame
 
-                if (interval % SPAWN_INTERVAL == 0 && enemyCount < ENEMY_COUNT) enemyCreate();
-                if (interval % BULLET_INTERVAL == 0) enemyBulletCreate();
-                if (interval % POWERUP_INTERVAL == 0 && powerupCount < POWERUP_COUNT) powerupCreate();
+                enemyCreate();
+                enemyBulletCreate();
+                powerupCreate();
                 update();
                 playerInput();
                 playerMovement();
                 objectCollision();
                 System.gc();
-
-                if (player.isDead()) {
-                    // Go to game over screen
-                    gc.fillText("Game Over", canvas.getWidth() / 2, canvas.getHeight() / 2);
-                    gameLoop.stop();
-                }
 
                 for (GameObject object: gameObjects) {
                     object.update();
@@ -150,37 +166,46 @@ public class GameController {
         player.setMoveBackward(pressedKeys.contains(KeyCode.S));
         player.setMoveRight(pressedKeys.contains(KeyCode.D));
 
-        if (pressedKeys.contains(KeyCode.SPACE)) {
+        if (pressedKeys.contains(KeyCode.SPACE) && interval % FIRE_INTERVAL == 0) {
             player.shoot(gameObjects);
         }
     }
 
-    private void showLosingScreen() throws IOException {
+    private void showLosingScreen() {
         // TODO: display Game Over screen with score and buttons
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("gameover-view.fxml"));
-        Stage currentStage = (Stage)(canvas).getScene().getWindow();
-        Scene scene = new Scene(fxmlLoader.load(), 360, 600);
+        try {
+            player.setDead(true);
+            gameLoop.stop();
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("gameover-view.fxml"));
+            Stage currentStage = (Stage)(canvas).getScene().getWindow();
+            Scene scene = new Scene(fxmlLoader.load(), 360, 600);
 
-        SpaceShooter losingScreen = fxmlLoader.getController();
-        losingScreen.scoreLabel.setText(String.format("Score: %d", score));
+            SpaceShooter losingScreen = fxmlLoader.getController();
+            losingScreen.scoreLabel.setText(String.format("Score: %d", score));
 
-        currentStage.setScene(scene);
+            System.gc();
+            currentStage.setScene(scene);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     // Collision
+    @FXML
     public void objectCollision() {
         for (GameObject object : gameObjects) {
             // Player side
-            if ((object instanceof Enemy || object instanceof EnemyBullet) && player.isColliding(object)) {
-                player.setDead(true);
-                try {
+            if ((object instanceof Enemy && (player.isColliding(object) || object.isCollidingWithBottom(canvas.getHeight()) == true)) ||
+                    (object instanceof EnemyBullet && player.isColliding(object) && health == 1)) {
                     showLosingScreen();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
             } else if (object instanceof PowerUp && player.isColliding(object)) {
                 score += 100;
                 ((PowerUp) object).setDead(true);
+            } else if (object instanceof EnemyBullet && player.isColliding(object)) {
+                ((EnemyBullet) object).setDead(true);
+                health--;
+                if (health == 2) heart3.setImage(new Image(getClass().getResource("/badheart.png").toString()));
+                else if (health == 1) heart2.setImage(new Image(getClass().getResource("/badheart.png").toString()));
             }
 
             // Enemy side

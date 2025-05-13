@@ -50,7 +50,7 @@ public class EnemyBullet extends GameObject {
     @Override
     public void render(GraphicsContext gc) {
         // TODO: draw bullet (e.g., filled rectangle or sprite)
-        gc.setFill(Color.YELLOW);
+        gc.setFill(Color.LIGHTBLUE);
         gc.fillRect(x - width / 2, y - height / 2, width, height);
     }
 

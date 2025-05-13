@@ -135,6 +135,12 @@ public class SpaceShooter extends Application {
         popupStage.showAndWait();
     }
 
+    @FXML
+    private void closeWindow(javafx.event.ActionEvent event) throws IOException {
+        Stage currentStage = (Stage)((javafx.scene.Node)event.getSource()).getScene().getWindow();
+        currentStage.close();
+    }
+
     private void showTempMessage(String message, double x, double y, double duration) {
         // TODO: show temporary on-screen message for duration seconds
     }
