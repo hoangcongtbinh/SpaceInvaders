@@ -34,6 +34,10 @@ public class Player extends GameObject {
     // State flag for removal
     private boolean dead;
 
+    //AI setting
+    private boolean autoPlay = false;
+    private int fireCooldown = 0;
+
     /**
      * Constructs a uet.oop.space_invaders.spaceinvaders.Player at the given position.
      *
@@ -141,6 +145,17 @@ public class Player extends GameObject {
     }
 
     /**
+     * AI.
+     */
+    public void setAutoPlay(boolean autoPlay) {
+        this.autoPlay = autoPlay;
+    }
+
+    public boolean isAutoPlay() {
+        return autoPlay;
+    }
+
+    /**
      * Shoots a bullet from the player.
      */
     public void shoot(List<GameObject> newObjects) {
@@ -164,5 +179,52 @@ public class Player extends GameObject {
     public boolean isDead() {
         // TODO: return dead flag
         return dead;
+    }
+
+    public void autoUpdate(List<GameObject> objects, List<GameObject> newObjects) {
+        if (!autoPlay) return;
+
+        boolean dangerLeft = false, dangerRight = false;
+
+        for (GameObject obj : objects) {
+            if (obj instanceof EnemyBullet) {
+                double dx = obj.getX() - this.x;
+                double dy = obj.getY() - this.y;
+
+                if (Math.abs(dx) < 30 && dy > -50 && dy < 100) {
+                    if (dx < 0) dangerLeft = true;
+                    else dangerRight = true;
+                }
+            }
+        }
+
+        if (dangerLeft && !dangerRight) {
+            setMoveRight(true);
+            setMoveLeft(false);
+        } else if (dangerRight && !dangerLeft) {
+            setMoveLeft(true);
+            setMoveRight(false);
+        } else {
+            setMoveLeft(false);
+            setMoveRight(false);
+        }
+
+        for (GameObject obj : objects) {
+            if (obj instanceof Enemy) {
+                if (Math.abs(obj.getX() - this.x) < 10 && intervalReadyToFire()) {
+                    shoot(newObjects);
+                    break;
+                }
+            }
+        }
+    }
+
+    private boolean intervalReadyToFire() {
+        if (fireCooldown == 0) {
+            fireCooldown = 10;
+            return true;
+        }
+        fireCooldown--;
+        return false;
     }
 }

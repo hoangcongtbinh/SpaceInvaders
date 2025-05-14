@@ -16,6 +16,11 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.animation.AnimationTimer;
+import javafx.event.ActionEvent;
+import javafx.scene.control.Button;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 
 import java.io.IOException;
 
@@ -63,6 +68,7 @@ public class SpaceShooter extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
 
+        initEventHandlers(scene);
     }
 
     /**
@@ -102,24 +108,74 @@ public class SpaceShooter extends Application {
 
     private void showLosingScreen() {
         // TODO: display Game Over screen with score and buttons
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("game-over.fxml"));
+            Stage popupStage = new Stage();
+            popupStage.setScene(new Scene(fxmlLoader.load(), 360, 600));
+            popupStage.setTitle("Game Over");
+            popupStage.setResizable(false);
+            popupStage.getIcons().add(new Image(getClass().getResource("/player.jpg").toString()));
+            popupStage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void restartGame() {
         // TODO: reset gameObjects, lives, score and switch back to game scene
+        score = 0;
+        numLives = 3;
+        gameRunning = true;
+        spawnEnemy();  // Reinitialize enemies
+        spawnPowerUp();
     }
 
     private void resetGame() {
         // TODO: stop game loop and call showLosingScreen
+        gameRunning = false;
+        showLosingScreen();
     }
 
     private void initEventHandlers(Scene scene) {
         // TODO: set OnKeyPressed and OnKeyReleased for movement and shooting
+        scene.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.RIGHT) {
+            } else if (event.getCode() == KeyCode.LEFT) {
+            } else if (event.getCode() == KeyCode.SPACE) {
+            }
+        });
+
+        scene.setOnKeyReleased(event -> {
+        });
 
     }
 
     private Pane createMenu() {
         // TODO: build and return main menu pane with styled buttons
-        return new Pane();
+        Pane menuPane = new Pane();
+        Button startButton = new Button("Start");
+        Button highScoreButton = new Button("High Score");
+        Button instructionsButton = new Button("Instructions");
+        Button quitButton = new Button("Quit");
+
+        startButton.setOnAction(e -> {
+            try {
+                startGame(e);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
+        instructionsButton.setOnAction(e -> {
+            try {
+                showInstructions();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
+        quitButton.setOnAction(event -> quit());
+
+        menuPane.getChildren().addAll(startButton, highScoreButton, instructionsButton, quitButton);
+        return menuPane;
     }
 
     @FXML

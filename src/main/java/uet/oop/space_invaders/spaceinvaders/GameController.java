@@ -38,6 +38,7 @@ public class GameController {
 
     private List<GameObject> gameObjects;
 
+
     private GraphicsContext gc;
     private AnimationTimer gameLoop;
 
@@ -119,6 +120,7 @@ public class GameController {
     }
 
     public void start() {
+
         gameLoop = new AnimationTimer() {
             @Override
             public void handle(long now) {
@@ -129,8 +131,12 @@ public class GameController {
                 enemyBulletCreate();
                 powerupCreate();
                 update();
-                playerInput();
-                playerMovement();
+                if (player.isAutoPlay()) {
+                    player.autoUpdate(gameObjects, gameObjects);
+                } else {
+                    playerInput();
+                    playerMovement();
+                }
                 objectCollision();
                 System.gc();
 
@@ -152,6 +158,13 @@ public class GameController {
     private void playerInput() {
         canvas.getScene().setOnKeyPressed(key -> {
             pressedKeys.add(key.getCode());
+
+
+            //Phim P de bat AI
+            if (key.getCode() == KeyCode.P) {
+                player.setAutoPlay(!player.isAutoPlay());
+                System.out.println("AI Mode: " + player.isAutoPlay());
+            }
         });
 
         canvas.getScene().setOnKeyReleased(key -> {
