@@ -25,8 +25,9 @@ import javafx.stage.Stage;
 import javafx.scene.image.ImageView;
 
 public class GameController {
-    public static final int ENEMY_COUNT = 15;
-    public static final int POWERUP_COUNT = 3;
+    public static final int ENEMY_LIMIT = 15;
+    public static final int POWERUP_LIMIT = 3;
+    public static final int BULLET_LIMIT = 25;
 
     public static final int SPAWN_INTERVAL = 60;
     public static final int POWERUP_INTERVAL = 120;
@@ -35,6 +36,7 @@ public class GameController {
 
     private int enemyCount = 2;
     private int powerupCount = 0;
+    private int bulletCount = 0;
 
     private List<GameObject> gameObjects;
     private ObjectPool<Enemy> enemyPool;
@@ -47,6 +49,7 @@ public class GameController {
     private Random r;
 
     private int interval = 0;
+    private int lastInterval = 0;
     private Player player;
     private int score = 0;
     private int health = 3;
@@ -86,7 +89,7 @@ public class GameController {
     }
 
     public void enemyCreate() {
-        if (interval % SPAWN_INTERVAL == 0 && enemyCount < ENEMY_COUNT) {
+        if (interval % SPAWN_INTERVAL == 0 && enemyCount < ENEMY_LIMIT) {
             Enemy enemy = enemyPool.get();
             enemy.x = r.nextInt(360 - Enemy.WIDTH);
             enemy.y = r.nextInt(10);
@@ -96,7 +99,7 @@ public class GameController {
     }
 
     public void powerupCreate() {
-        if (interval % POWERUP_INTERVAL == 0 && powerupCount < POWERUP_COUNT) {
+        if (interval % POWERUP_INTERVAL == 0 && powerupCount < POWERUP_LIMIT) {
             PowerUp powerUp = powerUpPool.get();
             powerUp.x = r.nextInt(360 - PowerUp.WIDTH);
             powerUp.y = r.nextInt(10);
@@ -139,6 +142,7 @@ public class GameController {
                     enemyBulletPool.release((EnemyBullet) obj);
                 }
                 else if (obj instanceof Bullet) {
+                    bulletCount--;
                     bulletPool.release((Bullet) obj);
                 }
                 it.remove();
@@ -192,8 +196,10 @@ public class GameController {
         player.setMoveBackward(pressedKeys.contains(KeyCode.S));
         player.setMoveRight(pressedKeys.contains(KeyCode.D));
 
-        if (pressedKeys.contains(KeyCode.SPACE) && interval % FIRE_INTERVAL == 0) {
+        if (pressedKeys.contains(KeyCode.SPACE) && bulletCount < BULLET_LIMIT && (interval - lastInterval > FIRE_INTERVAL)) {
+            lastInterval = interval;
             player.shoot(gameObjects, bulletPool);
+            bulletCount++;
         }
     }
 

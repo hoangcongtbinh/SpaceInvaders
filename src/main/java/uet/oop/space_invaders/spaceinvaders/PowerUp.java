@@ -21,6 +21,9 @@ public class PowerUp extends GameObject {
         this(0, 0);
     }
 
+    // Player image
+    private final Image POWERUP_IMAGE = new Image(getClass().getResource("/powerup.png").toString());
+
     /**
      * Constructs a uet.oop.space_invaders.spaceinvaders.PowerUp at the given position.
      *
@@ -72,8 +75,7 @@ public class PowerUp extends GameObject {
     @Override
     public void render(GraphicsContext gc) {
         // TODO: draw sprite or fallback (e.g., colored rectangle)
-        Image image = new Image(getClass().getResource("/powerup.png").toString());
-        gc.drawImage(image, x - width / 2, y - height / 2, width, height);
+        gc.drawImage(POWERUP_IMAGE, x - width / 2, y - height / 2, width, height);
     }
 
     /**
