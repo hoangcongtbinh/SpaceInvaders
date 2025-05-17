@@ -10,7 +10,7 @@
    <children>
       <Pane prefHeight="600.0" prefWidth="360.0">
          <children>
-            <Canvas fx:id="canvas" height="600.0" width="360.0" />
+            <Canvas fx:id="canvas" focusTraversable="true" height="600.0" onKeyPressed="#onKeyPressed" onKeyReleased="#onKeyReleased" width="360.0" />
             <Label fx:id="information" layoutX="14.0" layoutY="14.0" text="Score: %d&#10;Lives:" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="16.0" />

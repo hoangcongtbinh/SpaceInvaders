@@ -17,8 +17,9 @@ public class PowerUp extends GameObject {
     // Fall speed of the power-up
     private static final double SPEED = 2;
 
-    // Flag indicating whether the power-up should be removed
-    private boolean dead;
+    public PowerUp() {
+        this(0, 0);
+    }
 
     /**
      * Constructs a uet.oop.space_invaders.spaceinvaders.PowerUp at the given position.
@@ -31,6 +32,25 @@ public class PowerUp extends GameObject {
         // TODO: initialize dead flag, load sprite if needed
         this.dead = false;
     }
+
+    /**
+     * Set X coordinate for PowerUp, supporting PowerUpPool.
+     *
+     * @param x coordinate.
+     */
+    void setX(int x) {
+        this.x = x;
+    }
+
+    /**
+     * Set Y coordinate for PowerUp, supporting PowerUpPool.
+     *
+     * @param y coordinate.
+     */
+    void setY(int y) {
+        this.y = y;
+    }
+
 
     /**
      * Updates power-up position each frame.

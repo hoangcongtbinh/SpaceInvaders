@@ -17,11 +17,13 @@ public class Enemy extends GameObject {
     // Movement speed
     public static double SPEED = 1;
 
-    // Flag to indicate if enemy should be removed
-    private boolean dead;
 
     // Enemy image
     private final Image ENEMY_IMAGE = new Image(getClass().getResource("/enemy.png").toString());
+
+    public Enemy() {
+        this(0, 0);
+    }
 
     /**
      * Constructs an uet.oop.space_invaders.spaceinvaders.Enemy at the given coordinates.
@@ -33,6 +35,24 @@ public class Enemy extends GameObject {
         // TODO: load sprite if needed and initialize dead flag
         this.dead = false;
         this.velocityY = SPEED;
+    }
+
+    /**
+     * Set X coordinate for Enemy, supporting EnemyPool.
+     *
+     * @param x coordinate.
+     */
+    void setX(int x) {
+        this.x = x;
+    }
+
+    /**
+     * Set Y coordinate for Enemy, supporting EnemyPool.
+     *
+     * @param y coordinate.
+     */
+    void setY(int y) {
+        this.y = y;
     }
 
     /**

@@ -19,6 +19,7 @@ import java.util.Set;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 import javafx.scene.image.ImageView;
@@ -34,12 +35,16 @@ public class GameController {
 
     private int enemyCount = 2;
     private int powerupCount = 0;
-    private int enemyBulletCount = 0;
 
     private List<GameObject> gameObjects;
+    private ObjectPool<Enemy> enemyPool;
+    private ObjectPool<Bullet> bulletPool;
+    private ObjectPool<EnemyBullet> enemyBulletPool;
+    private ObjectPool<PowerUp> powerUpPool;
 
     private GraphicsContext gc;
     private AnimationTimer gameLoop;
+    private Random r;
 
     private int interval = 0;
     private Player player;
@@ -67,24 +72,35 @@ public class GameController {
         this.gc = canvas.getGraphicsContext2D();
         this.gameObjects = new ArrayList<>();
         this.player = new Player(canvas.getWidth() / 2, canvas.getHeight() - 50);
+
+        enemyPool = new ObjectPool<>(Enemy::new);
+        bulletPool = new ObjectPool<>(Bullet::new);
+        enemyBulletPool = new ObjectPool<>(EnemyBullet::new);
+        powerUpPool = new ObjectPool<>(PowerUp::new);
+
         gameObjects.add(player);
         gameObjects.add(new Enemy(100, 200));
         gameObjects.add(new Enemy(200, -20));
+        this.r = new Random();
         start();
     }
 
     public void enemyCreate() {
         if (interval % SPAWN_INTERVAL == 0 && enemyCount < ENEMY_COUNT) {
-            Random r = new Random();
-            gameObjects.add(new Enemy(r.nextInt(360 - Enemy.WIDTH), r.nextInt(10)));
+            Enemy enemy = enemyPool.get();
+            enemy.x = r.nextInt(360 - Enemy.WIDTH);
+            enemy.y = r.nextInt(10);
+            gameObjects.add(enemy);
             enemyCount++;
         }
     }
 
     public void powerupCreate() {
         if (interval % POWERUP_INTERVAL == 0 && powerupCount < POWERUP_COUNT) {
-            Random r = new Random();
-            gameObjects.add(new PowerUp(r.nextInt(360 - PowerUp.WIDTH), r.nextInt(10)));
+            PowerUp powerUp = powerUpPool.get();
+            powerUp.x = r.nextInt(360 - PowerUp.WIDTH);
+            powerUp.y = r.nextInt(10);
+            gameObjects.add(powerUp);
             powerupCount++;
         }
 
@@ -95,9 +111,10 @@ public class GameController {
             List<GameObject> bullets = new ArrayList<>();
             for (GameObject enemy: gameObjects) {
                 if (enemy instanceof Enemy) {
-                    EnemyBullet enemyBullet = new EnemyBullet(enemy.getX(), enemy.getY());
+                    EnemyBullet enemyBullet = enemyBulletPool.get();
+                    enemyBullet.x = enemy.getX();
+                    enemyBullet.y = enemy.getY();
                     bullets.add(enemyBullet);
-                    enemyBulletCount++;
                 }
             }
             gameObjects.addAll(bullets);
@@ -110,9 +127,20 @@ public class GameController {
         while (it.hasNext()) {
             GameObject obj = it.next();
             if (obj.isDead()) {
-                if (obj instanceof Enemy) enemyCount--;
-                else if (obj instanceof PowerUp) powerupCount--;
-                else if (obj instanceof EnemyBullet) enemyBulletCount--;
+                if (obj instanceof Enemy) {
+                    enemyCount--;
+                    enemyPool.release((Enemy) obj);
+                }
+                else if (obj instanceof PowerUp) {
+                    powerupCount--;
+                    powerUpPool.release((PowerUp) obj);
+                }
+                else if (obj instanceof EnemyBullet) {
+                    enemyBulletPool.release((EnemyBullet) obj);
+                }
+                else if (obj instanceof Bullet) {
+                    bulletPool.release((Bullet) obj);
+                }
                 it.remove();
             }
         }
@@ -130,9 +158,7 @@ public class GameController {
                 powerupCreate();
                 update();
                 playerInput();
-                playerMovement();
                 objectCollision();
-                System.gc();
 
                 for (GameObject object: gameObjects) {
                     object.update();
@@ -149,25 +175,25 @@ public class GameController {
     @FXML
     private final Set<KeyCode> pressedKeys = new HashSet<>();
 
-    private void playerInput() {
-        canvas.getScene().setOnKeyPressed(key -> {
-            pressedKeys.add(key.getCode());
-        });
+    @FXML
+    private void onKeyPressed(KeyEvent e) {
+        pressedKeys.add(e.getCode());
+    }
 
-        canvas.getScene().setOnKeyReleased(key -> {
-            pressedKeys.remove(key.getCode());
-        });
+    @FXML
+    private void onKeyReleased(KeyEvent e) {
+        pressedKeys.remove(e.getCode());
     }
 
     // Player movement
-    private void playerMovement() {
+    private void playerInput() {
         player.setMoveForward(pressedKeys.contains(KeyCode.W));
         player.setMoveLeft(pressedKeys.contains(KeyCode.A));
         player.setMoveBackward(pressedKeys.contains(KeyCode.S));
         player.setMoveRight(pressedKeys.contains(KeyCode.D));
 
         if (pressedKeys.contains(KeyCode.SPACE) && interval % FIRE_INTERVAL == 0) {
-            player.shoot(gameObjects);
+            player.shoot(gameObjects, bulletPool);
         }
     }
 
@@ -183,7 +209,6 @@ public class GameController {
             SpaceShooter losingScreen = fxmlLoader.getController();
             losingScreen.scoreLabel.setText(String.format("Score: %d", score));
 
-            System.gc();
             currentStage.setScene(scene);
         } catch (IOException e) {
             e.printStackTrace();

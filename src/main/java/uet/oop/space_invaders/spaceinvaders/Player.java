@@ -28,7 +28,7 @@ public class Player extends GameObject {
     // Player image
     private final Image PLAYER_IMAGE = new Image(getClass().getResource("/player.png").toString());
 
-    // uet.oop.space_invaders.spaceinvaders.Player health
+    // Player health
     private int health;
 
     // State flag for removal
@@ -143,9 +143,11 @@ public class Player extends GameObject {
     /**
      * Shoots a bullet from the player.
      */
-    public void shoot(List<GameObject> newObjects) {
+    public void shoot(List<GameObject> newObjects, ObjectPool<Bullet> objectPool) {
         // TODO: create and add new uet.oop.space_invaders.spaceinvaders.Bullet at (x, y - HEIGHT/2)
-        Bullet bullet = new Bullet(x,y - height/2);
+        Bullet bullet = objectPool.get();
+        bullet.x = this.x;
+        bullet.y = this.y - height / 2;
         newObjects.add(bullet);
     }
 
