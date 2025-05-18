@@ -181,44 +181,10 @@ public class Player extends GameObject {
         return dead;
     }
 
-    public void autoUpdate(List<GameObject> objects, List<GameObject> newObjects) {
-        if (!autoPlay) return;
-
-        boolean dangerLeft = false, dangerRight = false;
-
-        for (GameObject obj : objects) {
-            if (obj instanceof EnemyBullet) {
-                double dx = obj.getX() - this.x;
-                double dy = obj.getY() - this.y;
-
-                if (Math.abs(dx) < 30 && dy > -50 && dy < 100) {
-                    if (dx < 0) dangerLeft = true;
-                    else dangerRight = true;
-                }
-            }
-        }
-
-        if (dangerLeft && !dangerRight) {
-            setMoveRight(true);
-            setMoveLeft(false);
-        } else if (dangerRight && !dangerLeft) {
-            setMoveLeft(true);
-            setMoveRight(false);
-        } else {
-            setMoveLeft(false);
-            setMoveRight(false);
-        }
-
-        for (GameObject obj : objects) {
-            if (obj instanceof Enemy) {
-                if (Math.abs(obj.getX() - this.x) < 10 && intervalReadyToFire()) {
-                    shoot(newObjects);
-                    break;
-                }
-            }
-        }
-    }
-
+    /**
+     * thoi gian hoi chieu.
+     * @return
+     */
     private boolean intervalReadyToFire() {
         if (fireCooldown == 0) {
             fireCooldown = 10;
@@ -227,4 +193,70 @@ public class Player extends GameObject {
         fireCooldown--;
         return false;
     }
+
+    /**
+     * AI promax.
+     * @param objects
+     * @param newObjects
+     */
+    public void autoUpdate(List<GameObject> objects, List<GameObject> newObjects) {
+        if (!autoPlay) return;
+
+        boolean dangerLeft = false, dangerRight = false;
+
+        double closestEnemyX = -1;
+        double closestDist = Double.MAX_VALUE;
+
+        for (GameObject obj : objects) {
+            if (obj instanceof Enemy) {
+                double dist = Math.abs(obj.getX() - this.x);
+                if (dist < closestDist) {
+                    closestDist = dist;
+                    closestEnemyX = obj.getX();
+                }
+            }
+        }
+
+        // uu tien ne dan truoc
+        for (GameObject obj : objects) {
+            if (obj instanceof EnemyBullet) {
+                double dx = obj.getX() - this.x;
+                double dy = obj.getY() - this.y;
+                if (Math.abs(dx) < 30 && dy > -50 && dy < 100) {
+                    if (dx < 0) dangerLeft = true;
+                    else dangerRight = true;
+                }
+            }
+        }
+
+        // di chuyen ve muc tieu
+        if (dangerLeft && !dangerRight) {
+            setMoveRight(true);
+            setMoveLeft(false);
+        } else if (dangerRight && !dangerLeft) {
+            setMoveLeft(true);
+            setMoveRight(false);
+        } else if (closestEnemyX != -1) {
+            // di chuyen de ban neu an toan
+            if (Math.abs(closestEnemyX - this.x) < 5) {
+                setMoveLeft(false);
+                setMoveRight(false);
+            } else if (closestEnemyX < this.x) {
+                setMoveLeft(true);
+                setMoveRight(false);
+            } else {
+                setMoveLeft(false);
+                setMoveRight(true);
+            }
+        } else {
+            setMoveLeft(false);
+            setMoveRight(false);
+        }
+
+        // ban lien tuc
+        if (intervalReadyToFire()) {
+            shoot(newObjects);
+        }
+    }
+
 }
