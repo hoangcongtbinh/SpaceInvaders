@@ -178,8 +178,13 @@ public class GameController {
                 enemyBulletCreate();
                 powerupCreate();
                 update();
-                playerInput();
                 objectCollision();
+
+                if (player.isAutoPlay()) {
+                    player.autoUpdate(gameObjects, gameObjects, bulletPool);
+                } else {
+                    playerInput();
+                }
 
                 for (GameObject object: gameObjects) {
                     object.update();
@@ -219,6 +224,11 @@ public class GameController {
             bulletCount++;
         }
 
+        if (pressedKeys.contains(KeyCode.P)) {
+            player.setAutoPlay(!player.isAutoPlay());
+            System.out.println("AI Mode: " + player.isAutoPlay());
+        }
+
         if (pressedKeys.contains(KeyCode.ESCAPE)) {
             showPausingScreen();
         }
@@ -233,6 +243,7 @@ public class GameController {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("gameover-view.fxml"));
             Stage currentStage = (Stage)(canvas).getScene().getWindow();
             Scene scene = new Scene(fxmlLoader.load(), 360, 600);
+            gameObjects.clear();
 
             SpaceShooter losingScreen = fxmlLoader.getController();
             losingScreen.scoreLabel.setText(String.format("Score: %d", score));

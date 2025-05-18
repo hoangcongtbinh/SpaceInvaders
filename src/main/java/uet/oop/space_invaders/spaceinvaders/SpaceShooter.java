@@ -87,6 +87,7 @@ public class SpaceShooter extends Application {
 
     @FXML
     private void closeWindow(javafx.event.ActionEvent event) throws IOException {
+        System.gc();
         Stage currentStage = (Stage)((javafx.scene.Node)event.getSource()).getScene().getWindow();
         currentStage.close();
     }
@@ -112,6 +113,7 @@ public class SpaceShooter extends Application {
 
     @FXML
     private void mainMenu(javafx.event.ActionEvent event) throws IOException {
+        System.gc();
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("hello-view.fxml"));
         Stage currentStage = (Stage)((javafx.scene.Node)event.getSource()).getScene().getWindow();
         currentStage.setScene(new Scene(fxmlLoader.load(), 360, 600));
