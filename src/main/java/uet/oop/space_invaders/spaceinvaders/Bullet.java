@@ -16,8 +16,9 @@ public class Bullet extends GameObject {
     // Movement speed of the bullet
     private static final double SPEED = 7;
 
-    // Flag to indicate if bullet should be removed
-    private boolean dead;
+    public Bullet() {
+        this(0, 0);
+    }
 
     /**
      * Constructs a uet.oop.space_invaders.spaceinvaders.Bullet at the given position.
@@ -31,6 +32,25 @@ public class Bullet extends GameObject {
         this.velocityY = -SPEED;
         this.dead = false;
     }
+
+    /**
+     * Set X coordinate for Bullet, supporting BulletPool.
+     *
+     * @param x coordinate.
+     */
+    void setX(int x) {
+        this.x = x;
+    }
+
+    /**
+     * Set Y coordinate for Bullet, supporting BulletPool.
+     *
+     * @param y coordinate.
+     */
+    void setY(int y) {
+        this.y = y;
+    }
+
 
     /**
      * Updates bullet position each frame.

@@ -28,15 +28,13 @@ public class Player extends GameObject {
     // Player image
     private final Image PLAYER_IMAGE = new Image(getClass().getResource("/player.png").toString());
 
-    // uet.oop.space_invaders.spaceinvaders.Player health
+    // Player health
     private int health;
 
-    // State flag for removal
-    private boolean dead;
-
-    //AI setting
+    // AI settings
     private boolean autoPlay = false;
     private int fireCooldown = 0;
+
 
     /**
      * Constructs a uet.oop.space_invaders.spaceinvaders.Player at the given position.
@@ -55,7 +53,7 @@ public class Player extends GameObject {
          * Returns the width of the player.
          */
         @Override
-        public double getWidth () {
+        public double getWidth() {
             // TODO: return width
             return WIDTH;
         }
@@ -64,7 +62,7 @@ public class Player extends GameObject {
          * Returns the height of the player.
          */
         @Override
-        public double getHeight () {
+        public double getHeight() {
             // TODO: return height
             return HEIGHT;
         }
@@ -72,7 +70,7 @@ public class Player extends GameObject {
         /**
          * Returns current health of the player.
          */
-        public int getHealth () {
+        public int getHealth() {
             // TODO: return health
             return health;
         }
@@ -80,7 +78,7 @@ public class Player extends GameObject {
         /**
          * Sets player's health.
          */
-        public void setHealth ( int health){
+        public void setHealth(int health) {
             // TODO: update health
             this.health = health;
             if (this.health <= 0) {
@@ -117,7 +115,6 @@ public class Player extends GameObject {
     @Override
     public void render(GraphicsContext gc) {
         // TODO: draw sprite or placeholder shape
-
         gc.drawImage(PLAYER_IMAGE, x - width / 2, y - height / 2, width, height);
     }
 
@@ -158,9 +155,11 @@ public class Player extends GameObject {
     /**
      * Shoots a bullet from the player.
      */
-    public void shoot(List<GameObject> newObjects) {
+    public void shoot(List<GameObject> newObjects, ObjectPool<Bullet> objectPool) {
         // TODO: create and add new uet.oop.space_invaders.spaceinvaders.Bullet at (x, y - HEIGHT/2)
-        Bullet bullet = new Bullet(x,y - height/2);
+        Bullet bullet = objectPool.get();
+        bullet.x = this.x;
+        bullet.y = this.y - height / 2;
         newObjects.add(bullet);
     }
 
@@ -194,12 +193,7 @@ public class Player extends GameObject {
         return false;
     }
 
-    /**
-     * AI promax.
-     * @param objects
-     * @param newObjects
-     */
-    public void autoUpdate(List<GameObject> objects, List<GameObject> newObjects) {
+    public void autoUpdate(List<GameObject> objects, List<GameObject> newObjects, ObjectPool<Bullet> objectPool) {
         if (!autoPlay) return;
 
         boolean dangerLeft = false, dangerRight = false;
@@ -255,8 +249,7 @@ public class Player extends GameObject {
 
         // ban lien tuc
         if (intervalReadyToFire()) {
-            shoot(newObjects);
+            shoot(newObjects, objectPool);
         }
     }
-
 }

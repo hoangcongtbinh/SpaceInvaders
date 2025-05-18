@@ -9,6 +9,7 @@ import java.util.List;
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -17,35 +18,48 @@ import java.util.Random;
 import java.util.Set;
 
 import javafx.scene.control.Label;
+import javafx.scene.layout.Pane;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 import javafx.scene.image.ImageView;
 
 public class GameController {
-    public static final int ENEMY_COUNT = 15;
-    public static final int POWERUP_COUNT = 3;
+    public static final int ENEMY_LIMIT = 15;
+    public static final int POWERUP_LIMIT = 3;
+    public static final int BULLET_LIMIT = 25;
 
     public static final int SPAWN_INTERVAL = 60;
     public static final int POWERUP_INTERVAL = 120;
     public static final int BULLET_INTERVAL = 140;
-    public static final int FIRE_INTERVAL = 10;
+    public static final int FIRE_INTERVAL = 7;
 
     private int enemyCount = 2;
     private int powerupCount = 0;
-    private int enemyBulletCount = 0;
+    private int bulletCount = 0;
 
     private List<GameObject> gameObjects;
-
+    private ObjectPool<Enemy> enemyPool;
+    private ObjectPool<Bullet> bulletPool;
+    private ObjectPool<EnemyBullet> enemyBulletPool;
+    private ObjectPool<PowerUp> powerUpPool;
 
     private GraphicsContext gc;
     private AnimationTimer gameLoop;
+    private Random r;
 
     private int interval = 0;
+    private int lastInterval = 0;
     private Player player;
     private int score = 0;
     private int health = 3;
+
+    @FXML
+    private Pane game;
+    private Parent pause_view;
+    private SpaceShooter main;
 
     @FXML
     private Canvas canvas;
@@ -64,28 +78,49 @@ public class GameController {
     }
 
     @FXML
-    public void initialize() {
+    public void initialize() throws IOException {
         this.gc = canvas.getGraphicsContext2D();
         this.gameObjects = new ArrayList<>();
         this.player = new Player(canvas.getWidth() / 2, canvas.getHeight() - 50);
+
+        enemyPool = new ObjectPool<>(Enemy::new);
+        bulletPool = new ObjectPool<>(Bullet::new);
+        enemyBulletPool = new ObjectPool<>(EnemyBullet::new);
+        powerUpPool = new ObjectPool<>(PowerUp::new);
+
         gameObjects.add(player);
         gameObjects.add(new Enemy(100, 200));
         gameObjects.add(new Enemy(200, -20));
+        this.r = new Random();
+
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("pause-view.fxml"));
+            pause_view = fxmlLoader.load();
+            main = fxmlLoader.getController();
+            main.setGame(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         start();
     }
 
     public void enemyCreate() {
-        if (interval % SPAWN_INTERVAL == 0 && enemyCount < ENEMY_COUNT) {
-            Random r = new Random();
-            gameObjects.add(new Enemy(r.nextInt(360 - Enemy.WIDTH), r.nextInt(10)));
+        if (interval % SPAWN_INTERVAL == 0 && enemyCount < ENEMY_LIMIT) {
+            Enemy enemy = enemyPool.get();
+            enemy.x = r.nextInt(360 - Enemy.WIDTH);
+            enemy.y = r.nextInt(10);
+            gameObjects.add(enemy);
             enemyCount++;
         }
     }
 
     public void powerupCreate() {
-        if (interval % POWERUP_INTERVAL == 0 && powerupCount < POWERUP_COUNT) {
-            Random r = new Random();
-            gameObjects.add(new PowerUp(r.nextInt(360 - PowerUp.WIDTH), r.nextInt(10)));
+        if (interval % POWERUP_INTERVAL == 0 && powerupCount < POWERUP_LIMIT) {
+            PowerUp powerUp = powerUpPool.get();
+            powerUp.x = r.nextInt(360 - PowerUp.WIDTH);
+            powerUp.y = r.nextInt(10);
+            gameObjects.add(powerUp);
             powerupCount++;
         }
 
@@ -96,9 +131,10 @@ public class GameController {
             List<GameObject> bullets = new ArrayList<>();
             for (GameObject enemy: gameObjects) {
                 if (enemy instanceof Enemy) {
-                    EnemyBullet enemyBullet = new EnemyBullet(enemy.getX(), enemy.getY());
+                    EnemyBullet enemyBullet = enemyBulletPool.get();
+                    enemyBullet.x = enemy.getX();
+                    enemyBullet.y = enemy.getY();
                     bullets.add(enemyBullet);
-                    enemyBulletCount++;
                 }
             }
             gameObjects.addAll(bullets);
@@ -111,16 +147,27 @@ public class GameController {
         while (it.hasNext()) {
             GameObject obj = it.next();
             if (obj.isDead()) {
-                if (obj instanceof Enemy) enemyCount--;
-                else if (obj instanceof PowerUp) powerupCount--;
-                else if (obj instanceof EnemyBullet) enemyBulletCount--;
+                if (obj instanceof Enemy) {
+                    enemyCount--;
+                    enemyPool.release((Enemy) obj);
+                }
+                else if (obj instanceof PowerUp) {
+                    powerupCount--;
+                    powerUpPool.release((PowerUp) obj);
+                }
+                else if (obj instanceof EnemyBullet) {
+                    enemyBulletPool.release((EnemyBullet) obj);
+                }
+                else if (obj instanceof Bullet) {
+                    bulletCount--;
+                    bulletPool.release((Bullet) obj);
+                }
                 it.remove();
             }
         }
     }
 
     public void start() {
-
         gameLoop = new AnimationTimer() {
             @Override
             public void handle(long now) {
@@ -131,14 +178,13 @@ public class GameController {
                 enemyBulletCreate();
                 powerupCreate();
                 update();
+                objectCollision();
+
                 if (player.isAutoPlay()) {
-                    player.autoUpdate(gameObjects, gameObjects);
+                    player.autoUpdate(gameObjects, gameObjects, bulletPool);
                 } else {
                     playerInput();
-                    playerMovement();
                 }
-                objectCollision();
-                System.gc();
 
                 for (GameObject object: gameObjects) {
                     object.update();
@@ -153,38 +199,43 @@ public class GameController {
 
     // Keyboard input
     @FXML
-    private final Set<KeyCode> pressedKeys = new HashSet<>();
+    public final Set<KeyCode> pressedKeys = new HashSet<>();
 
-    private void playerInput() {
-        canvas.getScene().setOnKeyPressed(key -> {
-            pressedKeys.add(key.getCode());
+    @FXML
+    public void onKeyPressed(KeyEvent e) {
+        pressedKeys.add(e.getCode());
+    }
 
-
-            //Phim P de bat AI
-            if (key.getCode() == KeyCode.P) {
-                player.setAutoPlay(!player.isAutoPlay());
-                System.out.println("AI Mode: " + player.isAutoPlay());
-            }
-        });
-
-        canvas.getScene().setOnKeyReleased(key -> {
-            pressedKeys.remove(key.getCode());
-        });
+    @FXML
+    public void onKeyReleased(KeyEvent e) {
+        pressedKeys.remove(e.getCode());
     }
 
     // Player movement
-    private void playerMovement() {
+    public void playerInput() {
         player.setMoveForward(pressedKeys.contains(KeyCode.W));
         player.setMoveLeft(pressedKeys.contains(KeyCode.A));
         player.setMoveBackward(pressedKeys.contains(KeyCode.S));
         player.setMoveRight(pressedKeys.contains(KeyCode.D));
 
-        if (pressedKeys.contains(KeyCode.SPACE) && interval % FIRE_INTERVAL == 0) {
-            player.shoot(gameObjects);
+        if (pressedKeys.contains(KeyCode.SPACE) && bulletCount < BULLET_LIMIT && (interval - lastInterval > FIRE_INTERVAL)) {
+            lastInterval = interval;
+            player.shoot(gameObjects, bulletPool);
+            bulletCount++;
+        }
+
+        if (pressedKeys.contains(KeyCode.P)) {
+            player.setAutoPlay(!player.isAutoPlay());
+            System.out.println("AI Mode: " + player.isAutoPlay());
+        }
+
+        if (pressedKeys.contains(KeyCode.ESCAPE)) {
+            showPausingScreen();
         }
     }
 
-    private void showLosingScreen() {
+    public void showLosingScreen() {
+        System.gc();
         // TODO: display Game Over screen with score and buttons
         try {
             player.setDead(true);
@@ -192,15 +243,29 @@ public class GameController {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("gameover-view.fxml"));
             Stage currentStage = (Stage)(canvas).getScene().getWindow();
             Scene scene = new Scene(fxmlLoader.load(), 360, 600);
+            gameObjects.clear();
 
             SpaceShooter losingScreen = fxmlLoader.getController();
             losingScreen.scoreLabel.setText(String.format("Score: %d", score));
 
-            System.gc();
             currentStage.setScene(scene);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void showPausingScreen() {
+        System.gc();
+        gameLoop.stop();
+
+        if (!game.getChildren().contains(pause_view)) {
+            game.getChildren().add(pause_view);
+        }
+    }
+
+    public void returnGame() {
+        game.getChildren().remove(pause_view);
+        gameLoop.start();
     }
 
     // Collision

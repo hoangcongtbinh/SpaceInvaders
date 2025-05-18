@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox alignment="CENTER" prefHeight="600" prefWidth="360" spacing="20.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="uet.oop.space_invaders.spaceinvaders.SpaceShooter">
+   <children>
+      <Pane prefHeight="600.0" prefWidth="360.0">
+         <children>
+             <Button layoutX="108.0" layoutY="393.0" onAction="#mainMenu" prefHeight="35.0" prefWidth="145.0" style="-fx-background-color: white; -fx-border-radius: 20; -fx-border-width: 1; -fx-background-radius: 20;" text="Main Menu" textAlignment="CENTER">
+                 <font>
+                     <Font name="System Bold" size="15.0" />
+                 </font></Button>
+             <Button layoutX="108.0" layoutY="445.0" onAction="#quit" prefHeight="35.0" prefWidth="145.0" style="-fx-background-color: red; -fx-border-radius: 20; -fx-border-width: 1; -fx-background-radius: 20;" text="Exit Game" textAlignment="CENTER" textFill="WHITE">
+                 <font>
+                     <Font name="System Bold" size="15.0" />
+                 </font></Button>
+            <Label layoutX="121.0" layoutY="113.0" text="PAUSED" textFill="#ffc800">
+               <font>
+                  <Font name="System Bold" size="31.0" />
+               </font>
+            </Label>
+            <Button layoutX="108.0" layoutY="341.0" onAction="#startGame" prefHeight="35.0" prefWidth="145.0" style="-fx-background-color: orange; -fx-border-radius: 20; -fx-border-width: 1; -fx-background-radius: 20;" text="Restart" textAlignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Button>
+            <Button cancelButton="true" defaultButton="true" layoutX="108.0" layoutY="289.0" onAction="#returnGame" prefHeight="35.0" prefWidth="145.0" style="-fx-background-color: lightgreen; -fx-border-radius: 20; -fx-border-width: 1; -fx-background-radius: 20;" text="Resume" textAlignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Button>
+         </children>
+      </Pane>
+   </children>
+</VBox>
