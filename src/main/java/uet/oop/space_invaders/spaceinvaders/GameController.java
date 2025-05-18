@@ -9,6 +9,7 @@ import java.util.List;
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -17,6 +18,7 @@ import java.util.Random;
 import java.util.Set;
 
 import javafx.scene.control.Label;
+import javafx.scene.layout.Pane;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -32,7 +34,7 @@ public class GameController {
     public static final int SPAWN_INTERVAL = 60;
     public static final int POWERUP_INTERVAL = 120;
     public static final int BULLET_INTERVAL = 140;
-    public static final int FIRE_INTERVAL = 10;
+    public static final int FIRE_INTERVAL = 7;
 
     private int enemyCount = 2;
     private int powerupCount = 0;
@@ -55,6 +57,11 @@ public class GameController {
     private int health = 3;
 
     @FXML
+    private Pane game;
+    private Parent pause_view;
+    private SpaceShooter main;
+
+    @FXML
     private Canvas canvas;
 
     @FXML
@@ -71,7 +78,7 @@ public class GameController {
     }
 
     @FXML
-    public void initialize() {
+    public void initialize() throws IOException {
         this.gc = canvas.getGraphicsContext2D();
         this.gameObjects = new ArrayList<>();
         this.player = new Player(canvas.getWidth() / 2, canvas.getHeight() - 50);
@@ -85,6 +92,16 @@ public class GameController {
         gameObjects.add(new Enemy(100, 200));
         gameObjects.add(new Enemy(200, -20));
         this.r = new Random();
+
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("pause-view.fxml"));
+            pause_view = fxmlLoader.load();
+            main = fxmlLoader.getController();
+            main.setGame(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         start();
     }
 
@@ -177,20 +194,20 @@ public class GameController {
 
     // Keyboard input
     @FXML
-    private final Set<KeyCode> pressedKeys = new HashSet<>();
+    public final Set<KeyCode> pressedKeys = new HashSet<>();
 
     @FXML
-    private void onKeyPressed(KeyEvent e) {
+    public void onKeyPressed(KeyEvent e) {
         pressedKeys.add(e.getCode());
     }
 
     @FXML
-    private void onKeyReleased(KeyEvent e) {
+    public void onKeyReleased(KeyEvent e) {
         pressedKeys.remove(e.getCode());
     }
 
     // Player movement
-    private void playerInput() {
+    public void playerInput() {
         player.setMoveForward(pressedKeys.contains(KeyCode.W));
         player.setMoveLeft(pressedKeys.contains(KeyCode.A));
         player.setMoveBackward(pressedKeys.contains(KeyCode.S));
@@ -201,9 +218,14 @@ public class GameController {
             player.shoot(gameObjects, bulletPool);
             bulletCount++;
         }
+
+        if (pressedKeys.contains(KeyCode.ESCAPE)) {
+            showPausingScreen();
+        }
     }
 
-    private void showLosingScreen() {
+    public void showLosingScreen() {
+        System.gc();
         // TODO: display Game Over screen with score and buttons
         try {
             player.setDead(true);
@@ -219,6 +241,20 @@ public class GameController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void showPausingScreen() {
+        System.gc();
+        gameLoop.stop();
+
+        if (!game.getChildren().contains(pause_view)) {
+            game.getChildren().add(pause_view);
+        }
+    }
+
+    public void returnGame() {
+        game.getChildren().remove(pause_view);
+        gameLoop.start();
     }
 
     // Collision

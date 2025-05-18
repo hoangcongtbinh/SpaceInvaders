@@ -1,18 +1,13 @@
 package uet.oop.space_invaders.spaceinvaders;
 
-//import java.util.Random;
-//import java.util.Set;
 
-//import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-//import javafx.scene.canvas.Canvas;
-//import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
-//import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -27,15 +22,23 @@ public class SpaceShooter extends Application {
 
     public static final int WIDTH = 360;
     public static final int HEIGHT = 600;
-    public static int numLives = 3;
 
-    private int score;
-    private boolean bossExists;
-    private boolean reset;
-    private boolean levelUpShown;
-    private boolean gameRunning;
+    private GameController game;
+
+//    public static int numLives = 3;
+
+//    private int score;
+//    private boolean bossExists;
+//    private boolean reset;
+//    private boolean levelUpShown;
+//    private boolean gameRunning;
 
     // TODO: Declare UI labels, lists of GameObjects, player, root Pane, Scene, Stage
+
+    public void setGame(GameController game) {
+        this.game = game;
+    }
+
     @FXML
     protected Label scoreLabel;
 
@@ -67,60 +70,7 @@ public class SpaceShooter extends Application {
 
     /**
      * <li> All of <code> Game Logics</code> and <code>States</code> have been moved to <code>GameController.java</code> to ensure clarity and expand ability. </li>
-     * <li> <strong> Sorry for the inconvenience! </strong> </li>
      */
-
-    // Game mechanics stubs
-
-    private void spawnEnemy() {
-        // TODO: implement enemy and boss spawn logic based on score
-
-    }
-
-    private void spawnPowerUp() {
-        // TODO: implement power-up spawn logic
-
-    }
-
-    private void spawnEnemyBullet() {
-
-    }
-
-    private void spawnBossEnemy() {
-        // TODO: implement boss-only spawn logic
-    }
-
-    private void checkCollisions() {
-        // TODO: detect and handle collisions between bullets, enemies, power-ups, player
-    }
-
-    private void checkEnemiesReachingBottom() {
-        // TODO: handle enemies reaching bottom of screen (reduce lives, respawn, reset game)
-    }
-
-    // UI and game state methods
-
-    private void showLosingScreen() {
-        // TODO: display Game Over screen with score and buttons
-    }
-
-    private void restartGame() {
-        // TODO: reset gameObjects, lives, score and switch back to game scene
-    }
-
-    private void resetGame() {
-        // TODO: stop game loop and call showLosingScreen
-    }
-
-    private void initEventHandlers(Scene scene) {
-        // TODO: set OnKeyPressed and OnKeyReleased for movement and shooting
-
-    }
-
-    private Pane createMenu() {
-        // TODO: build and return main menu pane with styled buttons
-        return new Pane();
-    }
 
     @FXML
     private void showInstructions() throws IOException {
@@ -146,13 +96,18 @@ public class SpaceShooter extends Application {
     }
 
     @FXML
+    private void returnGame(ActionEvent event) {
+        game.returnGame();
+    }
+
+    @FXML
     private void startGame(javafx.event.ActionEvent event) throws IOException {
         // TODO: set gameRunning to true and switch to game scene
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("game-view.fxml"));
         Stage currentStage = (Stage)((javafx.scene.Node)event.getSource()).getScene().getWindow();
         currentStage.setScene(new Scene(fxmlLoader.load(), 360, 600));
 
-        gameRunning = true;
+        // gameRunning = true;
     }
 
     @FXML
