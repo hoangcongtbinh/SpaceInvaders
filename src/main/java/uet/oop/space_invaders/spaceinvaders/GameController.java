@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import javafx.animation.AnimationTimer;
+import javafx.animation.PauseTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -16,6 +17,7 @@ import javafx.scene.canvas.GraphicsContext;
 
 import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
@@ -27,17 +29,20 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import javafx.scene.image.ImageView;
+import javafx.util.Duration;
 
 public class GameController {
-    public static final int ENEMY_LIMIT = 15;
+    public static int ENEMY_LIMIT = 10;
     public static final int POWERUP_LIMIT = 3;
     public static final int BULLET_LIMIT = 25;
+    public static int ENEMY_PER_LAP = 3;
 
-    /* 60 intervals = 1 second */
-    public static final int SPAWN_INTERVAL = 60;
-    public static final int POWERUP_INTERVAL = 480;
-    public static final int BULLET_INTERVAL = 240;
-    public static int FIRE_INTERVAL = 10;
+    /* Depends on Screen Refresh Rate */
+    public static int SPAWN_INTERVAL = 120;
+    public static int POWERUP_INTERVAL = 480;
+    public static int BULLET_INTERVAL = 240;
+    public static int FIRE_INTERVAL = 7;
+    public static final int EXPLOSION_EDGE = 60;
 
     public static final int NOTIFICATION_TIMEOUT = 120;
 
@@ -56,6 +61,11 @@ public class GameController {
     private AudioClip reward = new AudioClip(getClass().getResource("/reward.wav").toString());
     private AudioClip target = new AudioClip(getClass().getResource("/target.wav").toString());
 
+    // Image Resources
+    private Image HEART = new Image(getClass().getResource("/heart.png").toString());
+    private Image BAD_HEART = new Image(getClass().getResource("/badheart.png").toString());
+    private Image EXPLOSION_IMAGE = new Image(getClass().getResource("/explosion.png").toString());
+
     private GraphicsContext gc;
     private AnimationTimer gameLoop;
     private Random r;
@@ -67,30 +77,26 @@ public class GameController {
     private Player player;
     private int score = 0;
     private int health = 3;
+    private int level = 1; // max is 5, a step is 2500
 
-    @FXML
-    private Pane game;
+    @FXML private Pane game;
 
     private Parent pause_view;
     private SpaceShooter main;
 
-    @FXML
-    private Canvas canvas;
+    @FXML private Canvas canvas;
 
-    @FXML
-    private Label information;
+    @FXML private Label information;
 
-    @FXML
-    private Label autoPlay;
+    @FXML private Label autoPlay;
 
-    @FXML
-    private Label notification;
+    @FXML private Label notification;
 
-    @FXML
-    private ImageView heart2;
+    @FXML private ImageView heart1;
 
-    @FXML
-    private ImageView heart3;
+    @FXML private ImageView heart2;
+
+    @FXML private ImageView heart3;
 
     public GameController() {
 
@@ -125,11 +131,13 @@ public class GameController {
     }
 
     public void objectSpawn() {
-        if (time % SPAWN_INTERVAL == 0 && enemyCount < ENEMY_LIMIT) {
+        int enemyCreated = 0;
+        while (time % SPAWN_INTERVAL == 0 && enemyCount < ENEMY_LIMIT && enemyCreated < ENEMY_PER_LAP) {
             Enemy enemy = enemyPool.get();
             enemy.x = r.nextInt(360 - Enemy.WIDTH);
             enemy.y = r.nextInt(10);
             gameObjects.add(enemy);
+            enemyCreated++;
             enemyCount++;
         }
 
@@ -187,17 +195,19 @@ public class GameController {
     }
 
     public void start() {
-        notification.setVisible(false);
+        pushNotification("Press P to enable AI", "lightgreen");
         gameLoop = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                information.setText(String.format("Score: %d\nFire: %d", score, FIRE_INTERVAL));
+                information.setText(String.format("Score: %d", score));
                 gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight()); // Reset frame
 
                 objectSpawn();
                 playerInput();
                 update();
                 objectCollision();
+
+                levelManagement();
 
                 if (player.isAutoPlay()) {
                     player.autoUpdate(gameObjects, gameObjects, bulletPool);
@@ -259,6 +269,7 @@ public class GameController {
     public void showLosingScreen() {
         System.gc();
         // TODO: display Game Over screen with score and buttons
+        System.out.printf("Score: %d\n", score);
         try {
             player.setDead(true);
             gameLoop.stop();
@@ -302,17 +313,9 @@ public class GameController {
     // Health management
     public void setHealth(int health) {
         this.health = health;
-        switch (this.health) {
-            case 1:
-                heart2.setImage(new Image(getClass().getResource("/badheart.png").toString()));
-                heart3.setImage(new Image(getClass().getResource("/badheart.png").toString()));
-            case 2:
-                heart2.setImage(new Image(getClass().getResource("/heart.png").toString()));
-                heart3.setImage(new Image(getClass().getResource("/badheart.png").toString()));
-            case 3:
-                heart2.setImage(new Image(getClass().getResource("/heart.png").toString()));
-                heart3.setImage(new Image(getClass().getResource("/heart.png").toString()));
-        }
+        heart1.setImage((this.health >= 1)? HEART : BAD_HEART);
+        heart2.setImage((this.health >= 2)? HEART : BAD_HEART);
+        heart3.setImage((this.health == 3)? HEART : BAD_HEART);
     }
 
     // Collision
@@ -322,12 +325,22 @@ public class GameController {
             // Player side
             if ((object instanceof Enemy && (player.isColliding(object) || object.isCollidingWithBottom(canvas.getHeight()) == true)) ||
                     (object instanceof EnemyBullet && player.isColliding(object) && health == 1)) {
+                gameLoop.stop();
                 explosion.play();
-                showLosingScreen();
+                player.setDead(true);
+
+                gc.drawImage(EXPLOSION_IMAGE, player.x - EXPLOSION_EDGE / 2, player.y - EXPLOSION_EDGE / 2, EXPLOSION_EDGE, EXPLOSION_EDGE);
+                setHealth(0);
+
+                PauseTransition delay = new PauseTransition(Duration.seconds(3));
+                delay.setOnFinished(event -> showLosingScreen());
+                delay.play();
+
+                break;
             } else if (object instanceof PowerUp && player.isColliding(object)) {
                 reward.play();
                 ((PowerUp) object).setDead(true);
-                int reward = r.nextInt(10);
+                int reward = r.nextInt(11);
                 if (reward <= 7) {
                     pushNotification("Score +100", "lightgreen");
                     score += 100;
@@ -353,7 +366,7 @@ public class GameController {
             } else if (object instanceof EnemyBullet && player.isColliding(object)) {
                 target.play();
                 ((EnemyBullet) object).setDead(true);
-                setHealth(health - 1);
+                setHealth(this.health - 1);
             }
 
             // Enemy side
@@ -367,6 +380,22 @@ public class GameController {
                     }
                 }
             }
+        }
+    }
+
+    public void levelManagement() {
+        if (score > level * 2500) {
+            level++;
+            if (level == 6) {
+                pushNotification(String.format("Boss is Coming!", level), "orange");
+                return;
+            }
+            pushNotification(String.format("Level %d", level), "orange");
+            ENEMY_LIMIT += 5;
+            ENEMY_PER_LAP ++;
+            SPAWN_INTERVAL -= 10;
+            POWERUP_INTERVAL += 10;
+            BULLET_INTERVAL -= 20;
         }
     }
 }
