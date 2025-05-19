@@ -10,6 +10,7 @@ module uet.oop.space_invaders.spaceinvaders {
     requires org.kordamp.bootstrapfx.core;
     requires com.almasb.fxgl.all;
     requires java.desktop;
+    requires javafx.media;
 
     opens uet.oop.space_invaders.spaceinvaders to javafx.fxml;
     exports uet.oop.space_invaders.spaceinvaders;

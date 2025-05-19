@@ -2,6 +2,7 @@ package uet.oop.space_invaders.spaceinvaders;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 
 import java.util.List;
@@ -35,6 +36,8 @@ public class Player extends GameObject {
     private boolean autoPlay = false;
     private int fireCooldown = 0;
 
+    // Sound effect
+    private AudioClip gun = new AudioClip(getClass().getResource("/gun.wav").toString());
 
     /**
      * Constructs a uet.oop.space_invaders.spaceinvaders.Player at the given position.
@@ -157,6 +160,7 @@ public class Player extends GameObject {
      */
     public void shoot(List<GameObject> newObjects, ObjectPool<Bullet> objectPool) {
         // TODO: create and add new uet.oop.space_invaders.spaceinvaders.Bullet at (x, y - HEIGHT/2)
+        gun.play();
         Bullet bullet = objectPool.get();
         bullet.x = this.x;
         bullet.y = this.y - height / 2;
@@ -186,7 +190,7 @@ public class Player extends GameObject {
      */
     private boolean intervalReadyToFire() {
         if (fireCooldown == 0) {
-            fireCooldown = 10;
+            fireCooldown = GameController.FIRE_INTERVAL;
             return true;
         }
         fireCooldown--;
@@ -199,17 +203,21 @@ public class Player extends GameObject {
         boolean dangerLeft = false, dangerRight = false;
 
         double closestEnemyX = -1;
-        double closestDist = Double.MAX_VALUE;
+
+        double closestDistY = Double.MAX_VALUE;
 
         for (GameObject obj : objects) {
             if (obj instanceof Enemy) {
-                double dist = Math.abs(obj.getX() - this.x);
-                if (dist < closestDist) {
-                    closestDist = dist;
+                double distY = Math.abs(600 - obj.getY());
+                if (distY < closestDistY) {
+                    closestDistY = distY;
                     closestEnemyX = obj.getX();
                 }
             }
         }
+
+        // lui ve sau de ban
+        this.setMoveBackward(!this.isCollidingWithBottom(600));
 
         // uu tien ne dan truoc
         for (GameObject obj : objects) {
