@@ -2,6 +2,7 @@ package uet.oop.space_invaders.spaceinvaders;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 
 import java.util.List;
@@ -35,6 +36,8 @@ public class Player extends GameObject {
     private boolean autoPlay = false;
     private int fireCooldown = 0;
 
+    // Sound effect
+    private AudioClip gun = new AudioClip(getClass().getResource("/gun.wav").toString());
 
     /**
      * Constructs a uet.oop.space_invaders.spaceinvaders.Player at the given position.
@@ -157,6 +160,7 @@ public class Player extends GameObject {
      */
     public void shoot(List<GameObject> newObjects, ObjectPool<Bullet> objectPool) {
         // TODO: create and add new uet.oop.space_invaders.spaceinvaders.Bullet at (x, y - HEIGHT/2)
+        gun.play();
         Bullet bullet = objectPool.get();
         bullet.x = this.x;
         bullet.y = this.y - height / 2;

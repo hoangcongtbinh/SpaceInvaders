@@ -22,6 +22,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.media.AudioClip;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import javafx.scene.image.ImageView;
@@ -31,10 +33,13 @@ public class GameController {
     public static final int POWERUP_LIMIT = 3;
     public static final int BULLET_LIMIT = 25;
 
+    /* 60 intervals = 1 second */
     public static final int SPAWN_INTERVAL = 60;
-    public static final int POWERUP_INTERVAL = 120;
-    public static final int BULLET_INTERVAL = 140;
-    public static final int FIRE_INTERVAL = 7;
+    public static final int POWERUP_INTERVAL = 480;
+    public static final int BULLET_INTERVAL = 240;
+    public static int FIRE_INTERVAL = 10;
+
+    public static final int NOTIFICATION_TIMEOUT = 120;
 
     private int enemyCount = 2;
     private int powerupCount = 0;
@@ -46,18 +51,26 @@ public class GameController {
     private ObjectPool<EnemyBullet> enemyBulletPool;
     private ObjectPool<PowerUp> powerUpPool;
 
+    // gun soundEffect in Player.java
+    private AudioClip explosion = new AudioClip(getClass().getResource("/explosion.wav").toString());
+    private AudioClip reward = new AudioClip(getClass().getResource("/reward.wav").toString());
+    private AudioClip target = new AudioClip(getClass().getResource("/target.wav").toString());
+
     private GraphicsContext gc;
     private AnimationTimer gameLoop;
     private Random r;
 
-    private int interval = 0;
-    private int lastInterval = 0;
+    private int time = 0;
+    private int lastTime = 0;
+    private int notifyShownTime = 0;
+
     private Player player;
     private int score = 0;
     private int health = 3;
 
     @FXML
     private Pane game;
+
     private Parent pause_view;
     private SpaceShooter main;
 
@@ -66,6 +79,12 @@ public class GameController {
 
     @FXML
     private Label information;
+
+    @FXML
+    private Label autoPlay;
+
+    @FXML
+    private Label notification;
 
     @FXML
     private ImageView heart2;
@@ -105,18 +124,16 @@ public class GameController {
         start();
     }
 
-    public void enemyCreate() {
-        if (interval % SPAWN_INTERVAL == 0 && enemyCount < ENEMY_LIMIT) {
+    public void objectSpawn() {
+        if (time % SPAWN_INTERVAL == 0 && enemyCount < ENEMY_LIMIT) {
             Enemy enemy = enemyPool.get();
             enemy.x = r.nextInt(360 - Enemy.WIDTH);
             enemy.y = r.nextInt(10);
             gameObjects.add(enemy);
             enemyCount++;
         }
-    }
 
-    public void powerupCreate() {
-        if (interval % POWERUP_INTERVAL == 0 && powerupCount < POWERUP_LIMIT) {
+        if (time % POWERUP_INTERVAL == 0 && powerupCount < POWERUP_LIMIT) {
             PowerUp powerUp = powerUpPool.get();
             powerUp.x = r.nextInt(360 - PowerUp.WIDTH);
             powerUp.y = r.nextInt(10);
@@ -124,10 +141,7 @@ public class GameController {
             powerupCount++;
         }
 
-    }
-
-    public void enemyBulletCreate() {
-        if (interval % BULLET_INTERVAL == 0) {
+        if (time % BULLET_INTERVAL == 0) {
             List<GameObject> bullets = new ArrayList<>();
             for (GameObject enemy: gameObjects) {
                 if (enemy instanceof Enemy) {
@@ -165,25 +179,31 @@ public class GameController {
                 it.remove();
             }
         }
+
+        /* Manage notification */
+        if (time - notifyShownTime > NOTIFICATION_TIMEOUT && notification.isVisible()) {
+            notification.setVisible(false);
+        }
     }
 
     public void start() {
+        notification.setVisible(false);
         gameLoop = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                information.setText(String.format("Score: %d", score));
+                information.setText(String.format("Score: %d\nFire: %d", score, FIRE_INTERVAL));
                 gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight()); // Reset frame
 
-                enemyCreate();
-                enemyBulletCreate();
-                powerupCreate();
+                objectSpawn();
+                playerInput();
                 update();
                 objectCollision();
 
                 if (player.isAutoPlay()) {
                     player.autoUpdate(gameObjects, gameObjects, bulletPool);
+                    autoPlay.setVisible(true);
                 } else {
-                    playerInput();
+                    autoPlay.setVisible(false);
                 }
 
                 for (GameObject object: gameObjects) {
@@ -191,7 +211,7 @@ public class GameController {
                     object.render(gc);
                 }
 
-                interval++;
+                time++;
             }
         };
         gameLoop.start();
@@ -204,6 +224,11 @@ public class GameController {
     @FXML
     public void onKeyPressed(KeyEvent e) {
         pressedKeys.add(e.getCode());
+
+        if (pressedKeys.contains(KeyCode.P)) {
+            player.setAutoPlay(!player.isAutoPlay());
+            System.out.println("AI Mode: " + player.isAutoPlay());
+        }
     }
 
     @FXML
@@ -213,20 +238,17 @@ public class GameController {
 
     // Player movement
     public void playerInput() {
-        player.setMoveForward(pressedKeys.contains(KeyCode.W));
-        player.setMoveLeft(pressedKeys.contains(KeyCode.A));
-        player.setMoveBackward(pressedKeys.contains(KeyCode.S));
-        player.setMoveRight(pressedKeys.contains(KeyCode.D));
+        if (!player.isAutoPlay()) {
+            player.setMoveForward(pressedKeys.contains(KeyCode.W) || pressedKeys.contains(KeyCode.UP));
+            player.setMoveLeft(pressedKeys.contains(KeyCode.A) || pressedKeys.contains(KeyCode.LEFT));
+            player.setMoveBackward(pressedKeys.contains(KeyCode.S) || pressedKeys.contains(KeyCode.DOWN));
+            player.setMoveRight(pressedKeys.contains(KeyCode.D) || pressedKeys.contains(KeyCode.RIGHT));
 
-        if (pressedKeys.contains(KeyCode.SPACE) && bulletCount < BULLET_LIMIT && (interval - lastInterval > FIRE_INTERVAL)) {
-            lastInterval = interval;
-            player.shoot(gameObjects, bulletPool);
-            bulletCount++;
-        }
-
-        if (pressedKeys.contains(KeyCode.P)) {
-            player.setAutoPlay(!player.isAutoPlay());
-            System.out.println("AI Mode: " + player.isAutoPlay());
+            if (pressedKeys.contains(KeyCode.SPACE) && bulletCount < BULLET_LIMIT && (time - lastTime > FIRE_INTERVAL)) {
+                lastTime = time;
+                player.shoot(gameObjects, bulletPool);
+                bulletCount++;
+            }
         }
 
         if (pressedKeys.contains(KeyCode.ESCAPE)) {
@@ -268,6 +290,31 @@ public class GameController {
         gameLoop.start();
     }
 
+    // Push notification
+    public void pushNotification(String body, String color) {
+        notifyShownTime = time;
+        notification.setVisible(true);
+        notification.setText(body);
+        notification.setStyle("-fx-background-color: " + color + ";"
+                + "-fx-background-radius: 20;");
+    }
+
+    // Health management
+    public void setHealth(int health) {
+        this.health = health;
+        switch (this.health) {
+            case 1:
+                heart2.setImage(new Image(getClass().getResource("/badheart.png").toString()));
+                heart3.setImage(new Image(getClass().getResource("/badheart.png").toString()));
+            case 2:
+                heart2.setImage(new Image(getClass().getResource("/heart.png").toString()));
+                heart3.setImage(new Image(getClass().getResource("/badheart.png").toString()));
+            case 3:
+                heart2.setImage(new Image(getClass().getResource("/heart.png").toString()));
+                heart3.setImage(new Image(getClass().getResource("/heart.png").toString()));
+        }
+    }
+
     // Collision
     @FXML
     public void objectCollision() {
@@ -275,21 +322,45 @@ public class GameController {
             // Player side
             if ((object instanceof Enemy && (player.isColliding(object) || object.isCollidingWithBottom(canvas.getHeight()) == true)) ||
                     (object instanceof EnemyBullet && player.isColliding(object) && health == 1)) {
-                    showLosingScreen();
+                explosion.play();
+                showLosingScreen();
             } else if (object instanceof PowerUp && player.isColliding(object)) {
-                score += 100;
+                reward.play();
                 ((PowerUp) object).setDead(true);
+                int reward = r.nextInt(10);
+                if (reward <= 7) {
+                    pushNotification("Score +100", "lightgreen");
+                    score += 100;
+                } else if (reward <= 9) {
+                    if (FIRE_INTERVAL > 3) {
+                        FIRE_INTERVAL--;
+                        pushNotification(String.format("Fire Rate +%.0f%%",
+                                (1.0 / FIRE_INTERVAL) * 100), "lightgreen");
+                    } else {
+                        pushNotification("Fire Rate limit reached!", "orange");
+                    }
+                } else {
+                    if (health < 3) {
+                        setHealth(health + 1);
+                        pushNotification(String.format("Health + 1",
+                                (1 / FIRE_INTERVAL)), "lightgreen");
+                    } else {
+                        pushNotification(String.format("Health limit reached!",
+                                (1 / FIRE_INTERVAL)), "orange");
+                    }
+                }
+
             } else if (object instanceof EnemyBullet && player.isColliding(object)) {
+                target.play();
                 ((EnemyBullet) object).setDead(true);
-                health--;
-                if (health == 2) heart3.setImage(new Image(getClass().getResource("/badheart.png").toString()));
-                else if (health == 1) heart2.setImage(new Image(getClass().getResource("/badheart.png").toString()));
+                setHealth(health - 1);
             }
 
             // Enemy side
             if (object instanceof Bullet) {
                 for (GameObject enemy: gameObjects) {
                     if (enemy instanceof Enemy && enemy.isColliding(object)) {
+                        target.play();
                         ((Enemy) enemy).setDead(true);
                         ((Bullet) object).setDead(true);
                         score += 50;
