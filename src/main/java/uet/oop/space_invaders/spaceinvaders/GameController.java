@@ -23,7 +23,6 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.media.AudioClip;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import javafx.scene.image.ImageView;
@@ -33,13 +32,14 @@ public class GameController {
     public static final int POWERUP_LIMIT = 3;
     public static final int BULLET_LIMIT = 25;
 
-    /* 60 intervals = 1 second */
-    public static final int SPAWN_INTERVAL = 60;
-    public static final int POWERUP_INTERVAL = 480;
-    public static final int BULLET_INTERVAL = 240;
-    public static int FIRE_INTERVAL = 10;
+    /* 1 interval = 1 second */
+    public static final int SPAWN_INTERVAL = 3000;
+    public static final int POWERUP_INTERVAL = 5500;
+    public static final int BULLET_INTERVAL = 1500;
+    public static int FIRE_INTERVAL = 200;
+    public static double GAME_SPEED = 1.0; // 1.0x by default
 
-    public static final int NOTIFICATION_TIMEOUT = 120;
+    public static final int NOTIFICATION_TIMEOUT = 3000;
 
     private int enemyCount = 2;
     private int powerupCount = 0;
@@ -60,9 +60,15 @@ public class GameController {
     private AnimationTimer gameLoop;
     private Random r;
 
-    private int time = 0;
-    private int lastTime = 0;
+    private long time = 0;
     private int notifyShownTime = 0;
+
+    private long lastSpawnTime;
+    private long lastPowerUpTime;
+    private long lastBulletTime;
+    private long lastFireTime;
+    private long lastUpdateTime;
+    private long lastNotifyTime;
 
     private Player player;
     private int score = 0;
@@ -101,6 +107,7 @@ public class GameController {
         this.gc = canvas.getGraphicsContext2D();
         this.gameObjects = new ArrayList<>();
         this.player = new Player(canvas.getWidth() / 2, canvas.getHeight() - 50);
+        this.notification.setVisible(false);
 
         enemyPool = new ObjectPool<>(Enemy::new);
         bulletPool = new ObjectPool<>(Bullet::new);
@@ -121,27 +128,42 @@ public class GameController {
             e.printStackTrace();
         }
 
+        if (lastSpawnTime == 0) {
+            lastSpawnTime = System.nanoTime();
+            lastNotifyTime = System.nanoTime();
+            lastBulletTime = System.nanoTime();
+            lastFireTime = System.nanoTime();
+            lastPowerUpTime = System.nanoTime();
+            lastUpdateTime = System.nanoTime();
+        }
+
         start();
     }
 
+    public double tick(double lastTimeStamp) {
+        return (System.nanoTime() - lastTimeStamp) / 1_000_000.0;
+    }
+
     public void objectSpawn() {
-        if (time % SPAWN_INTERVAL == 0 && enemyCount < ENEMY_LIMIT) {
+        if (tick(lastSpawnTime) >= SPAWN_INTERVAL && enemyCount < ENEMY_LIMIT) {
             Enemy enemy = enemyPool.get();
             enemy.x = r.nextInt(360 - Enemy.WIDTH);
             enemy.y = r.nextInt(10);
             gameObjects.add(enemy);
+            lastSpawnTime = time;
             enemyCount++;
         }
 
-        if (time % POWERUP_INTERVAL == 0 && powerupCount < POWERUP_LIMIT) {
+        if (tick(lastPowerUpTime) >= POWERUP_INTERVAL && powerupCount < POWERUP_LIMIT) {
             PowerUp powerUp = powerUpPool.get();
             powerUp.x = r.nextInt(360 - PowerUp.WIDTH);
             powerUp.y = r.nextInt(10);
             gameObjects.add(powerUp);
+            lastPowerUpTime = time;
             powerupCount++;
         }
 
-        if (time % BULLET_INTERVAL == 0) {
+        if (tick(lastBulletTime) >= BULLET_INTERVAL) {
             List<GameObject> bullets = new ArrayList<>();
             for (GameObject enemy: gameObjects) {
                 if (enemy instanceof Enemy) {
@@ -152,10 +174,25 @@ public class GameController {
                 }
             }
             gameObjects.addAll(bullets);
+            lastBulletTime = time;
         }
     }
 
-    public void update() {
+    public void update(long now) {
+        /* Update animation by milisecond */
+        if (tick(lastUpdateTime) >= 1.67) {
+            gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight()); // Reset frame
+            if (player.isAutoPlay()) {
+                player.autoUpdate(gameObjects, gameObjects, bulletPool);
+            }
+
+            for (GameObject object: gameObjects) {
+                object.update();
+                object.render(gc);
+            }
+            lastUpdateTime = time;
+        }
+
         /* Manage death state and object count */
         Iterator<GameObject> it = gameObjects.iterator();
         while (it.hasNext()) {
@@ -181,37 +218,24 @@ public class GameController {
         }
 
         /* Manage notification */
-        if (time - notifyShownTime > NOTIFICATION_TIMEOUT && notification.isVisible()) {
+        if (tick(lastNotifyTime) > NOTIFICATION_TIMEOUT && notification.isVisible()) {
             notification.setVisible(false);
         }
     }
 
     public void start() {
-        notification.setVisible(false);
         gameLoop = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                information.setText(String.format("Score: %d\nFire: %d", score, FIRE_INTERVAL));
-                gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight()); // Reset frame
+                information.setText(String.format("Score: %d", score));
+                time = now;
 
+                update(now);
                 objectSpawn();
                 playerInput();
-                update();
                 objectCollision();
 
-                if (player.isAutoPlay()) {
-                    player.autoUpdate(gameObjects, gameObjects, bulletPool);
-                    autoPlay.setVisible(true);
-                } else {
-                    autoPlay.setVisible(false);
-                }
-
-                for (GameObject object: gameObjects) {
-                    object.update();
-                    object.render(gc);
-                }
-
-                time++;
+                autoPlay.setVisible(player.isAutoPlay());
             }
         };
         gameLoop.start();
@@ -244,8 +268,8 @@ public class GameController {
             player.setMoveBackward(pressedKeys.contains(KeyCode.S) || pressedKeys.contains(KeyCode.DOWN));
             player.setMoveRight(pressedKeys.contains(KeyCode.D) || pressedKeys.contains(KeyCode.RIGHT));
 
-            if (pressedKeys.contains(KeyCode.SPACE) && bulletCount < BULLET_LIMIT && (time - lastTime > FIRE_INTERVAL)) {
-                lastTime = time;
+            if (pressedKeys.contains(KeyCode.SPACE) && bulletCount < BULLET_LIMIT && (tick(lastFireTime) >= FIRE_INTERVAL)) {
+                lastFireTime = time;
                 player.shoot(gameObjects, bulletPool);
                 bulletCount++;
             }
@@ -292,7 +316,7 @@ public class GameController {
 
     // Push notification
     public void pushNotification(String body, String color) {
-        notifyShownTime = time;
+        lastNotifyTime = time;
         notification.setVisible(true);
         notification.setText(body);
         notification.setStyle("-fx-background-color: " + color + ";"
