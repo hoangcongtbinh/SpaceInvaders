@@ -46,57 +46,57 @@ public class GameController {
 
     public static final int NOTIFICATION_TIMEOUT = 120;
 
-    private int enemyCount = 2;
-    private int powerupCount = 0;
-    private int bulletCount = 0;
+    protected int enemyCount = 2;
+    protected int powerupCount = 0;
+    protected int bulletCount = 0;
 
-    private List<GameObject> gameObjects;
-    private ObjectPool<Enemy> enemyPool;
-    private ObjectPool<Bullet> bulletPool;
-    private ObjectPool<EnemyBullet> enemyBulletPool;
-    private ObjectPool<PowerUp> powerUpPool;
+    protected List<GameObject> gameObjects;
+    protected ObjectPool<Enemy> enemyPool;
+    protected ObjectPool<Bullet> bulletPool;
+    protected ObjectPool<EnemyBullet> enemyBulletPool;
+    protected ObjectPool<PowerUp> powerUpPool;
 
     // gun soundEffect in Player.java
-    private AudioClip explosion = new AudioClip(getClass().getResource("/explosion.wav").toString());
-    private AudioClip reward = new AudioClip(getClass().getResource("/reward.wav").toString());
-    private AudioClip target = new AudioClip(getClass().getResource("/target.wav").toString());
+    protected AudioClip explosion = new AudioClip(getClass().getResource("/explosion.wav").toString());
+    protected AudioClip reward = new AudioClip(getClass().getResource("/reward.wav").toString());
+    protected AudioClip target = new AudioClip(getClass().getResource("/target.wav").toString());
 
     // Image Resources
-    private Image HEART = new Image(getClass().getResource("/heart.png").toString());
-    private Image BAD_HEART = new Image(getClass().getResource("/badheart.png").toString());
-    private Image EXPLOSION_IMAGE = new Image(getClass().getResource("/explosion.png").toString());
+    protected Image HEART = new Image(getClass().getResource("/heart.png").toString());
+    protected Image BAD_HEART = new Image(getClass().getResource("/badheart.png").toString());
+    protected Image EXPLOSION_IMAGE = new Image(getClass().getResource("/explosion.png").toString());
 
-    private GraphicsContext gc;
-    private AnimationTimer gameLoop;
-    private Random r;
+    protected GraphicsContext gc;
+    protected AnimationTimer gameLoop;
+    protected Random r;
 
-    private int time = 0;
-    private int lastTime = 0;
-    private int notifyShownTime = 0;
+    protected int time = 0;
+    protected int lastTime = 0;
+    protected int notifyShownTime = 0;
 
-    private Player player;
-    private int score = 0;
-    private int health = 3;
-    private int level = 1; // max is 5, a step is 2500
+    protected Player player;
+    protected int score = 0;
+    protected int health = 3;
+    protected int level = 1; // max is 5, a step is 2500
 
-    @FXML private Pane game;
+    @FXML protected Pane game;
 
-    private Parent pause_view;
-    private SpaceShooter main;
+    protected Parent pause_view;
+    protected SpaceShooter main;
 
-    @FXML private Canvas canvas;
+    @FXML protected Canvas canvas;
 
-    @FXML private Label information;
+    @FXML protected Label information;
 
-    @FXML private Label autoPlay;
+    @FXML protected Label autoPlay;
 
-    @FXML private Label notification;
+    @FXML protected Label notification;
 
-    @FXML private ImageView heart1;
+    @FXML protected ImageView heart1;
 
-    @FXML private ImageView heart2;
+    @FXML protected ImageView heart2;
 
-    @FXML private ImageView heart3;
+    @FXML protected ImageView heart3;
 
     public GameController() {
 

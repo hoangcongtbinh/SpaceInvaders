@@ -133,7 +133,7 @@ public class SpaceShooter extends Application {
 
     @FXML
     private void startMultiplayerGame(javafx.event.ActionEvent event) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("game-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("multiplayer-game-view.fxml"));
         Stage currentStage = (Stage)((javafx.scene.Node)event.getSource()).getScene().getWindow();
         currentStage.setScene(new Scene(fxmlLoader.load(), 360, 600));
     }
