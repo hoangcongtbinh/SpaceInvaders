@@ -32,16 +32,16 @@ import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 
 public class GameController {
-    public static int ENEMY_LIMIT = 10;
+    public int ENEMY_LIMIT = 10;
     public static final int POWERUP_LIMIT = 3;
     public static final int BULLET_LIMIT = 25;
-    public static int ENEMY_PER_LAP = 3;
+    public int ENEMY_PER_LAP = 3;
 
     /* Depends on Screen Refresh Rate */
-    public static int SPAWN_INTERVAL = 120;
-    public static int POWERUP_INTERVAL = 480;
-    public static int BULLET_INTERVAL = 240;
-    public static int FIRE_INTERVAL = 7;
+    public int SPAWN_INTERVAL = 120;
+    public int POWERUP_INTERVAL = 480;
+    public int BULLET_INTERVAL = 240;
+    public int FIRE_INTERVAL = 7;
     public static final int EXPLOSION_EDGE = 60;
 
     public static final int NOTIFICATION_TIMEOUT = 120;
@@ -199,7 +199,7 @@ public class GameController {
         gameLoop = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                information.setText(String.format("Score: %d", score));
+                information.setText(String.format("Score: %d\nLevel: %d", score, level));
                 gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight()); // Reset frame
 
                 objectSpawn();
@@ -341,10 +341,10 @@ public class GameController {
                 reward.play();
                 ((PowerUp) object).setDead(true);
                 int reward = r.nextInt(11);
-                if (reward <= 7) {
+                if (reward <= 6) {
                     pushNotification("Score +100", "lightgreen");
                     score += 100;
-                } else if (reward <= 9) {
+                } else if (reward <= 8) {
                     if (FIRE_INTERVAL > 3) {
                         FIRE_INTERVAL--;
                         pushNotification(String.format("Fire Rate +%.0f%%",
@@ -386,10 +386,10 @@ public class GameController {
     public void levelManagement() {
         if (score > level * 2500) {
             level++;
-            if (level == 6) {
-                pushNotification(String.format("Boss is Coming!", level), "orange");
-                return;
-            }
+//            if (level == 6) {
+//                pushNotification(String.format("Boss is Coming!", level), "orange");
+//                return;
+//            }
             pushNotification(String.format("Level %d", level), "orange");
             ENEMY_LIMIT += 5;
             ENEMY_PER_LAP ++;
