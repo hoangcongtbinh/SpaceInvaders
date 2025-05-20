@@ -14,7 +14,7 @@
   </padding>
    <Pane prefHeight="560.0" prefWidth="0.0">
       <children>
-        <Button defaultButton="true" layoutX="88.0" layoutY="328.0" onAction="#startGame" prefHeight="35.0" prefWidth="145.0" style="-fx-background-color: linear-gradient(to left, #0070C0, #7030A0); -fx-border-color: white; -fx-border-radius: 20; -fx-border-width: 1; -fx-background-radius: 20" text="Start" textFill="WHITE">
+        <Button defaultButton="true" layoutX="88.0" layoutY="328.0" onAction="#showGameModeSelection" prefHeight="35.0" prefWidth="145.0" style="-fx-background-color: linear-gradient(to left, #0070C0, #7030A0); -fx-border-color: white; -fx-border-radius: 20; -fx-border-width: 1; -fx-background-radius: 20" text="Start" textFill="WHITE">
             <font>
                <Font name="System Bold" size="15.0" />
             </font></Button>
