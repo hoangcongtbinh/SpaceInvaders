@@ -37,7 +37,7 @@ public class Player extends GameObject {
     private int fireCooldown = 0;
 
     // Sound effect
-    private AudioClip gun = new AudioClip(getClass().getResource("/gun.wav").toString());
+    private SoundEffect gun = new SoundEffect("/gun.wav");
 
     /**
      * Constructs a uet.oop.space_invaders.spaceinvaders.Player at the given position.
