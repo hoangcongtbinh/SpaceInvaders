@@ -57,9 +57,9 @@ public class GameController {
     private ObjectPool<PowerUp> powerUpPool;
 
     // gun soundEffect in Player.java
-    private AudioClip explosion = new AudioClip(getClass().getResource("/explosion.wav").toString());
-    private AudioClip reward = new AudioClip(getClass().getResource("/reward.wav").toString());
-    private AudioClip target = new AudioClip(getClass().getResource("/target.wav").toString());
+    private SoundEffect explosion = new SoundEffect("/explosion.wav");
+    private SoundEffect reward = new SoundEffect("/reward.wav");
+    private SoundEffect target = new SoundEffect("/target.wav");
 
     // Image Resources
     private Image HEART = new Image(getClass().getResource("/heart.png").toString());
