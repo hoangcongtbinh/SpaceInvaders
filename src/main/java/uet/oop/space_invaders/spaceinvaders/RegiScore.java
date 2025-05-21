@@ -69,7 +69,7 @@ public class RegiScore {
             createFile(path);
         }
 
-        List<String> lines = Files.readAllLines(Paths.get("score.txt"));
+        List<String> lines = Files.readAllLines(path);
         for (int i = 0; i < lines.size(); i++) {
             String[] highest = lines.get(i).split(",");
             if (score > Integer.parseInt(highest[1])) {
