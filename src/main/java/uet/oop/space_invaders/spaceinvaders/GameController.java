@@ -315,11 +315,11 @@ public class GameController {
     }
 
     // Health management
-    public void setHealth(int health) {
-        this.health = health;
-        heart1.setImage((this.health >= 1)? HEART : BAD_HEART);
-        heart2.setImage((this.health >= 2)? HEART : BAD_HEART);
-        heart3.setImage((this.health == 3)? HEART : BAD_HEART);
+    public void setHealth(int health, Player player) {
+        player.setHealth(health);
+        heart1.setImage((player.health >= 1)? HEART : BAD_HEART);
+        heart2.setImage((player.health >= 2)? HEART : BAD_HEART);
+        heart3.setImage((player.health == 3)? HEART : BAD_HEART);
     }
 
     // Collision
@@ -328,13 +328,13 @@ public class GameController {
         for (GameObject object : gameObjects) {
             // Player side
             if ((object instanceof Enemy && (player.isColliding(object) || object.isCollidingWithBottom(canvas.getHeight()) == true)) ||
-                    (object instanceof EnemyBullet && player.isColliding(object) && health == 1)) {
+                    (object instanceof EnemyBullet && player.isColliding(object) && player.health == 1)) {
                 gameLoop.stop();
                 explosion.play();
                 player.setDead(true);
 
                 gc.drawImage(EXPLOSION_IMAGE, player.x - EXPLOSION_EDGE / 2, player.y - EXPLOSION_EDGE / 2, EXPLOSION_EDGE, EXPLOSION_EDGE);
-                setHealth(0);
+                setHealth(0, player);
 
                 PauseTransition delay = new PauseTransition(Duration.seconds(3));
                 delay.setOnFinished(event -> showLosingScreen());
@@ -357,8 +357,8 @@ public class GameController {
                         pushNotification("Fire Rate limit reached!", "orange");
                     }
                 } else {
-                    if (health < 3) {
-                        setHealth(health + 1);
+                    if (player.health < 3) {
+                        setHealth(health + 1, player);
                         pushNotification(String.format("Health + 1",
                                 (1 / FIRE_INTERVAL)), "lightgreen");
                     } else {
@@ -370,7 +370,7 @@ public class GameController {
             } else if (object instanceof EnemyBullet && player.isColliding(object)) {
                 target.play();
                 ((EnemyBullet) object).setDead(true);
-                setHealth(this.health - 1);
+                setHealth(player.health - 1, player);
             }
 
             // Enemy side

@@ -32,7 +32,7 @@ public class Player extends GameObject {
     protected static final Image PLAYER_BLUE_IMAGE = new Image(Player.class.getResource("/player-blue.png").toString());
 
     // Player health
-    private int health;
+    protected int health;
 
     // AI settings
     private boolean autoPlay = false;
@@ -57,6 +57,8 @@ public class Player extends GameObject {
 
     public Player(double x, double y, Image playerImage) {
         super(x, y, WIDTH, HEIGHT);
+        this.health = 3;
+        this.dead = false;
         this.playerImage = playerImage;
     }
 
