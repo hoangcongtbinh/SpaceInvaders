@@ -104,11 +104,10 @@ public class SpaceShooter extends Application {
     @FXML
     private void startGame(javafx.event.ActionEvent event) throws IOException {
         // TODO: set gameRunning to true and switch to game scene
+        GameController.gameMode = GameController.SINGLE_PLAYER;
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("game-view.fxml"));
         Stage currentStage = (Stage)((javafx.scene.Node)event.getSource()).getScene().getWindow();
         currentStage.setScene(new Scene(fxmlLoader.load(), 360, 600));
-
-        // gameRunning = true;
     }
 
     @FXML
@@ -133,8 +132,20 @@ public class SpaceShooter extends Application {
 
     @FXML
     private void startMultiplayerGame(javafx.event.ActionEvent event) throws IOException {
+        GameController.gameMode = GameController.MULTIPLAYER;
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("multiplayer-game-view.fxml"));
         Stage currentStage = (Stage)((javafx.scene.Node)event.getSource()).getScene().getWindow();
         currentStage.setScene(new Scene(fxmlLoader.load(), 360, 600));
+    }
+
+    @FXML
+    private void tryAgain(javafx.event.ActionEvent event) throws IOException {
+        if (GameController.gameMode == GameController.SINGLE_PLAYER) {
+            startGame(event);
+        } else if (GameController.gameMode == GameController.MULTIPLAYER) {
+            startMultiplayerGame(event);
+        } else {
+            System.out.println("Invalid game mode");
+        }
     }
 }

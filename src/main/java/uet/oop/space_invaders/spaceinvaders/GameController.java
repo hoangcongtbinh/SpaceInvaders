@@ -79,6 +79,10 @@ public class GameController {
     protected int health = 3;
     protected int level = 1; // max is 5, a step is 2500
 
+    public static final int SINGLE_PLAYER = 1;
+    public static final int MULTIPLAYER = 2;
+    protected static int gameMode = 0;
+
     @FXML protected Pane game;
 
     protected Parent pause_view;
@@ -205,7 +209,7 @@ public class GameController {
                 objectSpawn();
                 playerInput();
                 update();
-                objectCollision();
+                objectCollision(player);
 
                 levelManagement();
 
@@ -320,7 +324,7 @@ public class GameController {
 
     // Collision
     @FXML
-    public void objectCollision() {
+    public void objectCollision(Player player) {
         for (GameObject object : gameObjects) {
             // Player side
             if ((object instanceof Enemy && (player.isColliding(object) || object.isCollidingWithBottom(canvas.getHeight()) == true)) ||

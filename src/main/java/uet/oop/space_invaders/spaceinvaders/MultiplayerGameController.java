@@ -56,7 +56,8 @@ public class MultiplayerGameController extends GameController {
                 objectSpawn();
                 playerInput();
                 update();
-                objectCollision();
+                objectCollision(player);
+                objectCollision(player2);
 
                 levelManagement();
 
