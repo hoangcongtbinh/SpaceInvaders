@@ -11,7 +11,7 @@
       <Pane fx:id="game" prefHeight="600.0" prefWidth="360.0">
          <children>
             <Canvas fx:id="canvas" focusTraversable="true" height="600.0" onKeyPressed="#onKeyPressed" onKeyReleased="#onKeyReleased" width="360.0" />
-            <Label fx:id="information" layoutX="14.0" layoutY="14.0" text="Score: %d" textFill="WHITE">
+            <Label fx:id="information" layoutX="14.0" layoutY="14.0" text="Score: %d&#10;Level: %d" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="16.0" />
                </font>
@@ -31,11 +31,16 @@
                   <Image url="@../../../../heart.png" />
                </image>
             </ImageView>
-            <Label fx:id="autoPlay" alignment="CENTER" contentDisplay="CENTER" layoutX="201.0" layoutY="14.0" prefHeight="25.0" prefWidth="80.0" style="-fx-background-color: linear-gradient(to bottom right, #0070C0, #7030A0, #163E64); -fx-background-radius: 20;" text="AI Player" textAlignment="CENTER" textFill="WHITE">
+            <Label fx:id="autoPlay" alignment="CENTER" contentDisplay="CENTER" layoutX="236.0" layoutY="14.0" prefHeight="25.0" prefWidth="45.0" style="-fx-background-color: linear-gradient(to bottom right, #0070C0, #7030A0, #163E64); -fx-background-radius: 20;" text="AI" textAlignment="CENTER" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font></Label>
-            <Label fx:id="notification" alignment="CENTER" contentDisplay="CENTER" layoutX="93.0" layoutY="51.0" prefHeight="25.0" prefWidth="175.0" style="-fx-background-color: lightgreen; -fx-background-radius: 20;" text="Notification goes here." textAlignment="CENTER" />
+            <Label fx:id="notification" alignment="CENTER" contentDisplay="CENTER" layoutX="103.0" layoutY="71.0" prefHeight="25.0" prefWidth="155.0" style="-fx-background-color: lightgreen; -fx-background-radius: 20;" text="Notification goes here." textAlignment="CENTER" />
+            <ImageView fx:id="nosound" fitHeight="17.0" fitWidth="17.0" layoutX="327.0" layoutY="41.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../mute.png" />
+               </image>
+            </ImageView>
          </children>
       </Pane>
    </children>

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+
+<VBox alignment="CENTER" prefHeight="600" prefWidth="360" spacing="20.0" style="-fx-background-color: linear-gradient(to bottom right, #0070C0, #7030A0, #163E64);" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="uet.oop.space_invaders.spaceinvaders.HighScore">
+  <padding>
+    <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+  </padding>
+   <Pane prefHeight="560.0" prefWidth="312.0">
+      <children>
+         <Button fx:id="reset" cancelButton="true" layoutX="88.0" layoutY="490.0" onAction="#reset" prefHeight="35.0" prefWidth="145.0" style="-fx-background-color: red; -fx-border-color: red; -fx-border-radius: 20; -fx-border-width: 1; -fx-background-radius: 20;" text="Reset" textFill="WHITE">
+            <font>
+               <Font name="System Bold" size="15.0" />
+            </font></Button>
+        <Label layoutX="101.0" layoutY="14.0" text="Highscore" textAlignment="CENTER">
+          <font>
+            <Font name="System Bold" size="25.0" />
+          </font>
+            <effect>
+               <Glow level="1.0" />
+            </effect>
+            <textFill>
+               <LinearGradient endX="1.0" endY="1.0">
+                  <stops>
+                     <Stop>
+                        <color>
+                           <Color red="1.0" green="1.0" blue="1.0" />
+                        </color>
+                     </Stop>
+                     <Stop offset="1.0">
+                        <color>
+                           <Color red="1.0" green="1.0" blue="1.0" />
+                        </color>
+                     </Stop>
+                  </stops>
+               </LinearGradient>
+            </textFill>
+        </Label>
+         <ImageView fitHeight="142.0" fitWidth="196.0" layoutX="236.0" layoutY="60.0" opacity="0.7" pickOnBounds="true" preserveRatio="true" rotate="-30.3">
+            <image>
+               <Image url="@../../../../boss.png" />
+            </image>
+         </ImageView>
+         <ImageView fitHeight="85.0" fitWidth="119.0" layoutX="-68.0" layoutY="195.0" opacity="0.7" pickOnBounds="true" preserveRatio="true" rotate="32.5">
+            <image>
+               <Image url="@../../../../enemy.png" />
+            </image>
+         </ImageView>
+         <ImageView fitHeight="101.0" fitWidth="50.0" layoutX="295.0" layoutY="371.0" opacity="0.7" pickOnBounds="true" preserveRatio="true" rotate="-35.5">
+            <image>
+               <Image url="@../../../../player.png" />
+            </image>
+         </ImageView>
+         <Pane layoutX="9.0" layoutY="79.0" prefHeight="52.0" prefWidth="301.0" style="-fx-background-color: white; -fx-background-radius: 20; -fx-border-radius: 20;">
+            <children>
+               <Label layoutX="14.0" layoutY="13.0" text="1">
+                  <font>
+                     <Font name="System Bold" size="17.0" />
+                  </font>
+               </Label>
+               <Label fx:id="p1" layoutX="37.0" layoutY="13.0" prefHeight="26.0" prefWidth="172.0" text="Player 1">
+                  <font>
+                     <Font name="System Bold" size="17.0" />
+                  </font>
+               </Label>
+               <Label fx:id="s1" alignment="CENTER_RIGHT" layoutX="216.0" layoutY="13.0" prefHeight="26.0" prefWidth="71.0" text="0">
+                  <font>
+                     <Font name="System Bold" size="17.0" />
+                  </font>
+               </Label>
+            </children>
+         </Pane>
+         <Label layoutX="24.0" layoutY="152.0" text="2&#10;&#10;3&#10;&#10;4&#10;&#10;5" textFill="WHITE">
+            <font>
+               <Font name="System Bold" size="17.0" />
+            </font>
+         </Label>
+         <Label fx:id="p2" layoutX="46.0" layoutY="152.0" prefHeight="26.0" prefWidth="172.0" text="Player 2" textFill="WHITE">
+            <font>
+               <Font name="System Bold" size="17.0" />
+            </font>
+         </Label>
+         <Label fx:id="p3" layoutX="46.0" layoutY="204.0" prefHeight="26.0" prefWidth="172.0" text="Player 3" textFill="WHITE">
+            <font>
+               <Font name="System Bold" size="17.0" />
+            </font>
+         </Label>
+         <Label fx:id="p4" layoutX="46.0" layoutY="256.0" prefHeight="26.0" prefWidth="172.0" text="Player 4" textFill="WHITE">
+            <font>
+               <Font name="System Bold" size="17.0" />
+            </font>
+         </Label>
+         <Label fx:id="p5" layoutX="46.0" layoutY="308.0" prefHeight="26.0" prefWidth="172.0" text="Player 5" textFill="WHITE">
+            <font>
+               <Font name="System Bold" size="17.0" />
+            </font>
+         </Label>
+         <Label fx:id="s2" alignment="CENTER_RIGHT" layoutX="226.0" layoutY="152.0" prefHeight="26.0" prefWidth="71.0" text="0" textFill="WHITE">
+            <font>
+               <Font name="System Bold" size="17.0" />
+            </font>
+         </Label>
+          <Label fx:id="s3" alignment="CENTER_RIGHT" layoutX="226.0" layoutY="204.0" prefHeight="26.0" prefWidth="71.0" text="0" textFill="WHITE">
+              <font>
+                  <Font name="System Bold" size="17.0" />
+              </font>
+          </Label>
+          <Label fx:id="s4" alignment="CENTER_RIGHT" layoutX="226.0" layoutY="256.0" prefHeight="26.0" prefWidth="71.0" text="0" textFill="WHITE">
+              <font>
+                  <Font name="System Bold" size="17.0" />
+              </font>
+          </Label>
+          <Label fx:id="s5" alignment="CENTER_RIGHT" layoutX="226.0" layoutY="308.0" prefHeight="26.0" prefWidth="71.0" text="0" textFill="WHITE">
+              <font>
+                  <Font name="System Bold" size="17.0" />
+              </font>
+          </Label>
+      </children>
+   </Pane>
+</VBox>

@@ -8,11 +8,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
-import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+
 
 /**
  * Skeleton for SpaceShooter. Students must implement game loop,
@@ -24,14 +24,7 @@ public class SpaceShooter extends Application {
     public static final int HEIGHT = 600;
 
     private GameController game;
-
-//    public static int numLives = 3;
-
-//    private int score;
-//    private boolean bossExists;
-//    private boolean reset;
-//    private boolean levelUpShown;
-//    private boolean gameRunning;
+    private HighScore highScore = new HighScore();
 
     // TODO: Declare UI labels, lists of GameObjects, player, root Pane, Scene, Stage
 
@@ -41,6 +34,7 @@ public class SpaceShooter extends Application {
 
     @FXML
     protected Label scoreLabel;
+
 
     public static void main(String[] args) {
         launch(args);
@@ -79,6 +73,19 @@ public class SpaceShooter extends Application {
         Stage popupStage = new Stage();
         popupStage.setScene(new Scene(fxmlLoader.load(), 360, 600));
         popupStage.setTitle("Instructions");
+        popupStage.setResizable(false);
+        popupStage.getIcons().add(new Image(getClass().getResource("/player.jpg").toString()));
+        popupStage.initModality(Modality.APPLICATION_MODAL);
+        popupStage.showAndWait();
+    }
+
+    @FXML
+    private void showScore() throws IOException {
+        // TODO: display instructions dialog
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("highscore-view.fxml"));
+        Stage popupStage = new Stage();
+        popupStage.setScene(new Scene(fxmlLoader.load(), 360, 600));
+        popupStage.setTitle("High score");
         popupStage.setResizable(false);
         popupStage.getIcons().add(new Image(getClass().getResource("/player.jpg").toString()));
         popupStage.initModality(Modality.APPLICATION_MODAL);

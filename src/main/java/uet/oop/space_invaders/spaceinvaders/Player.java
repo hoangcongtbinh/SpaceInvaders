@@ -4,6 +4,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
+import kotlin._Assertions;
 
 import java.util.List;
 
@@ -38,6 +39,9 @@ public class Player extends GameObject {
 
     // Sound effect
     private SoundEffect gun = new SoundEffect("/gun.wav");
+
+    // Sound
+    protected GameController game;
 
     /**
      * Constructs a uet.oop.space_invaders.spaceinvaders.Player at the given position.
@@ -160,7 +164,9 @@ public class Player extends GameObject {
      */
     public void shoot(List<GameObject> newObjects, ObjectPool<Bullet> objectPool) {
         // TODO: create and add new uet.oop.space_invaders.spaceinvaders.Bullet at (x, y - HEIGHT/2)
-        if (!this.isAutoPlay()) gun.play();
+        if (!this.isAutoPlay() && !game.muted) {
+            gun.play();
+        }
         Bullet bullet = objectPool.get();
         bullet.x = this.x;
         bullet.y = this.y - height / 2;
