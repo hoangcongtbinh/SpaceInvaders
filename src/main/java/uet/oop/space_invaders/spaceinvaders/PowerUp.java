@@ -2,7 +2,6 @@ package uet.oop.space_invaders.spaceinvaders;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
 
 /**
  * Skeleton for uet.oop.space_invaders.spaceinvaders.PowerUp. Students must implement movement,
