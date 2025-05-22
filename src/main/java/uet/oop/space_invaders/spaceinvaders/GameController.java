@@ -33,6 +33,7 @@ public class GameController {
     private int ENEMY_LIMIT = 10;
     private int POWERUP_LIMIT = 3;
     public static final int BULLET_LIMIT = 25;
+    public static final int LEVEL_TIME = 60; // in seconds
     private int ENEMY_PER_LAP = 3;
 
     /* Depends on Screen Refresh Rate */
@@ -41,6 +42,7 @@ public class GameController {
     private int LAST_POWERUP_INTERVAL = 120;
     private int BULLET_INTERVAL = 240;
     private int FIRE_INTERVAL = 7;
+
     public static final int EXPLOSION_EDGE = 60;
 
     public static final int NOTIFICATION_TIMEOUT = 180;
@@ -74,6 +76,7 @@ public class GameController {
     private int time = 0;
     private int lastTime = 0;
     private int notifyShownTime = 0;
+    private long lastLevelTime = 0;
 
     public boolean muted = false;
     private Player player;
@@ -135,6 +138,8 @@ public class GameController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        this.lastLevelTime = System.nanoTime();
         start();
     }
 
@@ -478,8 +483,9 @@ public class GameController {
     }
 
     public void levelManagement() {
-        if (score > level * 2500) {
+        if (System.nanoTime() - lastLevelTime >= LEVEL_TIME * Math.pow(10,9)) {
             level++;
+            lastLevelTime = System.nanoTime();
             if (level >= 6) return;
 
             ENEMY_LIMIT += 5;
