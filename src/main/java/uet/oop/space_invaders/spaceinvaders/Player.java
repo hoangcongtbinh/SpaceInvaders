@@ -2,6 +2,9 @@ package uet.oop.space_invaders.spaceinvaders;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.media.AudioClip;
+import javafx.scene.paint.Color;
+import kotlin._Assertions;
 
 import java.util.List;
 
@@ -12,8 +15,8 @@ import java.util.List;
 public class Player extends GameObject {
 
     // Hitbox dimensions
-    private static final int WIDTH = 20;
-    private static final int HEIGHT = 40;
+    private static final int WIDTH = 25;
+    private static final int HEIGHT = 50;
 
     // Movement speed
     private static final double SPEED = 5;
@@ -38,6 +41,9 @@ public class Player extends GameObject {
 
     // Sound effect
     private SoundEffect gun = new SoundEffect("/gun.wav");
+
+    // Sound
+    protected GameController game;
 
     /**
      * Constructs a uet.oop.space_invaders.spaceinvaders.Player at the given position.
@@ -116,8 +122,8 @@ public class Player extends GameObject {
             y += SPEED;
         }
 
-        x = Math.max(WIDTH / 2, Math.min(360 - WIDTH / 2, x));
-        y = Math.max(HEIGHT / 2, Math.min(600 - HEIGHT / 2, y));
+        x = Math.max(WIDTH / 2, Math.min(480 - WIDTH / 2, x));
+        y = Math.max(HEIGHT / 2, Math.min(800 - HEIGHT / 2, y));
     }
 
     /**
@@ -168,7 +174,9 @@ public class Player extends GameObject {
      */
     public void shoot(List<GameObject> newObjects, ObjectPool<Bullet> objectPool) {
         // TODO: create and add new uet.oop.space_invaders.spaceinvaders.Bullet at (x, y - HEIGHT/2)
-        if (!this.isAutoPlay()) gun.play();
+        if (!this.isAutoPlay() && !game.muted) {
+            gun.play();
+        }
         Bullet bullet = objectPool.get();
         bullet.x = this.x;
         bullet.y = this.y - height / 2;
@@ -216,7 +224,7 @@ public class Player extends GameObject {
 
         for (GameObject obj : objects) {
             if (obj instanceof Enemy) {
-                double distY = Math.abs(600 - obj.getY());
+                double distY = Math.abs(800 - obj.getY());
                 if (distY < closestDistY) {
                     closestDistY = distY;
                     closestEnemyX = obj.getX();
@@ -225,7 +233,7 @@ public class Player extends GameObject {
         }
 
         // lui ve sau de ban
-        this.setMoveBackward(!this.isCollidingWithBottom(600));
+        this.setMoveBackward(!this.isCollidingWithBottom(800));
 
         // uu tien ne dan truoc
         for (GameObject obj : objects) {

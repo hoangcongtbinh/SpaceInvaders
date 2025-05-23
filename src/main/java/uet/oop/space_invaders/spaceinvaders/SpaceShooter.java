@@ -6,12 +6,15 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+
 
 /**
  * Skeleton for SpaceShooter. Students must implement game loop,
@@ -19,18 +22,11 @@ import java.io.IOException;
  */
 public class SpaceShooter extends Application {
 
-    public static final int WIDTH = 360;
-    public static final int HEIGHT = 600;
+    public static final int WIDTH = 480;
+    public static final int HEIGHT = 800;
 
     private GameController game;
-
-//    public static int numLives = 3;
-
-//    private int score;
-//    private boolean bossExists;
-//    private boolean reset;
-//    private boolean levelUpShown;
-//    private boolean gameRunning;
+    private HighScore highScore = new HighScore();
 
     // TODO: Declare UI labels, lists of GameObjects, player, root Pane, Scene, Stage
 
@@ -40,6 +36,13 @@ public class SpaceShooter extends Application {
 
     @FXML
     protected Label scoreLabel;
+
+    @FXML protected Button ctrlbtn;
+    @FXML protected Button rulesbtn;
+
+    @FXML protected Pane rules;
+    @FXML protected Pane controls;
+
 
     public static void main(String[] args) {
         launch(args);
@@ -55,7 +58,7 @@ public class SpaceShooter extends Application {
         // TODO: set up AnimationTimer game loop and start it
         // TODO: show primaryStage
         FXMLLoader fxmlLoader = new FXMLLoader(SpaceShooter.class.getResource("hello-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 360, 600);
+        Scene scene = new Scene(fxmlLoader.load(), 480, 800);
 
         primaryStage.setResizable(false);
         Image icon = new Image(getClass().getResource("/player.jpg").toString());
@@ -76,8 +79,21 @@ public class SpaceShooter extends Application {
         // TODO: display instructions dialog
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("instructions-view.fxml"));
         Stage popupStage = new Stage();
-        popupStage.setScene(new Scene(fxmlLoader.load(), 360, 600));
+        popupStage.setScene(new Scene(fxmlLoader.load(), 480, 800));
         popupStage.setTitle("Instructions");
+        popupStage.setResizable(false);
+        popupStage.getIcons().add(new Image(getClass().getResource("/player.jpg").toString()));
+        popupStage.initModality(Modality.APPLICATION_MODAL);
+        popupStage.showAndWait();
+    }
+
+    @FXML
+    private void showScore() throws IOException {
+        // TODO: display instructions dialog
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("highscore-view.fxml"));
+        Stage popupStage = new Stage();
+        popupStage.setScene(new Scene(fxmlLoader.load(), 360, 600));
+        popupStage.setTitle("High score");
         popupStage.setResizable(false);
         popupStage.getIcons().add(new Image(getClass().getResource("/player.jpg").toString()));
         popupStage.initModality(Modality.APPLICATION_MODAL);
@@ -91,6 +107,10 @@ public class SpaceShooter extends Application {
         currentStage.close();
     }
 
+    private void showTempMessage(String message, double x, double y, double duration) {
+        // TODO: show temporary on-screen message for duration seconds
+    }
+
     @FXML
     private void returnGame(ActionEvent event) {
         game.returnGame();
@@ -102,7 +122,7 @@ public class SpaceShooter extends Application {
         GameController.gameMode = GameController.SINGLE_PLAYER;
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("game-view.fxml"));
         Stage currentStage = (Stage)((javafx.scene.Node)event.getSource()).getScene().getWindow();
-        currentStage.setScene(new Scene(fxmlLoader.load(), 360, 600));
+        currentStage.setScene(new Scene(fxmlLoader.load(), 480, 800));
     }
 
     @FXML
@@ -110,7 +130,7 @@ public class SpaceShooter extends Application {
         System.gc();
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("hello-view.fxml"));
         Stage currentStage = (Stage)((javafx.scene.Node)event.getSource()).getScene().getWindow();
-        currentStage.setScene(new Scene(fxmlLoader.load(), 360, 600));
+        currentStage.setScene(new Scene(fxmlLoader.load(), 480, 800));
     }
 
     @FXML
@@ -122,7 +142,7 @@ public class SpaceShooter extends Application {
     private void showGameModeSelection(ActionEvent event) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("gamemode-view.fxml"));
         Stage currentStage = (Stage)((javafx.scene.Node)event.getSource()).getScene().getWindow();
-        currentStage.setScene(new Scene(fxmlLoader.load(), 360, 600));
+        currentStage.setScene(new Scene(fxmlLoader.load(), 480, 800));
     }
 
     @FXML
@@ -130,7 +150,25 @@ public class SpaceShooter extends Application {
         GameController.gameMode = GameController.MULTIPLAYER;
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("multiplayer-game-view.fxml"));
         Stage currentStage = (Stage)((javafx.scene.Node)event.getSource()).getScene().getWindow();
-        currentStage.setScene(new Scene(fxmlLoader.load(), 360, 600));
+        currentStage.setScene(new Scene(fxmlLoader.load(), 480, 800));
+    }
+
+    @FXML
+    private void onRulesAction(javafx.event.ActionEvent event) throws IOException {
+        controls.setVisible(false);
+        rules.setVisible(true);
+
+        ctrlbtn.setStyle("-fx-background-color: lightgray; -fx-background-radius: 20; -fx-border-radius: 20;");
+        rulesbtn.setStyle("-fx-background-color: white; -fx-background-radius: 20; -fx-border-radius: 20;");
+    }
+
+    @FXML
+    private void onControlsAction(javafx.event.ActionEvent event) throws IOException {
+        controls.setVisible(true);
+        rules.setVisible(false);
+
+        ctrlbtn.setStyle("-fx-background-color: white; -fx-background-radius: 20; -fx-border-radius: 20;");
+        rulesbtn.setStyle("-fx-background-color: lightgray; -fx-background-radius: 20; -fx-border-radius: 20;");
     }
 
     @FXML

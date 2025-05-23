@@ -6,99 +6,140 @@
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
-<VBox minHeight="10" minWidth="10" prefHeight="600.0" prefWidth="360.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="uet.oop.space_invaders.spaceinvaders.SpaceShooter">
+<VBox minHeight="10" minWidth="10" prefHeight="800.0" prefWidth="480.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="uet.oop.space_invaders.spaceinvaders.SpaceShooter">
    <children>
-      <Pane prefHeight="600.0" prefWidth="360.0" style="-fx-background-color: white;">
+      <Pane prefHeight="97.0" prefWidth="480.0" style="-fx-background-color: white;">
          <children>
-            <Label layoutX="28.0" layoutY="458.0" prefHeight="70.0" prefWidth="301.0" text="• The game ends when all lives are lost, but you can start over by resetting the game." wrapText="true">
+            <Label layoutX="129.0" layoutY="57.0" prefHeight="40.0" prefWidth="222.0" style="-fx-background-color: lightgray; -fx-background-radius: 20; -fx-border-radius: 20;" />
+            <Button fx:id="rulesbtn" layoutX="136.0" layoutY="63.0" mnemonicParsing="false" onAction="#onRulesAction" prefHeight="25.0" prefWidth="97.0" style="-fx-background-color: white; -fx-background-radius: 20; -fx-border-radius: 20;" text="Rules">
                <font>
-                  <Font size="14.0" />
+                  <Font size="13.0" />
                </font>
-            </Label>
-            <Label layoutX="28.0" layoutY="16.0" prefHeight="54.0" prefWidth="232.0" text="• Use the A, W, S, D keys or arrow keys to move the spaceship." wrapText="true">
+            </Button>
+            <Button fx:id="ctrlbtn" layoutX="247.0" layoutY="63.0" mnemonicParsing="false" onAction="#onControlsAction" prefHeight="25.0" prefWidth="97.0" style="-fx-background-color: lightgray; -fx-background-radius: 20; -fx-border-radius: 20;" text="Controls">
                <font>
-                  <Font size="14.0" />
+                  <Font size="13.0" />
                </font>
-            </Label>
-            <ImageView fitHeight="48.0" fitWidth="48.0" layoutX="291.0" layoutY="19.0" pickOnBounds="true" preserveRatio="true">
-             <image>
-                 <Image url="@../../../../player.png" />
-             </image>
-            </ImageView>
-            <Label layoutX="28.0" layoutY="80.0" prefHeight="54.0" prefWidth="232.0" text="• Press SPACE to shoot at enemies." wrapText="true">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Label>
-            <ImageView fitHeight="48.0" fitWidth="48.0" layoutX="279.0" layoutY="90.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../../../enemy.png" />
-               </image>
-            </ImageView>
-            <Label layoutX="28.0" layoutY="145.0" prefHeight="70.0" prefWidth="301.0" text="• Avoid letting enemies reach the bottom of the screen or colliding with them." wrapText="true">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Label>
-            <ImageView fitHeight="48.0" fitWidth="48.0" layoutX="42.0" layoutY="224.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../../../enemy.png" />
-               </image>
-            </ImageView>
-            <Line endX="-46.0" layoutX="139.0" layoutY="258.0" startX="-100.0" strokeWidth="2.0" />
-            <ImageView fitHeight="19.0" fitWidth="27.0" layoutX="150.0" layoutY="215.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../../../enemy.png" />
-               </image>
-            </ImageView>
-            <ImageView fitHeight="48.0" fitWidth="48.0" layoutX="130.0" layoutY="217.0" pickOnBounds="true" preserveRatio="true">
-            <image>
-               <Image url="@../../../../player.png" />
-            </image>
-            </ImageView>
-            <ImageView fitHeight="19.0" fitWidth="27.0" layoutX="127.0" layoutY="240.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../../../enemy.png" />
-               </image>
-            </ImageView>
-            <Line endX="-69.0" layoutX="312.0" layoutY="241.0" startX="-100.0" strokeWidth="2.0" />
-            <Line endX="-86.0" layoutX="331.0" layoutY="236.0" rotate="45.0" startX="-100.0" strokeWidth="2.0" />
-            <Line endX="-86.0" layoutX="331.0" layoutY="246.0" rotate="-45.0" startX="-100.0" strokeWidth="2.0" />
-            <ImageView fitHeight="48.0" fitWidth="48.0" layoutX="279.0" layoutY="305.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../../../heart.png" />
-               </image>
-            </ImageView>
-            <Label layoutX="294.0" layoutY="311.0" prefHeight="34.0" prefWidth="33.0" text="-1" textFill="WHITE" wrapText="true">
-               <font>
-                  <Font name="System Bold" size="17.0" />
-               </font>
-            </Label>
-            <Label layoutX="28.0" layoutY="378.0" prefHeight="70.0" prefWidth="232.0" text="• Collect power-ups to enhance your capabilities and increase your score." wrapText="true">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Label>
-            <ImageView fitHeight="48.0" fitWidth="48.0" layoutX="279.0" layoutY="389.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../../../powerup.png" />
-               </image>
-            </ImageView>
-            <Button fx:id="closeButton" layoutX="110.0" layoutY="533.0" mnemonicParsing="false" onAction="#closeWindow" prefHeight="48.0" prefWidth="140.0" text="🍀 Good luck 🍀">
+            </Button>
+         </children></Pane>
+      <Pane prefHeight="703.0" prefWidth="480.0" style="-fx-background-color: white;">
+         <children>
+            <Pane fx:id="rules" layoutX="14.0" layoutY="61.0" prefHeight="525.0" prefWidth="447.0">
+               <children>
+                  <Label layoutX="14.0" layoutY="332.0" prefHeight="70.0" prefWidth="420.0" text="• The game ends when all lives are lost, but you can start over by resetting the game." wrapText="true">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="14.0" layoutY="443.0" prefHeight="54.0" prefWidth="420.0" text="• In multiplayer mode, high score award will only be given to whom having higher score" wrapText="true">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="14.0" layoutY="14.0" prefHeight="70.0" prefWidth="420.0" text="• Avoid letting enemies reach the bottom of the screen or colliding with them." wrapText="true">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <ImageView fitHeight="48.0" fitWidth="48.0" layoutX="82.0" layoutY="95.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../enemy.png" />
+                     </image>
+                  </ImageView>
+                  <Line endX="-46.0" layoutX="179.0" layoutY="129.0" startX="-100.0" strokeWidth="2.0" />
+                  <ImageView fitHeight="19.0" fitWidth="27.0" layoutX="190.0" layoutY="86.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../enemy.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="48.0" fitWidth="48.0" layoutX="170.0" layoutY="88.0" pickOnBounds="true" preserveRatio="true">
+                  <image>
+                     <Image url="@../../../../player.png" />
+                  </image>
+                  </ImageView>
+                  <ImageView fitHeight="19.0" fitWidth="27.0" layoutX="167.0" layoutY="111.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../enemy.png" />
+                     </image>
+                  </ImageView>
+                  <Line endX="-69.0" layoutX="352.0" layoutY="112.0" startX="-100.0" strokeWidth="2.0" />
+                  <Line endX="-86.0" layoutX="371.0" layoutY="107.0" rotate="45.0" startX="-100.0" strokeWidth="2.0" />
+                  <Line endX="-86.0" layoutX="371.0" layoutY="117.0" rotate="-45.0" startX="-100.0" strokeWidth="2.0" />
+                  <ImageView fitHeight="48.0" fitWidth="48.0" layoutX="380.0" layoutY="171.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../heart.png" />
+                     </image>
+                  </ImageView>
+                  <Label layoutX="395.0" layoutY="177.0" prefHeight="34.0" prefWidth="33.0" text="-1" textFill="WHITE" wrapText="true">
+                     <font>
+                        <Font name="System Bold" size="17.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="14.0" layoutY="245.0" prefHeight="70.0" prefWidth="345.0" text="• Collect power-ups to boost fire power, increase score and keep health bar full." wrapText="true">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <ImageView fitHeight="48.0" fitWidth="48.0" layoutX="380.0" layoutY="256.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../powerup.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="48.0" fitWidth="48.0" layoutX="321.0" layoutY="88.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../skull.png" />
+                     </image>
+                  </ImageView>
+                  <Label layoutX="14.0" layoutY="157.0" prefHeight="76.0" prefWidth="345.0" text="• You have only 3 chances of colliding with a bullet. After that, it's game over." wrapText="true">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+               </children></Pane>
+            <Pane fx:id="controls" layoutX="14.0" layoutY="71.0" prefHeight="480.0" prefWidth="447.0" visible="false">
+               <children>
+                  <Label layoutX="14.0" layoutY="14.0" prefHeight="70.0" prefWidth="420.0" text="• Player 1 / Player in single player mode:&#10;Use W, A, S, D to move the spaceship&#10;Press SPACE to shoot at enemies" wrapText="true">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="14.0" layoutY="253.0" prefHeight="97.0" prefWidth="420.0" text="• General:&#10;Press P to enable AI mode&#10;Press ESC to pause game&#10;Press M to mute sound" wrapText="true">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="14.0" layoutY="394.0" prefHeight="54.0" prefWidth="420.0" text="* AI Mode should be enable at the begin or with at least enemies to have best performance." wrapText="true">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <ImageView fitHeight="90.0" fitWidth="43.0" layoutX="368.0" layoutY="20.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../player.png" />
+                     </image>
+                  </ImageView>
+                  <Label layoutX="14.0" layoutY="134.0" prefHeight="76.0" prefWidth="345.0" text="• Player 2:&#10;Use ↑ ← ↓ →  to move the spaceship&#10;Press ENTER to shoot at enemies" wrapText="true">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <ImageView fitHeight="82.0" fitWidth="43.0" layoutX="294.0" layoutY="94.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../player-blue.png" />
+                     </image>
+                  </ImageView>
+                  <Label alignment="CENTER" layoutX="296.0" layoutY="287.0" prefHeight="48.0" prefWidth="79.0" style="-fx-background-color: linear-gradient(to bottom right, #0070C0, #7030A0, #163E64); -fx-background-radius: 40;" text="AI" textFill="WHITE" wrapText="true">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                  </Label>
+               </children>
+            </Pane>
+            <Button fx:id="closeButton" layoutX="168.0" layoutY="605.0" mnemonicParsing="false" onAction="#closeWindow" prefHeight="48.0" prefWidth="140.0" text="🍀 Good luck 🍀">
                <font>
                   <Font name="System Bold Italic" size="14.0" />
                </font>
             </Button>
-            <ImageView fitHeight="48.0" fitWidth="48.0" layoutX="281.0" layoutY="217.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../../../skull.png" />
-               </image>
-            </ImageView>
-            <Label layoutX="28.0" layoutY="291.0" prefHeight="76.0" prefWidth="232.0" text="• You have only 3 chances of colliding with a bullet. After that, it's game over." wrapText="true">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Label>
          </children></Pane>
    </children>
 </VBox>

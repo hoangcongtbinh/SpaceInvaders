@@ -2,6 +2,7 @@ package uet.oop.space_invaders.spaceinvaders;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 
 /**
  * Skeleton for uet.oop.space_invaders.spaceinvaders.PowerUp. Students must implement movement,
@@ -10,8 +11,8 @@ import javafx.scene.image.Image;
 public class PowerUp extends GameObject {
 
     // Dimensions of the power-up
-    public static final int WIDTH = 20;
-    public static final int HEIGHT = 20;
+    public static final int WIDTH = 25;
+    public static final int HEIGHT = 25;
 
     // Fall speed of the power-up
     private static final double SPEED = 2;
@@ -61,7 +62,7 @@ public class PowerUp extends GameObject {
     public void update() {
         y+=SPEED;
         // TODO: move power-up vertically by SPEED
-        if(y - height / 2> 600) {
+        if(y - height / 2 > 800) {
             dead = true;
         }
     }

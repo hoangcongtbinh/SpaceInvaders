@@ -10,8 +10,8 @@ import javafx.scene.paint.Color;
 public class Bullet extends GameObject {
 
     // Width and height of the bullet
-    public static final int WIDTH = 2;
-    public static final int HEIGHT = 15;
+    public static final int WIDTH = 3;
+    public static final int HEIGHT = 20;
 
     // Movement speed of the bullet
     private static final double SPEED = 7;

@@ -1,6 +1,7 @@
 package uet.oop.space_invaders.spaceinvaders;
 
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import java.util.List;
 
@@ -14,14 +15,17 @@ public class BossEnemy extends Enemy {
     private int health;
 
     // Hitbox dimensions
-    private static final int WIDTH = 50;
-    private static final int HEIGHT = 50;
+    private static final int WIDTH = 146;
+    private static final int HEIGHT = 105;
 
     // Horizontal movement speed
     private double horizontalSpeed;
 
-    private static final int SCREEN_WIDTH = 360;
-    private static final int SCREEN_HEIGHT = 600;
+    private static final int SCREEN_WIDTH = 480;
+    private static final int SCREEN_HEIGHT = 800;
+
+    private final Image BOSS_IMAGE = new Image(getClass().getResource("/boss.png").toString());
+
 
     /**
      * Constructs a uet.oop.space_invaders.spaceinvaders.BossEnemy at the given coordinates.
@@ -33,9 +37,9 @@ public class BossEnemy extends Enemy {
         // TODO: initialize health, speeds, and load resources
         this.width = WIDTH;
         this.height = HEIGHT;
-        this.health = 20;
+        this.health = 220;
         this.velocityY = 0.5;
-        this.horizontalSpeed = 2.0;
+        this.horizontalSpeed = 2.05;
     }
 
     /**
@@ -84,13 +88,15 @@ public class BossEnemy extends Enemy {
      */
     @Override
     public void render(GraphicsContext gc) {
-        gc.setFill(Color.DARKRED);
-        gc.fillRect(x - width / 2, y - height / 2, width, height);
+        gc.drawImage(BOSS_IMAGE, x - width / 2, y - height / 2, width, height);
+
         // TODO: draw boss sprite or placeholder
         gc.setFill(Color.GRAY);
         gc.fillRect(x - width / 2, y - height / 2 - 10, width, 5);
+
         gc.setFill(Color.LIMEGREEN);
-        double healthBarWidth = ((double) health / 20) * width;
+        double healthBarWidth = ((double) health / 220) * width;
+
         gc.fillRect(x - width / 2, y - height / 2 - 10, healthBarWidth, 5);
     }
 

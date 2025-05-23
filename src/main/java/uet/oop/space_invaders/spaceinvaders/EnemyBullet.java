@@ -10,8 +10,8 @@ import javafx.scene.paint.Color;
 public class EnemyBullet extends GameObject {
 
     // Dimensions of the enemy bullet
-    public static final int WIDTH = 5;
-    public static final int HEIGHT = 5;
+    public static final int WIDTH = 3;
+    public static final int HEIGHT = 14;
 
     // Movement speed of the bullet
     private static final double SPEED = 3;
@@ -59,7 +59,7 @@ public class EnemyBullet extends GameObject {
     public void update() {
         y += velocityY;
         // TODO: move bullet vertically by SPEED
-        if (y>600 + HEIGHT) {
+        if (y>800 + HEIGHT) {
             dead = true;
         }
     }

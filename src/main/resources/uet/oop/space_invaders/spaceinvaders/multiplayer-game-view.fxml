@@ -1,19 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.canvas.Canvas?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<VBox alignment="CENTER" prefHeight="600" prefWidth="360" spacing="20.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="uet.oop.space_invaders.spaceinvaders.MultiplayerGameController">
+<VBox alignment="CENTER" prefHeight="800" prefWidth="480" spacing="20.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="uet.oop.space_invaders.spaceinvaders.MultiplayerGameController">
    <children>
-      <Pane fx:id="game" prefHeight="600.0" prefWidth="360.0">
+      <Pane fx:id="game" prefHeight="800.0" prefWidth="480.0">
          <children>
-            <Canvas fx:id="canvas" focusTraversable="true" height="600.0" onKeyPressed="#onKeyPressed" onKeyReleased="#onKeyReleased" width="360.0" />
-            <Label fx:id="information" layoutX="93.0" layoutY="14.0" text="Score: %d" textFill="WHITE">
+            <Canvas fx:id="canvas" focusTraversable="true" height="800.0" onKeyPressed="#onKeyPressed" onKeyReleased="#onKeyReleased" width="480.0" />
+            <Label fx:id="information" layoutX="13.0" layoutY="41.0" prefHeight="25.0" prefWidth="125.0" text="Score: %d" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="16.0" />
                </font>
@@ -33,26 +31,34 @@
                   <Image url="@../../../../heart.png" />
                </image>
             </ImageView>
-            <Label fx:id="autoPlay" alignment="CENTER" contentDisplay="CENTER" layoutX="188.0" layoutY="14.0" prefHeight="25.0" prefWidth="80.0" style="-fx-background-color: linear-gradient(to bottom right, #0070C0, #7030A0, #163E64); -fx-background-radius: 20;" text="AI Player" textAlignment="CENTER" textFill="WHITE">
+            <Label fx:id="autoPlay" alignment="CENTER" contentDisplay="CENTER" layoutX="17.0" layoutY="75.0" prefHeight="28.0" prefWidth="49.0" style="-fx-background-color: linear-gradient(to bottom right, #0070C0, #7030A0, #163E64); -fx-background-radius: 20;" text="AI" textAlignment="CENTER" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font></Label>
-            <Label fx:id="notification" alignment="CENTER" contentDisplay="CENTER" layoutX="93.0" layoutY="74.0" prefHeight="25.0" prefWidth="175.0" style="-fx-background-color: lightgreen; -fx-background-radius: 20;" text="Notification goes here." textAlignment="CENTER" />
-            <ImageView fx:id="heart1_player2" fitHeight="17.0" fitWidth="17.0" layoutX="291.0" layoutY="18.0" pickOnBounds="true" preserveRatio="true">
+            <Label fx:id="notification" alignment="CENTER" contentDisplay="CENTER" layoutX="153.0" layoutY="25.0" prefHeight="38.0" prefWidth="176.0" style="-fx-background-color: lightgreen; -fx-background-radius: 20;" text="Notification goes here." textAlignment="CENTER">
+               <font>
+                  <Font size="14.0" />
+               </font></Label>
+            <ImageView fx:id="heart1_player2" fitHeight="17.0" fitWidth="17.0" layoutX="405.0" layoutY="18.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../../../heart.png" />
                </image>
             </ImageView>
-            <ImageView fx:id="heart2_player2" fitHeight="17.0" fitWidth="17.0" layoutX="310.0" layoutY="18.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="heart2_player2" fitHeight="17.0" fitWidth="17.0" layoutX="424.0" layoutY="18.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../../../heart.png" />
                </image>
             </ImageView>
-            <ImageView fx:id="heart3_player2" fitHeight="17.0" fitWidth="17.0" layoutX="329.0" layoutY="18.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="heart3_player2" fitHeight="17.0" fitWidth="17.0" layoutX="443.0" layoutY="18.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../../../heart.png" />
                </image>
             </ImageView>
+            <Label fx:id="information2" alignment="CENTER_RIGHT" layoutX="349.0" layoutY="41.0" prefHeight="25.0" prefWidth="112.0" text="Score: %d" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
          </children>
       </Pane>
    </children>

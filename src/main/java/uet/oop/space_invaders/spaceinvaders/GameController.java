@@ -23,25 +23,30 @@ import javafx.scene.layout.Pane;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 
 public class GameController {
-    public int ENEMY_LIMIT = 10;
-    public static final int POWERUP_LIMIT = 3;
+    protected int ENEMY_LIMIT = 10;
+    protected int POWERUP_LIMIT = 3;
     public static final int BULLET_LIMIT = 25;
-    public int ENEMY_PER_LAP = 3;
+
+    public static final int LEVEL_TIME = 5; // in seconds
+    protected int ENEMY_PER_LAP = 3;
 
     /* Depends on Screen Refresh Rate */
-    public int SPAWN_INTERVAL = 120;
-    public int POWERUP_INTERVAL = 480;
-    public int BULLET_INTERVAL = 240;
-    public int FIRE_INTERVAL = 7;
+    protected int SPAWN_INTERVAL = 120;
+    protected int POWERUP_INTERVAL = 480;
+    protected int LAST_POWERUP_INTERVAL = 120;
+    protected int BULLET_INTERVAL = 240;
+    protected int FIRE_INTERVAL = 7;
+
     public static final int EXPLOSION_EDGE = 60;
 
-    public static final int NOTIFICATION_TIMEOUT = 120;
+    public static final int NOTIFICATION_TIMEOUT = 240;
 
     protected int enemyCount = 2;
     protected int powerupCount = 0;
@@ -57,6 +62,8 @@ public class GameController {
     protected SoundEffect explosion = new SoundEffect("/explosion.wav");
     protected SoundEffect reward = new SoundEffect("/reward.wav");
     protected SoundEffect target = new SoundEffect("/target.wav");
+    protected SoundEffect boss = new SoundEffect("/boss.wav");
+    protected SoundEffect win = new SoundEffect("/win.wav");
 
     // Image Resources
     protected Image HEART = new Image(getClass().getResource("/heart.png").toString());
@@ -70,7 +77,9 @@ public class GameController {
     protected int time = 0;
     protected int lastTime = 0;
     protected int notifyShownTime = 0;
+    protected long lastLevelTime = 0;
 
+    public boolean muted = false;
     protected Player player;
     protected int score = 0;
     protected int health = 3;
@@ -79,6 +88,10 @@ public class GameController {
     public static final int SINGLE_PLAYER = 1;
     public static final int MULTIPLAYER = 2;
     protected static int gameMode = 0;
+
+    protected boolean isBossSpawned = false;
+    protected boolean isBossCalled = false;
+    protected int bossCount = 0;
 
     @FXML protected Pane game;
 
@@ -99,6 +112,8 @@ public class GameController {
 
     @FXML protected ImageView heart3;
 
+    @FXML protected ImageView nosound;
+
     public GameController() {
 
     }
@@ -108,6 +123,7 @@ public class GameController {
         this.gc = canvas.getGraphicsContext2D();
         this.gameObjects = new ArrayList<>();
         this.player = new Player(canvas.getWidth() / 2, canvas.getHeight() - 50);
+        this.player.game = this;
 
         enemyPool = new ObjectPool<>(Enemy::new);
         bulletPool = new ObjectPool<>(Bullet::new);
@@ -128,23 +144,33 @@ public class GameController {
             e.printStackTrace();
         }
 
+        this.lastLevelTime = System.nanoTime();
         start();
     }
 
-    public void objectSpawn() {
-        int enemyCreated = 0;
-        while (time % SPAWN_INTERVAL == 0 && enemyCount < ENEMY_LIMIT && enemyCreated < ENEMY_PER_LAP) {
-            Enemy enemy = enemyPool.get();
-            enemy.x = r.nextInt(360 - Enemy.WIDTH);
-            enemy.y = r.nextInt(10);
-            gameObjects.add(enemy);
-            enemyCreated++;
-            enemyCount++;
-        }
+    // Push notification
+    public void pushNotification(String body, String color) {
+        notifyShownTime = time;
+        notification.setVisible(true);
+        notification.setText(body);
+        notification.setStyle("-fx-background-color: " + color + ";"
+                + "-fx-background-radius: 20;");
+    }
 
+    public void spawnBoss() {
+        POWERUP_INTERVAL = LAST_POWERUP_INTERVAL - 30;
+        POWERUP_LIMIT = 3;
+        if (!muted) boss.play();
+        pushNotification("Good luck!", "orange");
+        gameObjects.add(new BossEnemy(90, 5));
+        bossCount = 1;
+        isBossSpawned = true;
+    }
+
+    public void objectSpawn() {
         if (time % POWERUP_INTERVAL == 0 && powerupCount < POWERUP_LIMIT) {
             PowerUp powerUp = powerUpPool.get();
-            powerUp.x = r.nextInt(360 - PowerUp.WIDTH);
+            powerUp.x = r.nextInt(480 - PowerUp.WIDTH);
             powerUp.y = r.nextInt(10);
             gameObjects.add(powerUp);
             powerupCount++;
@@ -153,14 +179,38 @@ public class GameController {
         if (time % BULLET_INTERVAL == 0) {
             List<GameObject> bullets = new ArrayList<>();
             for (GameObject enemy: gameObjects) {
-                if (enemy instanceof Enemy) {
+                if (enemy instanceof BossEnemy) {
+                    ((BossEnemy) enemy).shoot(gameObjects);
+                    break;
+                } else if (enemy instanceof Enemy) {
                     EnemyBullet enemyBullet = enemyBulletPool.get();
                     enemyBullet.x = enemy.getX();
                     enemyBullet.y = enemy.getY();
                     bullets.add(enemyBullet);
                 }
             }
-            gameObjects.addAll(bullets);
+            if (bullets.size() > 0) gameObjects.addAll(bullets);
+        }
+
+        if (level <= 5) {
+            int enemyCreated = 0;
+            while (time % SPAWN_INTERVAL == 0 && enemyCount < ENEMY_LIMIT && enemyCreated < ENEMY_PER_LAP) {
+                Enemy enemy = enemyPool.get();
+                enemy.x = r.nextInt(480 - Enemy.WIDTH);
+                enemy.y = r.nextInt(10);
+                gameObjects.add(enemy);
+                enemyCreated++;
+                enemyCount++;
+            }
+        } else if (!isBossSpawned && !isBossCalled) {
+            pushNotification("Boss is Coming...", "orange");
+            LAST_POWERUP_INTERVAL = POWERUP_INTERVAL;
+            POWERUP_INTERVAL = 40;
+            POWERUP_LIMIT = 8;
+            PauseTransition delay = new PauseTransition(Duration.seconds(7));
+            delay.setOnFinished(event -> spawnBoss());
+            delay.play();
+            isBossCalled = true;
         }
     }
 
@@ -170,7 +220,10 @@ public class GameController {
         while (it.hasNext()) {
             GameObject obj = it.next();
             if (obj.isDead()) {
-                if (obj instanceof Enemy) {
+                if (obj instanceof BossEnemy) {
+                    bossCount--;
+                    score += 200;
+                } else if (obj instanceof Enemy) {
                     enemyCount--;
                     enemyPool.release((Enemy) obj);
                 }
@@ -185,6 +238,7 @@ public class GameController {
                     bulletCount--;
                     bulletPool.release((Bullet) obj);
                 }
+
                 it.remove();
             }
         }
@@ -200,21 +254,30 @@ public class GameController {
         gameLoop = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                information.setText(String.format("Score: %d\nLevel: %d", score, level));
+                information.setText(String.format("Score: %d\nLevel: %s", score, (level <= 5) ? level : "BOSS"));
                 gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight()); // Reset frame
 
                 objectSpawn();
                 playerInput();
                 update();
-                objectCollision(player);
-
+                objectCollision();
                 levelManagement();
+
+                nosound.setVisible(muted);
 
                 if (player.isAutoPlay()) {
                     player.autoUpdate(gameObjects, gameObjects, bulletPool);
                     autoPlay.setVisible(true);
                 } else {
                     autoPlay.setVisible(false);
+                }
+
+                if (isBossSpawned && bossCount == 0) {
+                    if (!muted) win.play();
+                    PauseTransition delay = new PauseTransition(Duration.millis(300));
+                    delay.setOnFinished(event -> showCongratsScreen());
+                    delay.play();
+                    gameLoop.stop();
                 }
 
                 for (GameObject object: gameObjects) {
@@ -239,6 +302,10 @@ public class GameController {
         if (pressedKeys.contains(KeyCode.P)) {
             player.setAutoPlay(!player.isAutoPlay());
             System.out.println("AI Mode: " + player.isAutoPlay());
+        }
+
+        if (pressedKeys.contains(KeyCode.M)) {
+            muted = !muted;
         }
     }
 
@@ -267,6 +334,22 @@ public class GameController {
         }
     }
 
+    public void showRegiScreen() throws IOException {
+        if (RegiScore.isHighScore(this.score)) {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("regiscore-view.fxml"));
+            Stage popupStage = new Stage();
+            popupStage.setScene(new Scene(fxmlLoader.load(), 360, 200));
+            popupStage.setTitle("High score");
+            popupStage.setResizable(false);
+            popupStage.getIcons().add(new Image(getClass().getResource("/player.jpg").toString()));
+
+            RegiScore regiScore = fxmlLoader.getController();
+            regiScore.score.setText(String.valueOf(this.score));
+
+            popupStage.show();
+        }
+    }
+
     public void showLosingScreen() {
         System.gc();
         // TODO: display Game Over screen with score and buttons
@@ -276,13 +359,15 @@ public class GameController {
             gameLoop.stop();
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("gameover-view.fxml"));
             Stage currentStage = (Stage)(canvas).getScene().getWindow();
-            Scene scene = new Scene(fxmlLoader.load(), 360, 600);
+            Scene scene = new Scene(fxmlLoader.load(), 480, 800);
             gameObjects.clear();
 
             SpaceShooter losingScreen = fxmlLoader.getController();
             losingScreen.scoreLabel.setText(String.format("Score: %d", score));
 
             currentStage.setScene(scene);
+            showRegiScreen();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -297,41 +382,54 @@ public class GameController {
         }
     }
 
+    public void showCongratsScreen() {
+        System.gc();
+        try {
+            player.setDead(true);
+            gameLoop.stop();
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("win-view.fxml"));
+            Stage currentStage = (Stage)(canvas).getScene().getWindow();
+            Scene scene = new Scene(fxmlLoader.load(), 480, 800);
+            gameObjects.clear();
+
+            SpaceShooter winScreen = fxmlLoader.getController();
+            winScreen.scoreLabel.setText(String.format("Score: %d", score));
+
+            currentStage.setScene(scene);
+            showRegiScreen();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     public void returnGame() {
         game.getChildren().remove(pause_view);
         gameLoop.start();
     }
 
-    // Push notification
-    public void pushNotification(String body, String color) {
-        notifyShownTime = time;
-        notification.setVisible(true);
-        notification.setText(body);
-        notification.setStyle("-fx-background-color: " + color + ";"
-                + "-fx-background-radius: 20;");
-    }
 
     // Health management
-    public void setHealth(int health, Player player) {
-        player.setHealth(health);
-        heart1.setImage((player.health >= 1)? HEART : BAD_HEART);
-        heart2.setImage((player.health >= 2)? HEART : BAD_HEART);
-        heart3.setImage((player.health == 3)? HEART : BAD_HEART);
+    public void setHealth(int health) {
+        this.health = health;
+        heart1.setImage((this.health >= 1)? HEART : BAD_HEART);
+        heart2.setImage((this.health >= 2)? HEART : BAD_HEART);
+        heart3.setImage((this.health == 3)? HEART : BAD_HEART);
     }
 
     // Collision
     @FXML
-    public void objectCollision(Player player) {
+    public void objectCollision() {
         for (GameObject object : gameObjects) {
             // Player side
             if ((object instanceof Enemy && (player.isColliding(object) || object.isCollidingWithBottom(canvas.getHeight()) == true)) ||
-                    (object instanceof EnemyBullet && player.isColliding(object) && player.health == 1)) {
+                    (object instanceof EnemyBullet && player.isColliding(object) && health == 1)) {
                 gameLoop.stop();
-                explosion.play();
+                if (!muted) explosion.play();
                 player.setDead(true);
 
                 gc.drawImage(EXPLOSION_IMAGE, player.x - EXPLOSION_EDGE / 2, player.y - EXPLOSION_EDGE / 2, EXPLOSION_EDGE, EXPLOSION_EDGE);
-                setHealth(0, player);
+                setHealth(0);
 
                 PauseTransition delay = new PauseTransition(Duration.seconds(3));
                 delay.setOnFinished(event -> showLosingScreen());
@@ -339,7 +437,7 @@ public class GameController {
 
                 break;
             } else if (object instanceof PowerUp && player.isColliding(object)) {
-                reward.play();
+                if (!muted) reward.play();
                 ((PowerUp) object).setDead(true);
                 int reward = r.nextInt(11);
                 if (reward <= 6) {
@@ -354,8 +452,8 @@ public class GameController {
                         pushNotification("Fire Rate limit reached!", "orange");
                     }
                 } else {
-                    if (player.health < 3) {
-                        setHealth(health + 1, player);
+                    if (health < 3) {
+                        setHealth(health + 1);
                         pushNotification(String.format("Health + 1",
                                 (1 / FIRE_INTERVAL)), "lightgreen");
                     } else {
@@ -365,16 +463,21 @@ public class GameController {
                 }
 
             } else if (object instanceof EnemyBullet && player.isColliding(object)) {
-                target.play();
+                if (!muted) target.play();
                 ((EnemyBullet) object).setDead(true);
-                setHealth(player.health - 1, player);
+                setHealth(this.health - 1);
             }
 
             // Enemy side
             if (object instanceof Bullet) {
                 for (GameObject enemy: gameObjects) {
-                    if (enemy instanceof Enemy && enemy.isColliding(object)) {
-                        target.play();
+                    if (enemy instanceof BossEnemy && enemy.isColliding(object) && !object.isDead()){
+                        if (!muted) target.play();
+                        ((Bullet) object).setDead(true);
+                        ((BossEnemy) enemy).takeDamage();
+                        score += 50;
+                    } else if (enemy instanceof Enemy && enemy.isColliding(object) && !object.isDead()) {
+                        if (!muted) target.play();
                         ((Enemy) enemy).setDead(true);
                         ((Bullet) object).setDead(true);
                         score += 50;
@@ -385,13 +488,11 @@ public class GameController {
     }
 
     public void levelManagement() {
-        if (score > level * 2500) {
+        if (System.nanoTime() - lastLevelTime >= LEVEL_TIME * Math.pow(10,9)) {
             level++;
-//            if (level == 6) {
-//                pushNotification(String.format("Boss is Coming!", level), "orange");
-//                return;
-//            }
-            pushNotification(String.format("Level %d", level), "orange");
+            lastLevelTime = System.nanoTime();
+            if (level >= 6) return;
+
             ENEMY_LIMIT += 5;
             ENEMY_PER_LAP ++;
             SPAWN_INTERVAL -= 10;

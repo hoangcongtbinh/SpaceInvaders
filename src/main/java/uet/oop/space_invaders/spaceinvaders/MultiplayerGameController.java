@@ -31,6 +31,9 @@ public class MultiplayerGameController extends GameController {
         this.player = new Player(canvas.getWidth() / 3, canvas.getHeight() - 50);
         this.player2 = new Player(canvas.getWidth() * 2 / 3, canvas.getHeight() - 50, Player.PLAYER_BLUE_IMAGE);
 
+        this.player.game = this;
+        this.player2.game = this;
+
         enemyPool = new ObjectPool<>(Enemy::new);
         bulletPool = new ObjectPool<>(Bullet::new);
         enemyBulletPool = new ObjectPool<>(EnemyBullet::new);
@@ -127,7 +130,6 @@ public class MultiplayerGameController extends GameController {
         }
     }
 
-    @Override
     public void setHealth(int health, Player player) {
         if (player.equals(this.player)) {
             player.setHealth(health);
@@ -145,11 +147,10 @@ public class MultiplayerGameController extends GameController {
         System.out.println("Setting health for " + (player == this.player ? "player1" : "player2") + ": " + health);
     }
 
-    @Override
     public void objectCollision(Player player) {
         for (GameObject object : gameObjects) {
             // Player side
-            if ((object instanceof Enemy && (player.isColliding(object) || object.isCollidingWithBottom(canvas.getHeight()) == true)) ||
+            if ((object instanceof Enemy && (player.isColliding(object) || object.isCollidingWithBottom(canvas.getHeight()))) ||
                     (object instanceof EnemyBullet && player.isColliding(object) && player.health == 1)) {
                 player.setDead(true);
                 gameObjects.remove(player);
