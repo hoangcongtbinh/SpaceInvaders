@@ -174,12 +174,14 @@ public class Player extends GameObject {
      */
     public void shoot(List<GameObject> newObjects, ObjectPool<Bullet> objectPool) {
         // TODO: create and add new uet.oop.space_invaders.spaceinvaders.Bullet at (x, y - HEIGHT/2)
+        if (this.isDead()) return;
         if (!this.isAutoPlay() && !game.muted) {
             gun.play();
         }
         Bullet bullet = objectPool.get();
         bullet.x = this.x;
         bullet.y = this.y - height / 2;
+        bullet.player = playerImage.equals(PLAYER_IMAGE) ? 1 : 2;
         newObjects.add(bullet);
     }
 

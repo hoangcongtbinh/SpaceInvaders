@@ -92,7 +92,7 @@ public class SpaceShooter extends Application {
         // TODO: display instructions dialog
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("highscore-view.fxml"));
         Stage popupStage = new Stage();
-        popupStage.setScene(new Scene(fxmlLoader.load(), 480, 800));
+        popupStage.setScene(new Scene(fxmlLoader.load(), 360, 600));
         popupStage.setTitle("High score");
         popupStage.setResizable(false);
         popupStage.getIcons().add(new Image(getClass().getResource("/player.jpg").toString()));
