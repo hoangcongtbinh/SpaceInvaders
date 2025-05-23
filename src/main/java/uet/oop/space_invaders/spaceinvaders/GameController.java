@@ -34,7 +34,7 @@ public class GameController {
     protected int POWERUP_LIMIT = 3;
     public static final int BULLET_LIMIT = 25;
 
-    public static final int LEVEL_TIME = 5; // in seconds
+    public static final int LEVEL_TIME = 60; // in seconds
     protected int ENEMY_PER_LAP = 3;
 
     /* Depends on Screen Refresh Rate */
@@ -81,7 +81,7 @@ public class GameController {
 
     public boolean muted = false;
     protected Player player;
-    protected int score = 0;
+    int score = 0;
     protected int health = 3;
     protected int level = 1; // max is 5, a step is 2500
 

@@ -44,6 +44,11 @@
                   <Image url="@../../../../heart.png" />
                </image>
             </ImageView>
+            <ImageView fx:id="nosound" fitHeight="13.0" fitWidth="13.0" layoutX="384.0" layoutY="19.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+               <Image url="@../../../../mute.png" />
+            </image>
+            </ImageView>
             <ImageView fx:id="heart2_player2" fitHeight="17.0" fitWidth="17.0" layoutX="424.0" layoutY="18.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../../../heart.png" />

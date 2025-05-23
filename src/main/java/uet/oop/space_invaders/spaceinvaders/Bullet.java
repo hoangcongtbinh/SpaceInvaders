@@ -16,6 +16,9 @@ public class Bullet extends GameObject {
     // Movement speed of the bullet
     private static final double SPEED = 7;
 
+    // Who fire this bullet
+    protected int player = 1;
+
     public Bullet() {
         this(0, 0);
     }
@@ -31,6 +34,20 @@ public class Bullet extends GameObject {
         // TODO: initialize dead flag if needed
         this.velocityY = -SPEED;
         this.dead = false;
+    }
+
+    /**
+     * Constructs a uet.oop.space_invaders.spaceinvaders.Bullet at the given position.
+     *
+     * @param x initial X position
+     * @param y initial Y position
+     */
+    public Bullet(double x, double y, int player) {
+        super(x, y, WIDTH, HEIGHT);
+        // TODO: initialize dead flag if needed
+        this.velocityY = -SPEED;
+        this.dead = false;
+        this.player = player;
     }
 
     /**
