@@ -15,14 +15,14 @@ public class BossEnemy extends Enemy {
     private int health;
 
     // Hitbox dimensions
-    private static final int WIDTH = 50;
-    private static final int HEIGHT = 50;
+    private static final int WIDTH = 146;
+    private static final int HEIGHT = 105;
 
     // Horizontal movement speed
     private double horizontalSpeed;
 
-    private static final int SCREEN_WIDTH = 360;
-    private static final int SCREEN_HEIGHT = 600;
+    private static final int SCREEN_WIDTH = 480;
+    private static final int SCREEN_HEIGHT = 800;
 
     private final Image BOSS_IMAGE = new Image(getClass().getResource("/boss.png").toString());
 
@@ -37,7 +37,7 @@ public class BossEnemy extends Enemy {
         // TODO: initialize health, speeds, and load resources
         this.width = WIDTH;
         this.height = HEIGHT;
-        this.health = 120;
+        this.health = 220;
         this.velocityY = 0.5;
         this.horizontalSpeed = 2.05;
     }
@@ -95,7 +95,7 @@ public class BossEnemy extends Enemy {
         gc.fillRect(x - width / 2, y - height / 2 - 10, width, 5);
 
         gc.setFill(Color.LIMEGREEN);
-        double healthBarWidth = ((double) health / 120) * width;
+        double healthBarWidth = ((double) health / 220) * width;
 
         gc.fillRect(x - width / 2, y - height / 2 - 10, healthBarWidth, 5);
     }

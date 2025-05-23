@@ -11,8 +11,8 @@ import javafx.scene.image.Image;
 public class Enemy extends GameObject {
 
     // Hitbox dimensions
-    protected static final int WIDTH = 30;
-    protected static final int HEIGHT = 20;
+    protected static final int WIDTH = 45;
+    protected static final int HEIGHT = 30;
 
     // Movement speed
     public static double SPEED = 1;
@@ -62,7 +62,7 @@ public class Enemy extends GameObject {
     public void update() {
         y += velocityY;
         // TODO: implement vertical movement by SPEED
-        if (y>600 + HEIGHT) {
+        if (y>800 + HEIGHT) {
             dead = true;
         }
     }

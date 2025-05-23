@@ -15,8 +15,8 @@ import java.util.List;
 public class Player extends GameObject {
 
     // Hitbox dimensions
-    private static final int WIDTH = 20;
-    private static final int HEIGHT = 40;
+    private static final int WIDTH = 25;
+    private static final int HEIGHT = 50;
 
     // Movement speed
     private static final double SPEED = 5;
@@ -28,10 +28,12 @@ public class Player extends GameObject {
     private boolean moveBackward;
 
     // Player image
-    private final Image PLAYER_IMAGE = new Image(getClass().getResource("/player.png").toString());
+    private Image playerImage;
+    protected static final Image PLAYER_IMAGE = new Image(Player.class.getResource("/player.png").toString());
+    protected static final Image PLAYER_BLUE_IMAGE = new Image(Player.class.getResource("/player-blue.png").toString());
 
     // Player health
-    private int health;
+    protected int health;
 
     // AI settings
     private boolean autoPlay = false;
@@ -54,44 +56,52 @@ public class Player extends GameObject {
         // TODO: initialize health, dead flag, load sprite if needed
         this.health = 3;
         this.dead = false;
+        this.playerImage = PLAYER_IMAGE;
     }
 
-        /**
-         * Returns the width of the player.
-         */
-        @Override
-        public double getWidth() {
-            // TODO: return width
-            return WIDTH;
-        }
+    public Player(double x, double y, Image playerImage) {
+        super(x, y, WIDTH, HEIGHT);
+        this.health = 3;
+        this.dead = false;
+        this.playerImage = playerImage;
+    }
 
-        /**
-         * Returns the height of the player.
-         */
-        @Override
-        public double getHeight() {
-            // TODO: return height
-            return HEIGHT;
-        }
+    /**
+     * Returns the width of the player.
+     */
+    @Override
+    public double getWidth() {
+        // TODO: return width
+        return WIDTH;
+    }
 
-        /**
-         * Returns current health of the player.
-         */
-        public int getHealth() {
-            // TODO: return health
-            return health;
-        }
+    /**
+     * Returns the height of the player.
+     */
+    @Override
+    public double getHeight() {
+        // TODO: return height
+        return HEIGHT;
+    }
 
-        /**
-         * Sets player's health.
-         */
-        public void setHealth(int health) {
-            // TODO: update health
-            this.health = health;
-            if (this.health <= 0) {
-                dead = true;
-            }
+    /**
+     * Returns current health of the player.
+     */
+    public int getHealth() {
+        // TODO: return health
+        return health;
+    }
+
+    /**
+     * Sets player's health.
+     */
+    public void setHealth(int health) {
+        // TODO: update health
+        this.health = health;
+        if (this.health <= 0) {
+            dead = true;
         }
+    }
 
     /**
      * Updates player position based on movement flags.
@@ -112,8 +122,8 @@ public class Player extends GameObject {
             y += SPEED;
         }
 
-        x = Math.max(WIDTH / 2, Math.min(360 - WIDTH / 2, x));
-        y = Math.max(HEIGHT / 2, Math.min(600 - HEIGHT / 2, y));
+        x = Math.max(WIDTH / 2, Math.min(480 - WIDTH / 2, x));
+        y = Math.max(HEIGHT / 2, Math.min(800 - HEIGHT / 2, y));
     }
 
     /**
@@ -122,7 +132,7 @@ public class Player extends GameObject {
     @Override
     public void render(GraphicsContext gc) {
         // TODO: draw sprite or placeholder shape
-        gc.drawImage(PLAYER_IMAGE, x - width / 2, y - height / 2, width, height);
+        gc.drawImage(playerImage, x - width / 2, y - height / 2, width, height);
     }
 
     /**
@@ -214,7 +224,7 @@ public class Player extends GameObject {
 
         for (GameObject obj : objects) {
             if (obj instanceof Enemy) {
-                double distY = Math.abs(600 - obj.getY());
+                double distY = Math.abs(800 - obj.getY());
                 if (distY < closestDistY) {
                     closestDistY = distY;
                     closestEnemyX = obj.getX();
@@ -223,7 +233,7 @@ public class Player extends GameObject {
         }
 
         // lui ve sau de ban
-        this.setMoveBackward(!this.isCollidingWithBottom(600));
+        this.setMoveBackward(!this.isCollidingWithBottom(800));
 
         // uu tien ne dan truoc
         for (GameObject obj : objects) {

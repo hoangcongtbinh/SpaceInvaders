@@ -30,84 +30,89 @@ import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 
 public class GameController {
-    private int ENEMY_LIMIT = 10;
-    private int POWERUP_LIMIT = 3;
+    protected int ENEMY_LIMIT = 10;
+    protected int POWERUP_LIMIT = 3;
     public static final int BULLET_LIMIT = 25;
-    public static final int LEVEL_TIME = 60; // in seconds
-    private int ENEMY_PER_LAP = 3;
+
+    public static final int LEVEL_TIME = 5; // in seconds
+    protected int ENEMY_PER_LAP = 3;
 
     /* Depends on Screen Refresh Rate */
-    private int SPAWN_INTERVAL = 120;
-    private int POWERUP_INTERVAL = 480;
-    private int LAST_POWERUP_INTERVAL = 120;
-    private int BULLET_INTERVAL = 240;
-    private int FIRE_INTERVAL = 7;
+    protected int SPAWN_INTERVAL = 120;
+    protected int POWERUP_INTERVAL = 480;
+    protected int LAST_POWERUP_INTERVAL = 120;
+    protected int BULLET_INTERVAL = 240;
+    protected int FIRE_INTERVAL = 7;
 
     public static final int EXPLOSION_EDGE = 60;
 
-    public static final int NOTIFICATION_TIMEOUT = 180;
+    public static final int NOTIFICATION_TIMEOUT = 240;
 
-    private int enemyCount = 2;
-    private int powerupCount = 0;
-    private int bulletCount = 0;
+    protected int enemyCount = 2;
+    protected int powerupCount = 0;
+    protected int bulletCount = 0;
 
-    private List<GameObject> gameObjects;
-    private ObjectPool<Enemy> enemyPool;
-    private ObjectPool<Bullet> bulletPool;
-    private ObjectPool<EnemyBullet> enemyBulletPool;
-    private ObjectPool<PowerUp> powerUpPool;
+    protected List<GameObject> gameObjects;
+    protected ObjectPool<Enemy> enemyPool;
+    protected ObjectPool<Bullet> bulletPool;
+    protected ObjectPool<EnemyBullet> enemyBulletPool;
+    protected ObjectPool<PowerUp> powerUpPool;
 
     // gun soundEffect in Player.java
-    private SoundEffect explosion = new SoundEffect("/explosion.wav");
-    private SoundEffect reward = new SoundEffect("/reward.wav");
-    private SoundEffect target = new SoundEffect("/target.wav");
-    private SoundEffect boss = new SoundEffect("/boss.wav");
-    private SoundEffect win = new SoundEffect("/win.wav");
+    protected SoundEffect explosion = new SoundEffect("/explosion.wav");
+    protected SoundEffect reward = new SoundEffect("/reward.wav");
+    protected SoundEffect target = new SoundEffect("/target.wav");
+    protected SoundEffect boss = new SoundEffect("/boss.wav");
+    protected SoundEffect win = new SoundEffect("/win.wav");
 
     // Image Resources
-    private Image HEART = new Image(getClass().getResource("/heart.png").toString());
-    private Image BAD_HEART = new Image(getClass().getResource("/badheart.png").toString());
-    private Image EXPLOSION_IMAGE = new Image(getClass().getResource("/explosion.png").toString());
+    protected Image HEART = new Image(getClass().getResource("/heart.png").toString());
+    protected Image BAD_HEART = new Image(getClass().getResource("/badheart.png").toString());
+    protected Image EXPLOSION_IMAGE = new Image(getClass().getResource("/explosion.png").toString());
 
-    private GraphicsContext gc;
-    private AnimationTimer gameLoop;
-    private Random r;
+    protected GraphicsContext gc;
+    protected AnimationTimer gameLoop;
+    protected Random r;
 
-    private int time = 0;
-    private int lastTime = 0;
-    private int notifyShownTime = 0;
-    private long lastLevelTime = 0;
+    protected int time = 0;
+    protected int lastTime = 0;
+    protected int notifyShownTime = 0;
+    protected long lastLevelTime = 0;
 
     public boolean muted = false;
-    private Player player;
-    private int score = 0;
-    private int health = 3;
-    private int level = 1; // max is 5, a step is 2500
+    protected Player player;
+    protected int score = 0;
+    protected int health = 3;
+    protected int level = 1; // max is 5, a step is 2500
 
-    private boolean isBossSpawned = false;
-    private boolean isBossCalled = false;
-    private int bossCount = 0;
+    public static final int SINGLE_PLAYER = 1;
+    public static final int MULTIPLAYER = 2;
+    protected static int gameMode = 0;
 
-    @FXML private Pane game;
+    protected boolean isBossSpawned = false;
+    protected boolean isBossCalled = false;
+    protected int bossCount = 0;
 
-    private Parent pause_view;
-    private SpaceShooter main;
+    @FXML protected Pane game;
 
-    @FXML private Canvas canvas;
+    protected Parent pause_view;
+    protected SpaceShooter main;
 
-    @FXML private Label information;
+    @FXML protected Canvas canvas;
 
-    @FXML private Label autoPlay;
+    @FXML protected Label information;
 
-    @FXML private Label notification;
+    @FXML protected Label autoPlay;
 
-    @FXML private ImageView heart1;
+    @FXML protected Label notification;
 
-    @FXML private ImageView heart2;
+    @FXML protected ImageView heart1;
 
-    @FXML private ImageView heart3;
+    @FXML protected ImageView heart2;
 
-    @FXML private ImageView nosound;
+    @FXML protected ImageView heart3;
+
+    @FXML protected ImageView nosound;
 
     public GameController() {
 
@@ -157,7 +162,7 @@ public class GameController {
         POWERUP_LIMIT = 3;
         if (!muted) boss.play();
         pushNotification("Good luck!", "orange");
-        gameObjects.add(new BossEnemy(50, 5));
+        gameObjects.add(new BossEnemy(90, 5));
         bossCount = 1;
         isBossSpawned = true;
     }
@@ -165,7 +170,7 @@ public class GameController {
     public void objectSpawn() {
         if (time % POWERUP_INTERVAL == 0 && powerupCount < POWERUP_LIMIT) {
             PowerUp powerUp = powerUpPool.get();
-            powerUp.x = r.nextInt(360 - PowerUp.WIDTH);
+            powerUp.x = r.nextInt(480 - PowerUp.WIDTH);
             powerUp.y = r.nextInt(10);
             gameObjects.add(powerUp);
             powerupCount++;
@@ -191,7 +196,7 @@ public class GameController {
             int enemyCreated = 0;
             while (time % SPAWN_INTERVAL == 0 && enemyCount < ENEMY_LIMIT && enemyCreated < ENEMY_PER_LAP) {
                 Enemy enemy = enemyPool.get();
-                enemy.x = r.nextInt(360 - Enemy.WIDTH);
+                enemy.x = r.nextInt(480 - Enemy.WIDTH);
                 enemy.y = r.nextInt(10);
                 gameObjects.add(enemy);
                 enemyCreated++;
@@ -354,7 +359,7 @@ public class GameController {
             gameLoop.stop();
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("gameover-view.fxml"));
             Stage currentStage = (Stage)(canvas).getScene().getWindow();
-            Scene scene = new Scene(fxmlLoader.load(), 360, 600);
+            Scene scene = new Scene(fxmlLoader.load(), 480, 800);
             gameObjects.clear();
 
             SpaceShooter losingScreen = fxmlLoader.getController();
@@ -384,7 +389,7 @@ public class GameController {
             gameLoop.stop();
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("win-view.fxml"));
             Stage currentStage = (Stage)(canvas).getScene().getWindow();
-            Scene scene = new Scene(fxmlLoader.load(), 360, 600);
+            Scene scene = new Scene(fxmlLoader.load(), 480, 800);
             gameObjects.clear();
 
             SpaceShooter winScreen = fxmlLoader.getController();
