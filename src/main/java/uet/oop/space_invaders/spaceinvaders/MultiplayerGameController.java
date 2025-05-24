@@ -175,6 +175,9 @@ public class MultiplayerGameController extends GameController {
 
             x = popupStage.getX();
             y = popupStage.getY() + popupStage.getHeight();
+        } else {
+            x = -1;
+            y = -1;
         }
 
         if (RegiScore.isHighScore(this.score_player2)) {
@@ -185,8 +188,10 @@ public class MultiplayerGameController extends GameController {
             popupStage2.setResizable(false);
             popupStage2.getIcons().add(new Image(getClass().getResource("/player.jpg").toString()));
 
-            popupStage2.setX(x);
-            popupStage2.setY(y);
+            if (x != -1) {
+                popupStage2.setX(x);
+                popupStage2.setY(y);
+            }
 
             RegiScore regiScore = fxmlLoader.getController();
             regiScore.score.setText(String.valueOf(this.score_player2));

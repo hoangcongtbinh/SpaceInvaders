@@ -108,7 +108,7 @@
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <Label layoutX="14.0" layoutY="394.0" prefHeight="54.0" prefWidth="420.0" text="* AI Mode should be enable at the begin or with at least enemies to have best performance." wrapText="true">
+                  <Label layoutX="14.0" layoutY="394.0" prefHeight="54.0" prefWidth="420.0" text="* AI Mode should be enabled at the beginning or when there are only a few enemies, to ensure the best performance" wrapText="true">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
