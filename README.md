@@ -40,17 +40,19 @@
 </p>
 
 ### Gameplay
+<table align="center">
+  <tr>
+    <td align="center">
+      <img src="img/Single.png" alt="Single Player Mode" width="300"><br>
+      <em>Single Player Mode</em>
+    </td>
+    <td align="center" style="padding-left: 20px;">
+      <img src="img/Multi.png" alt="Multiplayer Mode" width="300"><br>
+      <em>Multiplayer Mode</em>
+    </td>
+  </tr>
+</table>
 
-<div style="display: flex; justify-content: center; gap: 40px; cursor: pointer;">
-    <div style="text-align: center;">
-        <img src="img/Single.png" alt="Single Player Mode" style="height: 600px; width: auto;"><br>
-        <em>Single Player Mode</em>
-    </div>
-    <div style="text-align: center;">
-        <img src="img/Multi.png" alt="Multiplayer Mode" style="height: 600px; width: auto;"><br>
-        <em>Multiplayer Mode</em>
-    </div>
-</div>
 
 ### Losing Screen
 <p align="center" style="cursor: pointer;">
