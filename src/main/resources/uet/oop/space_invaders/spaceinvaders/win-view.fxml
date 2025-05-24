@@ -5,7 +5,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<VBox alignment="CENTER" prefHeight="800" prefWidth="480" spacing="20.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="uet.oop.space_invaders.spaceinvaders.SpaceShooter">
+<VBox alignment="CENTER" prefHeight="800" prefWidth="480" spacing="20.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1" fx:controller="uet.oop.space_invaders.spaceinvaders.SpaceShooter">
    <children>
       <Pane prefHeight="800.0" prefWidth="480.0">
          <children>

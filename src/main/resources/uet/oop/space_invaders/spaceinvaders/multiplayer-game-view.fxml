@@ -11,7 +11,7 @@
       <Pane fx:id="game" prefHeight="800.0" prefWidth="480.0">
          <children>
             <Canvas fx:id="canvas" focusTraversable="true" height="800.0" onKeyPressed="#onKeyPressed" onKeyReleased="#onKeyReleased" width="480.0" />
-            <Label fx:id="information" layoutX="13.0" layoutY="41.0" prefHeight="25.0" prefWidth="125.0" text="Score: %d" textFill="WHITE">
+            <Label fx:id="information" layoutX="14.0" layoutY="41.0" prefHeight="25.0" prefWidth="125.0" text="Score: %d" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="16.0" />
                </font>
@@ -39,27 +39,27 @@
                <font>
                   <Font size="14.0" />
                </font></Label>
-            <ImageView fx:id="heart1_player2" fitHeight="17.0" fitWidth="17.0" layoutX="405.0" layoutY="18.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="heart1_player2" fitHeight="17.0" fitWidth="17.0" layoutX="411.0" layoutY="18.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../../../heart.png" />
                </image>
             </ImageView>
-            <ImageView fx:id="nosound" fitHeight="13.0" fitWidth="13.0" layoutX="384.0" layoutY="19.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="nosound" fitHeight="13.0" fitWidth="13.0" layoutX="390.0" layoutY="19.0" pickOnBounds="true" preserveRatio="true">
             <image>
                <Image url="@../../../../mute.png" />
             </image>
             </ImageView>
-            <ImageView fx:id="heart2_player2" fitHeight="17.0" fitWidth="17.0" layoutX="424.0" layoutY="18.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="heart2_player2" fitHeight="17.0" fitWidth="17.0" layoutX="430.0" layoutY="18.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../../../heart.png" />
                </image>
             </ImageView>
-            <ImageView fx:id="heart3_player2" fitHeight="17.0" fitWidth="17.0" layoutX="443.0" layoutY="18.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="heart3_player2" fitHeight="17.0" fitWidth="17.0" layoutX="449.0" layoutY="18.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../../../heart.png" />
                </image>
             </ImageView>
-            <Label fx:id="information2" alignment="CENTER_RIGHT" layoutX="349.0" layoutY="41.0" prefHeight="25.0" prefWidth="112.0" text="Score: %d" textFill="WHITE">
+            <Label fx:id="information2" alignment="CENTER_RIGHT" layoutX="353.0" layoutY="41.0" prefHeight="25.0" prefWidth="112.0" text="Score: %d" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="16.0" />
                </font>
