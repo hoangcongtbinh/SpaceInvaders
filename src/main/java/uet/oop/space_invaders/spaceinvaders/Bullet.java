@@ -1,25 +1,30 @@
+package uet.oop.space_invaders.spaceinvaders;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 /**
- * Skeleton for Bullet. Students must implement movement,
+ * Skeleton for uet.oop.space_invaders.spaceinvaders.Bullet. Students must implement movement,
  * rendering, and state management.
  */
 public class Bullet extends GameObject {
 
     // Width and height of the bullet
-    public static final int WIDTH = 4;
-    public static final int HEIGHT = 15;
+    public static final int WIDTH = 3;
+    public static final int HEIGHT = 20;
 
     // Movement speed of the bullet
     private static final double SPEED = 7;
 
-    // Flag to indicate if bullet should be removed
-    private boolean dead;
+    // Who fire this bullet
+    protected int player = 1;
+
+    public Bullet() {
+        this(0, 0);
+    }
 
     /**
-     * Constructs a Bullet at the given position.
+     * Constructs a uet.oop.space_invaders.spaceinvaders.Bullet at the given position.
      *
      * @param x initial X position
      * @param y initial Y position
@@ -30,6 +35,39 @@ public class Bullet extends GameObject {
         this.velocityY = -SPEED;
         this.dead = false;
     }
+
+    /**
+     * Constructs a uet.oop.space_invaders.spaceinvaders.Bullet at the given position.
+     *
+     * @param x initial X position
+     * @param y initial Y position
+     */
+    public Bullet(double x, double y, int player) {
+        super(x, y, WIDTH, HEIGHT);
+        // TODO: initialize dead flag if needed
+        this.velocityY = -SPEED;
+        this.dead = false;
+        this.player = player;
+    }
+
+    /**
+     * Set X coordinate for Bullet, supporting BulletPool.
+     *
+     * @param x coordinate.
+     */
+    void setX(int x) {
+        this.x = x;
+    }
+
+    /**
+     * Set Y coordinate for Bullet, supporting BulletPool.
+     *
+     * @param y coordinate.
+     */
+    void setY(int y) {
+        this.y = y;
+    }
+
 
     /**
      * Updates bullet position each frame.
@@ -51,7 +89,7 @@ public class Bullet extends GameObject {
     @Override
     public void render(GraphicsContext gc) {
         // TODO: draw bullet (e.g., filled rectangle or sprite)
-        gc.setFill(Color.LIGHTBLUE);
+        gc.setFill(Color.WHITE);
         gc.fillRect(x - width / 2, y - height / 2, width, height);
     }
 

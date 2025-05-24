@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox alignment="CENTER" prefHeight="800" prefWidth="480" spacing="20.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1" fx:controller="uet.oop.space_invaders.spaceinvaders.SpaceShooter">
+   <children>
+      <Pane prefHeight="800.0" prefWidth="480.0">
+         <children>
+             <Button defaultButton="true" layoutX="167.0" layoutY="378.0" onAction="#tryAgain" prefHeight="35.0" prefWidth="145.0" style="-fx-background-color: orange; -fx-border-radius: 20; -fx-border-width: 1; -fx-background-radius: 20;" text="Try Again" textAlignment="CENTER">
+                 <font>
+                     <Font name="System Bold" size="15.0" />
+                 </font>
+             </Button>
+             <Button layoutX="167.0" layoutY="430.0" onAction="#mainMenu" prefHeight="35.0" prefWidth="145.0" style="-fx-background-color: white; -fx-border-color: white; -fx-border-radius: 20; -fx-border-width: 1; -fx-background-radius: 20" text="Main Menu" textAlignment="CENTER">
+                 <font>
+                     <Font name="System Bold" size="15.0" />
+                 </font></Button>
+             <Button cancelButton="true" layoutX="167.0" layoutY="482.0" onAction="#quit" prefHeight="35.0" prefWidth="145.0" style="-fx-background-color: red; -fx-border-color: red; -fx-border-radius: 20; -fx-border-width: 1; -fx-background-radius: 20;" text="Exit Game" textAlignment="CENTER" textFill="WHITE">
+                 <font>
+                     <Font name="System Bold" size="15.0" />
+                 </font></Button>
+            <Label layoutX="150.0" layoutY="180.0" text="GAME OVER" textFill="#ff3434">
+               <font>
+                  <Font name="System Bold" size="31.0" />
+               </font>
+            </Label>
+            <Label fx:id="scoreLabel" alignment="TOP_CENTER" contentDisplay="CENTER" layoutX="137.0" layoutY="245.0" prefHeight="85.0" prefWidth="206.0" text="Score: %d" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
+   </children>
+</VBox>

@@ -8,34 +8,34 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<VBox alignment="CENTER" prefHeight="600" prefWidth="360" spacing="20.0" style="-fx-background-color: linear-gradient(to bottom right, #0070C0, #7030A0, #163E64);" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="uet.oop.space_invaders.spaceinvaders.HelloController">
+<VBox alignment="CENTER" prefHeight="800" prefWidth="480" spacing="20.0" style="-fx-background-color: linear-gradient(to bottom right, #0070C0, #7030A0, #163E64);" xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1" fx:controller="uet.oop.space_invaders.spaceinvaders.SpaceShooter">
   <padding>
     <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
   </padding>
-   <Pane prefHeight="560.0" prefWidth="0.0">
+   <Pane prefHeight="800.0" prefWidth="480.0">
       <children>
-        <Button defaultButton="true" layoutX="88.0" layoutY="328.0" onAction="#onHelloButtonClick" onMouseClicked="#onHelloButtonClick" prefHeight="35.0" prefWidth="145.0" style="-fx-background-color: linear-gradient(to left, #0070C0, #7030A0); -fx-border-color: white; -fx-border-radius: 20; -fx-border-width: 1; -fx-background-radius: 20" text="Start" textFill="WHITE">
+        <Button defaultButton="true" layoutX="148.0" layoutY="408.0" onAction="#showGameModeSelection" prefHeight="35.0" prefWidth="145.0" style="-fx-background-color: linear-gradient(to left, #0070C0, #7030A0); -fx-border-color: white; -fx-border-radius: 20; -fx-border-width: 1; -fx-background-radius: 20" text="Start" textFill="WHITE">
             <font>
                <Font name="System Bold" size="15.0" />
             </font></Button>
-         <Button layoutX="88.0" layoutY="382.0" onAction="#onHelloButtonClick" onMouseClicked="#onHelloButtonClick" prefHeight="35.0" prefWidth="145.0" style="-fx-background-color: white; -fx-border-color: white; -fx-border-radius: 20; -fx-border-width: 1; -fx-background-radius: 20" text="High score">
+         <Button layoutX="148.0" layoutY="462.0" onAction="#showScore" prefHeight="35.0" prefWidth="145.0" style="-fx-background-color: white; -fx-border-color: white; -fx-border-radius: 20; -fx-border-width: 1; -fx-background-radius: 20" text="High score">
             <font>
                <Font name="System Bold" size="15.0" />
             </font></Button>
-         <Button layoutX="88.0" layoutY="436.0" onAction="#onHelloButtonClick" onMouseClicked="#onHelloButtonClick" prefHeight="35.0" prefWidth="145.0" style="-fx-background-color: white; -fx-border-color: white; -fx-border-radius: 20; -fx-border-width: 1; -fx-background-radius: 20" text="Instructions">
+         <Button layoutX="148.0" layoutY="516.0" onAction="#showInstructions" prefHeight="35.0" prefWidth="145.0" style="-fx-background-color: white; -fx-border-color: white; -fx-border-radius: 20; -fx-border-width: 1; -fx-background-radius: 20" text="Instructions">
             <font>
                <Font name="System Bold" size="15.0" />
             </font></Button>
-         <Button cancelButton="true" layoutX="88.0" layoutY="490.0" onAction="#onQuitButtonClick" onMouseClicked="#onHelloButtonClick" prefHeight="35.0" prefWidth="145.0" style="-fx-background-color: white; -fx-border-color: white; -fx-border-radius: 20; -fx-border-width: 1; -fx-background-radius: 20" text="Quit">
+         <Button cancelButton="true" layoutX="148.0" layoutY="570.0" onAction="#quit" prefHeight="35.0" prefWidth="145.0" style="-fx-background-color: white; -fx-border-color: white; -fx-border-radius: 20; -fx-border-width: 1; -fx-background-radius: 20" text="Quit">
             <font>
                <Font name="System Bold" size="15.0" />
             </font></Button>
-         <ImageView fitHeight="139.0" fitWidth="177.0" layoutX="72.0" layoutY="42.0" pickOnBounds="true" preserveRatio="true">
+         <ImageView fitHeight="139.0" fitWidth="177.0" layoutX="132.0" layoutY="122.0" pickOnBounds="true" preserveRatio="true">
             <image>
                <Image url="@../../../../boss.png" />
             </image>
          </ImageView>
-        <Label layoutX="73.0" layoutY="208.0" text="Welcome to&#10;Space Invaders&#10;" textAlignment="CENTER">
+        <Label layoutX="133.0" layoutY="288.0" text="Welcome to&#10;Space Invaders&#10;" textAlignment="CENTER">
           <font>
             <Font name="System Bold" size="25.0" />
           </font>
@@ -59,6 +59,46 @@
                </LinearGradient>
             </textFill>
         </Label>
+          <ImageView fitHeight="110.0" fitWidth="105.0" layoutX="391.0" layoutY="44.0" opacity="0.7" pickOnBounds="true" preserveRatio="true" rotate="-30.3">
+              <image>
+                  <Image url="@../../../../skull.png" />
+              </image>
+          </ImageView>
+          <ImageView fitHeight="145.0" fitWidth="75.0" layoutX="404.0" layoutY="407.0" opacity="0.7" pickOnBounds="true" preserveRatio="true" rotate="-35.5">
+              <image>
+                  <Image url="@../../../../player.png" />
+              </image>
+          </ImageView>
+         <ImageView fitHeight="61.0" fitWidth="56.0" layoutX="74.0" layoutY="24.0" opacity="0.7" pickOnBounds="true" preserveRatio="true" rotate="26.6">
+            <image>
+               <Image url="@../../../../powerup.png" />
+            </image>
+         </ImageView>
+         <ImageView fitHeight="61.0" fitWidth="56.0" layoutX="335.0" layoutY="643.0" opacity="0.7" pickOnBounds="true" preserveRatio="true" rotate="-108.4">
+            <image>
+               <Image url="@../../../../powerup.png" />
+            </image>
+         </ImageView>
+          <ImageView fitHeight="110.0" fitWidth="132.0" layoutX="-66.0" layoutY="243.0" opacity="0.7" pickOnBounds="true" preserveRatio="true" rotate="32.5">
+              <image>
+                  <Image url="@../../../../enemy.png" />
+              </image>
+          </ImageView>
+         <ImageView fitHeight="61.0" fitWidth="56.0" layoutX="36.0" layoutY="577.0" opacity="0.7" pickOnBounds="true" preserveRatio="true" rotate="21.8">
+            <image>
+               <Image url="@../../../../powerup.png" />
+            </image>
+         </ImageView>
+         <ImageView fitHeight="35.0" fitWidth="43.0" layoutX="342.0" layoutY="245.0" opacity="0.7" pickOnBounds="true" preserveRatio="true" rotate="-29.7">
+            <image>
+               <Image url="@../../../../enemy.png" />
+            </image>
+         </ImageView>
+         <ImageView fitHeight="35.0" fitWidth="43.0" layoutX="34.0" layoutY="689.0" opacity="0.7" pickOnBounds="true" preserveRatio="true" rotate="36.9">
+            <image>
+               <Image url="@../../../../enemy.png" />
+            </image>
+         </ImageView>
       </children>
    </Pane>
 </VBox>

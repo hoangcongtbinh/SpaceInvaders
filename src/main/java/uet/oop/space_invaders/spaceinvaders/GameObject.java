@@ -1,8 +1,10 @@
+package uet.oop.space_invaders.spaceinvaders;
+
 import javafx.scene.canvas.GraphicsContext;
 import javafx.geometry.Bounds;
 
 /**
- * Skeleton for GameObject. Base class for all game objects.
+ * Skeleton for uet.oop.space_invaders.spaceinvaders.GameObject. Base class for all game objects.
  * Subclasses must implement the abstract methods below.
  */
 public abstract class GameObject {
@@ -16,8 +18,11 @@ public abstract class GameObject {
     protected double velocityX = 0;
     protected double velocityY = 0;
 
+    // Death state
+    protected boolean dead = false;
+
     /**
-     * Constructs a GameObject at the specified position with dimensions.
+     * Constructs a uet.oop.space_invaders.spaceinvaders.GameObject at the specified position with dimensions.
      * @param x initial X position
      * @param y initial Y position
      * @param width object width
@@ -105,4 +110,23 @@ public abstract class GameObject {
      * @return height
      */
     public abstract double getHeight();
+
+    public boolean isColliding(GameObject other) {
+        // Check if this object is colliding with another object
+        if (this.getBounds().intersects(other.getBounds())) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isCollidingWithBottom(double CANVAS_HEIGHT) {
+        if (this.height / 2 + this.y > CANVAS_HEIGHT) return true;
+        return false;
+    }
+
+    public void reset() {
+        this.x = 0;
+        this.y = 0;
+        this.dead = false;
+    }
 }

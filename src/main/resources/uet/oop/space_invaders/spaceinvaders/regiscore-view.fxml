@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox alignment="CENTER" prefHeight="200.0" prefWidth="360.0" spacing="20.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/17.0.6" xmlns:fx="http://javafx.com/fxml/1" fx:controller="uet.oop.space_invaders.spaceinvaders.RegiScore">
+  <padding>
+    <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+  </padding>
+   <Pane prefHeight="560.0" prefWidth="350.0">
+      <children>
+         <Button defaultButton="true" layoutX="223.0" layoutY="107.0" onAction="#setHighScore" prefHeight="35.0" prefWidth="83.0" style="-fx-background-color: lightgray; -fx-border-color: lightgray; -fx-border-radius: 20; -fx-border-width: 1; -fx-background-radius: 20;" text="Save">
+            <font>
+               <Font name="System Bold" size="15.0" />
+            </font></Button>
+        <Label layoutX="17.0" layoutY="14.0" text="Score: &#10;&#10;Enter your name:&#10;">
+          <font>
+            <Font size="15.0" />
+          </font>
+        </Label>
+         <TextField fx:id="username" layoutX="143.0" layoutY="55.0" prefHeight="25.0" prefWidth="161.0" text="Player" />
+         <TextField fx:id="score" disable="true" layoutX="143.0" layoutY="12.0" prefHeight="25.0" prefWidth="161.0" text="12000" />
+      </children>
+   </Pane>
+</VBox>

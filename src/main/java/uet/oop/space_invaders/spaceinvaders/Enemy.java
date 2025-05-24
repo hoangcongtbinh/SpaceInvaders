@@ -1,24 +1,32 @@
+package uet.oop.space_invaders.spaceinvaders;
+
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
+//import javafx.scene.paint.Color;
+import javafx.scene.image.Image;
 
 /**
- * Skeleton for Enemy. Students must implement movement, rendering,
+ * Skeleton for uet.oop.space_invaders.spaceinvaders.Enemy. Students must implement movement, rendering,
  * and death state without viewing the original implementation.
  */
 public class Enemy extends GameObject {
 
     // Hitbox dimensions
-    protected static final int WIDTH = 30;
+    protected static final int WIDTH = 45;
     protected static final int HEIGHT = 30;
 
     // Movement speed
     public static double SPEED = 1;
 
-    // Flag to indicate if enemy should be removed
-    private boolean dead;
+
+    // Enemy image
+    private final Image ENEMY_IMAGE = new Image(getClass().getResource("/enemy.png").toString());
+
+    public Enemy() {
+        this(0, 0);
+    }
 
     /**
-     * Constructs an Enemy at the given coordinates.
+     * Constructs an uet.oop.space_invaders.spaceinvaders.Enemy at the given coordinates.
      * @param x initial X position
      * @param y initial Y position
      */
@@ -30,13 +38,31 @@ public class Enemy extends GameObject {
     }
 
     /**
+     * Set X coordinate for Enemy, supporting EnemyPool.
+     *
+     * @param x coordinate.
+     */
+    void setX(int x) {
+        this.x = x;
+    }
+
+    /**
+     * Set Y coordinate for Enemy, supporting EnemyPool.
+     *
+     * @param y coordinate.
+     */
+    void setY(int y) {
+        this.y = y;
+    }
+
+    /**
      * Updates enemy position each frame.
      */
     @Override
     public void update() {
         y += velocityY;
         // TODO: implement vertical movement by SPEED
-        if (y>600 + HEIGHT) {
+        if (y>800 + HEIGHT) {
             dead = true;
         }
     }
@@ -48,8 +74,7 @@ public class Enemy extends GameObject {
     @Override
     public void render(GraphicsContext gc) {
         // TODO: draw sprite or fallback shape (e.g., colored rectangle)
-        gc.setFill(Color.RED);
-        gc.fillRect(x - width / 2, y - height / 2, width, height);
+        gc.drawImage(ENEMY_IMAGE,x - width / 2, y - height / 2, width, height);
     }
 
     /**

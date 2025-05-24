@@ -1,24 +1,28 @@
+package uet.oop.space_invaders.spaceinvaders;
+
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 /**
- * Skeleton for EnemyBullet. Students must implement movement,
+ * Skeleton for uet.oop.space_invaders.spaceinvaders.EnemyBullet. Students must implement movement,
  * rendering, and state management.
  */
 public class EnemyBullet extends GameObject {
 
     // Dimensions of the enemy bullet
-    public static final int WIDTH = 4;
-    public static final int HEIGHT = 20;
+    public static final int WIDTH = 3;
+    public static final int HEIGHT = 14;
 
     // Movement speed of the bullet
     private static final double SPEED = 3;
 
-    // Flag indicating whether the bullet should be removed
-    private boolean dead;
+
+    public EnemyBullet() {
+        this(0, 0);
+    }
 
     /**
-     * Constructs an EnemyBullet at the given position.
+     * Constructs an uet.oop.space_invaders.spaceinvaders.EnemyBullet at the given position.
      * @param x initial X position
      * @param y initial Y position
      */
@@ -30,13 +34,32 @@ public class EnemyBullet extends GameObject {
     }
 
     /**
+     * Set X coordinate for EnemyBullet, supporting EnemyBulletPool.
+     *
+     * @param x coordinate.
+     */
+    void setX(int x) {
+        this.x = x;
+    }
+
+    /**
+     * Set Y coordinate for EnemyBullet, supporting EnemyBulletPool.
+     *
+     * @param y coordinate.
+     */
+    void setY(int y) {
+        this.y = y;
+    }
+
+
+    /**
      * Updates bullet position each frame.
      */
     @Override
     public void update() {
         y += velocityY;
         // TODO: move bullet vertically by SPEED
-        if (y>600 + HEIGHT) {
+        if (y>800 + HEIGHT) {
             dead = true;
         }
     }
@@ -48,7 +71,7 @@ public class EnemyBullet extends GameObject {
     @Override
     public void render(GraphicsContext gc) {
         // TODO: draw bullet (e.g., filled rectangle or sprite)
-        gc.setFill(Color.YELLOW);
+        gc.setFill(Color.LIGHTBLUE);
         gc.fillRect(x - width / 2, y - height / 2, width, height);
     }
 

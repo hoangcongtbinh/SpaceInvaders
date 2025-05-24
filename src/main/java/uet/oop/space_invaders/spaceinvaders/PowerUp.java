@@ -1,25 +1,31 @@
+package uet.oop.space_invaders.spaceinvaders;
 
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 /**
- * Skeleton for PowerUp. Students must implement movement,
+ * Skeleton for uet.oop.space_invaders.spaceinvaders.PowerUp. Students must implement movement,
  * rendering, and state management.
  */
 public class PowerUp extends GameObject {
 
     // Dimensions of the power-up
-    public static final int WIDTH = 20;
-    public static final int HEIGHT = 20;
+    public static final int WIDTH = 25;
+    public static final int HEIGHT = 25;
 
     // Fall speed of the power-up
     private static final double SPEED = 2;
 
-    // Flag indicating whether the power-up should be removed
-    private boolean dead;
+    public PowerUp() {
+        this(0, 0);
+    }
+
+    // Player image
+    private final Image POWERUP_IMAGE = new Image(getClass().getResource("/powerup.png").toString());
 
     /**
-     * Constructs a PowerUp at the given position.
+     * Constructs a uet.oop.space_invaders.spaceinvaders.PowerUp at the given position.
      *
      * @param x initial X position
      * @param y initial Y position
@@ -31,13 +37,32 @@ public class PowerUp extends GameObject {
     }
 
     /**
+     * Set X coordinate for PowerUp, supporting PowerUpPool.
+     *
+     * @param x coordinate.
+     */
+    void setX(int x) {
+        this.x = x;
+    }
+
+    /**
+     * Set Y coordinate for PowerUp, supporting PowerUpPool.
+     *
+     * @param y coordinate.
+     */
+    void setY(int y) {
+        this.y = y;
+    }
+
+
+    /**
      * Updates power-up position each frame.
      */
     @Override
     public void update() {
         y+=SPEED;
         // TODO: move power-up vertically by SPEED
-        if(y - height / 2> 600) {
+        if(y - height / 2 > 800) {
             dead = true;
         }
     }
@@ -50,8 +75,7 @@ public class PowerUp extends GameObject {
     @Override
     public void render(GraphicsContext gc) {
         // TODO: draw sprite or fallback (e.g., colored rectangle)
-        gc.setFill(Color.GOLDENROD);
-        gc.fillRect(x - width / 2, y - height / 2, width, height);
+        gc.drawImage(POWERUP_IMAGE, x - width / 2, y - height / 2, width, height);
     }
 
     /**

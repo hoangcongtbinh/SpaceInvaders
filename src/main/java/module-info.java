@@ -8,8 +8,9 @@ module uet.oop.space_invaders.spaceinvaders {
     requires net.synedra.validatorfx;
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.bootstrapfx.core;
-    requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
+    requires java.desktop;
+    requires javafx.media;
 
     opens uet.oop.space_invaders.spaceinvaders to javafx.fxml;
     exports uet.oop.space_invaders.spaceinvaders;
