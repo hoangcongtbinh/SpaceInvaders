@@ -43,7 +43,7 @@
                   </LinearGradient>
                </textFill>
             </Label>
-            <Label fx:id="scoreLabel" alignment="CENTER" contentDisplay="CENTER" layoutY="242.0" prefHeight="27.0" prefWidth="480.0" text="Score: %d" textAlignment="CENTER" textFill="WHITE">
+            <Label fx:id="scoreLabel" alignment="TOP_CENTER" contentDisplay="CENTER" layoutY="242.0" prefHeight="72.0" prefWidth="480.0" text="Score: %d" textAlignment="CENTER" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>

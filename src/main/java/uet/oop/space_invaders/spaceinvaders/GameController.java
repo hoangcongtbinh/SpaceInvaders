@@ -83,7 +83,7 @@ public class GameController {
     protected Player player;
     int score = 0;
     protected int health = 3;
-    protected int level = 1; // max is 5, a step is 2500
+    protected int level = 0;
 
     public static final int SINGLE_PLAYER = 1;
     public static final int MULTIPLAYER = 2;
@@ -124,6 +124,7 @@ public class GameController {
         this.gameObjects = new ArrayList<>();
         this.player = new Player(canvas.getWidth() / 2, canvas.getHeight() - 50);
         this.player.game = this;
+        this.level = 1;
 
         enemyPool = new ObjectPool<>(Enemy::new);
         bulletPool = new ObjectPool<>(Bullet::new);

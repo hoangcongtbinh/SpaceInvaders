@@ -35,7 +35,7 @@
                <font>
                   <Font name="System Bold" size="12.0" />
                </font></Label>
-            <Label fx:id="notification" alignment="CENTER" contentDisplay="CENTER" layoutX="153.0" layoutY="25.0" prefHeight="38.0" prefWidth="176.0" style="-fx-background-color: lightgreen; -fx-background-radius: 20;" text="Notification goes here." textAlignment="CENTER">
+            <Label fx:id="notification" alignment="CENTER" contentDisplay="CENTER" layoutX="154.0" layoutY="47.0" prefHeight="38.0" prefWidth="176.0" style="-fx-background-color: lightgreen; -fx-background-radius: 20;" text="Notification goes here." textAlignment="CENTER">
                <font>
                   <Font size="14.0" />
                </font></Label>
@@ -60,6 +60,11 @@
                </image>
             </ImageView>
             <Label fx:id="information2" alignment="CENTER_RIGHT" layoutX="349.0" layoutY="41.0" prefHeight="25.0" prefWidth="112.0" text="Score: %d" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+            <Label fx:id="levelText" alignment="CENTER" layoutX="180.0" layoutY="14.0" prefHeight="25.0" prefWidth="125.0" text="Level: %d" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="16.0" />
                </font>

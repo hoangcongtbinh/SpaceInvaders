@@ -22,6 +22,8 @@ public class MultiplayerGameController extends GameController {
 
     protected int score_player2;
 
+    protected int last2Time;
+
     @FXML protected ImageView heart1_player2;
 
     @FXML protected ImageView heart2_player2;
@@ -29,6 +31,8 @@ public class MultiplayerGameController extends GameController {
     @FXML protected ImageView heart3_player2;
 
     @FXML protected Label information2;
+
+    @FXML protected Label levelText;
 
 
     @Override
@@ -71,8 +75,9 @@ public class MultiplayerGameController extends GameController {
         gameLoop = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                information.setText(String.format("Score: %d\nLevel: %d", score, level));
-                information2.setText(String.format("Score: %d\nLevel: %d", score_player2, level));
+                information.setText(String.format("Score: %d", score));
+                information2.setText(String.format("Score: %d", score_player2));
+                levelText.setText("Level: " + MultiplayerGameController.this.level);
                 gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight()); // Reset frame
 
                 objectSpawn();
@@ -139,8 +144,8 @@ public class MultiplayerGameController extends GameController {
             player2.setMoveBackward(pressedKeys.contains(KeyCode.DOWN));
             player2.setMoveLeft(pressedKeys.contains(KeyCode.LEFT));
             player2.setMoveRight(pressedKeys.contains(KeyCode.RIGHT));
-            if (pressedKeys.contains(KeyCode.ENTER) && bulletCount < BULLET_LIMIT && (time - lastTime > FIRE_INTERVAL)) {
-                lastTime = time;
+            if (pressedKeys.contains(KeyCode.ENTER) && bulletCount < BULLET_LIMIT && (time - last2Time > FIRE_INTERVAL)) {
+                last2Time = time;
                 player2.shoot(gameObjects, bulletPool);
                 bulletCount++;
             }
