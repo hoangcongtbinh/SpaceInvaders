@@ -75,7 +75,7 @@ public class SpaceShooter extends Application {
      */
 
     @FXML
-    private void showInstructions() throws IOException {
+    public void showInstructions() throws IOException {
         // TODO: display instructions dialog
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("instructions-view.fxml"));
         Stage popupStage = new Stage();
@@ -88,7 +88,7 @@ public class SpaceShooter extends Application {
     }
 
     @FXML
-    private void showScore() throws IOException {
+    public void showScore() throws IOException {
         // TODO: display instructions dialog
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("highscore-view.fxml"));
         Stage popupStage = new Stage();
@@ -101,23 +101,19 @@ public class SpaceShooter extends Application {
     }
 
     @FXML
-    private void closeWindow(javafx.event.ActionEvent event) throws IOException {
+    public void closeWindow(javafx.event.ActionEvent event) throws IOException {
         System.gc();
         Stage currentStage = (Stage)((javafx.scene.Node)event.getSource()).getScene().getWindow();
         currentStage.close();
     }
 
-    private void showTempMessage(String message, double x, double y, double duration) {
-        // TODO: show temporary on-screen message for duration seconds
-    }
-
     @FXML
-    private void returnGame(ActionEvent event) {
+    public void returnGame(ActionEvent event) {
         game.returnGame();
     }
 
     @FXML
-    private void startGame(javafx.event.ActionEvent event) throws IOException {
+    public void startGame(javafx.event.ActionEvent event) throws IOException {
         // TODO: set gameRunning to true and switch to game scene
         GameController.gameMode = GameController.SINGLE_PLAYER;
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("game-view.fxml"));
@@ -126,7 +122,7 @@ public class SpaceShooter extends Application {
     }
 
     @FXML
-    private void mainMenu(javafx.event.ActionEvent event) throws IOException {
+    public void mainMenu(javafx.event.ActionEvent event) throws IOException {
         System.gc();
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("hello-view.fxml"));
         Stage currentStage = (Stage)((javafx.scene.Node)event.getSource()).getScene().getWindow();
@@ -134,19 +130,19 @@ public class SpaceShooter extends Application {
     }
 
     @FXML
-    private void quit() {
+    public void quit() {
         System.exit(0);
     }
 
     @FXML
-    private void showGameModeSelection(ActionEvent event) throws IOException {
+    public void showGameModeSelection(ActionEvent event) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("gamemode-view.fxml"));
         Stage currentStage = (Stage)((javafx.scene.Node)event.getSource()).getScene().getWindow();
         currentStage.setScene(new Scene(fxmlLoader.load(), 480, 800));
     }
 
     @FXML
-    private void startMultiplayerGame(javafx.event.ActionEvent event) throws IOException {
+    public void startMultiplayerGame(javafx.event.ActionEvent event) throws IOException {
         GameController.gameMode = GameController.MULTIPLAYER;
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("multiplayer-game-view.fxml"));
         Stage currentStage = (Stage)((javafx.scene.Node)event.getSource()).getScene().getWindow();
@@ -154,7 +150,7 @@ public class SpaceShooter extends Application {
     }
 
     @FXML
-    private void onRulesAction(javafx.event.ActionEvent event) throws IOException {
+    public void onRulesAction(javafx.event.ActionEvent event) throws IOException {
         controls.setVisible(false);
         rules.setVisible(true);
 
@@ -163,7 +159,7 @@ public class SpaceShooter extends Application {
     }
 
     @FXML
-    private void onControlsAction(javafx.event.ActionEvent event) throws IOException {
+    public void onControlsAction(javafx.event.ActionEvent event) throws IOException {
         controls.setVisible(true);
         rules.setVisible(false);
 
@@ -172,7 +168,7 @@ public class SpaceShooter extends Application {
     }
 
     @FXML
-    private void tryAgain(javafx.event.ActionEvent event) throws IOException {
+    public void tryAgain(javafx.event.ActionEvent event) throws IOException {
         if (GameController.gameMode == GameController.SINGLE_PLAYER) {
             startGame(event);
         } else if (GameController.gameMode == GameController.MULTIPLAYER) {

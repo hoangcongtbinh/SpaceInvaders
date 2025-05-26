@@ -23,30 +23,27 @@ import javafx.scene.layout.Pane;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 
 public class GameController {
-    protected int ENEMY_LIMIT = 10;
-    protected int POWERUP_LIMIT = 3;
     public static final int BULLET_LIMIT = 25;
-
+    public static final int EXPLOSION_EDGE = 60;
+    public static final int NOTIFICATION_TIMEOUT = 240;
     public static final int LEVEL_TIME = 60; // in seconds
-    protected int ENEMY_PER_LAP = 3;
+
+    protected int enemyLimit = 10;
+    protected int powerupLimit = 3;
+    protected int enemyPerLap = 3;
 
     /* Depends on Screen Refresh Rate */
-    protected int SPAWN_INTERVAL = 120;
-    protected int POWERUP_INTERVAL = 480;
-    protected int LAST_POWERUP_INTERVAL = 120;
-    protected int BULLET_INTERVAL = 240;
-    protected int FIRE_INTERVAL = 7;
-
-    public static final int EXPLOSION_EDGE = 60;
-
-    public static final int NOTIFICATION_TIMEOUT = 240;
+    protected int spawnInterval = 120;
+    protected int powerupInterval = 480;
+    protected int lastPowerupInterval = 120;
+    protected int bulletInterval = 240;
+    protected int fireInterval = 7;
 
     protected int enemyCount = 2;
     protected int powerupCount = 0;
@@ -66,9 +63,9 @@ public class GameController {
     protected SoundEffect win = new SoundEffect("/win.wav");
 
     // Image Resources
-    protected Image HEART = new Image(getClass().getResource("/heart.png").toString());
-    protected Image BAD_HEART = new Image(getClass().getResource("/badheart.png").toString());
-    protected Image EXPLOSION_IMAGE = new Image(getClass().getResource("/explosion.png").toString());
+    protected final Image HEART = new Image(getClass().getResource("/heart.png").toString());
+    protected final Image BAD_HEART = new Image(getClass().getResource("/badheart.png").toString());
+    protected final Image EXPLOSION_IMAGE = new Image(getClass().getResource("/explosion.png").toString());
 
     protected GraphicsContext gc;
     protected AnimationTimer gameLoop;
@@ -159,8 +156,8 @@ public class GameController {
     }
 
     public void spawnBoss() {
-        POWERUP_INTERVAL = LAST_POWERUP_INTERVAL - 30;
-        POWERUP_LIMIT = 3;
+        powerupInterval = lastPowerupInterval - 30;
+        powerupLimit = 3;
         if (!muted) boss.play();
         pushNotification("Good luck!", "orange");
         gameObjects.add(new BossEnemy(90, 5));
@@ -169,7 +166,7 @@ public class GameController {
     }
 
     public void objectSpawn() {
-        if (time % POWERUP_INTERVAL == 0 && powerupCount < POWERUP_LIMIT) {
+        if (time % powerupInterval == 0 && powerupCount < powerupLimit) {
             PowerUp powerUp = powerUpPool.get();
             powerUp.x = r.nextInt(480 - PowerUp.WIDTH);
             powerUp.y = r.nextInt(10);
@@ -177,7 +174,7 @@ public class GameController {
             powerupCount++;
         }
 
-        if (time % BULLET_INTERVAL == 0) {
+        if (time % bulletInterval == 0) {
             List<GameObject> bullets = new ArrayList<>();
             for (GameObject enemy: gameObjects) {
                 if (enemy instanceof BossEnemy) {
@@ -195,7 +192,7 @@ public class GameController {
 
         if (level <= 5) {
             int enemyCreated = 0;
-            while (time % SPAWN_INTERVAL == 0 && enemyCount < ENEMY_LIMIT && enemyCreated < ENEMY_PER_LAP) {
+            while (time % spawnInterval == 0 && enemyCount < enemyLimit && enemyCreated < enemyPerLap) {
                 Enemy enemy = enemyPool.get();
                 enemy.x = r.nextInt(480 - Enemy.WIDTH);
                 enemy.y = r.nextInt(10);
@@ -205,9 +202,9 @@ public class GameController {
             }
         } else if (!isBossSpawned && !isBossCalled) {
             pushNotification("Boss is Coming...", "orange");
-            LAST_POWERUP_INTERVAL = POWERUP_INTERVAL;
-            POWERUP_INTERVAL = 40;
-            POWERUP_LIMIT = 8;
+            lastPowerupInterval = powerupInterval;
+            powerupInterval = 40;
+            powerupLimit = 8;
             PauseTransition delay = new PauseTransition(Duration.seconds(7));
             delay.setOnFinished(event -> spawnBoss());
             delay.play();
@@ -294,7 +291,7 @@ public class GameController {
 
     // Keyboard input
     @FXML
-    public final Set<KeyCode> pressedKeys = new HashSet<>();
+    protected Set<KeyCode> pressedKeys = new HashSet<>();
 
     @FXML
     public void onKeyPressed(KeyEvent e) {
@@ -323,7 +320,7 @@ public class GameController {
             player.setMoveBackward(pressedKeys.contains(KeyCode.S) || pressedKeys.contains(KeyCode.DOWN));
             player.setMoveRight(pressedKeys.contains(KeyCode.D) || pressedKeys.contains(KeyCode.RIGHT));
 
-            if (pressedKeys.contains(KeyCode.SPACE) && bulletCount < BULLET_LIMIT && (time - lastTime > FIRE_INTERVAL)) {
+            if (pressedKeys.contains(KeyCode.SPACE) && bulletCount < BULLET_LIMIT && (time - lastTime > fireInterval)) {
                 lastTime = time;
                 player.shoot(gameObjects, bulletPool);
                 bulletCount++;
@@ -445,10 +442,10 @@ public class GameController {
                     pushNotification("Score +100", "lightgreen");
                     score += 100;
                 } else if (reward <= 8) {
-                    if (FIRE_INTERVAL > 3) {
-                        FIRE_INTERVAL--;
+                    if (fireInterval > 3) {
+                        fireInterval--;
                         pushNotification(String.format("Fire Rate +%.0f%%",
-                                (1.0 / FIRE_INTERVAL) * 100), "lightgreen");
+                                (1.0 / fireInterval) * 100), "lightgreen");
                     } else {
                         pushNotification("Fire Rate limit reached!", "orange");
                     }
@@ -456,10 +453,10 @@ public class GameController {
                     if (health < 3) {
                         setHealth(health + 1);
                         pushNotification(String.format("Health + 1",
-                                (1 / FIRE_INTERVAL)), "lightgreen");
+                                (1 / fireInterval)), "lightgreen");
                     } else {
                         pushNotification(String.format("Health limit reached!",
-                                (1 / FIRE_INTERVAL)), "orange");
+                                (1 / fireInterval)), "orange");
                     }
                 }
 
@@ -470,7 +467,7 @@ public class GameController {
             }
 
             // Enemy side
-            if (object instanceof Bullet) {
+            if (object instanceof Bullet && !(object instanceof EnemyBullet)) {
                 for (GameObject enemy: gameObjects) {
                     if (enemy instanceof BossEnemy && enemy.isColliding(object) && !object.isDead()){
                         if (!muted) target.play();
@@ -494,11 +491,11 @@ public class GameController {
             lastLevelTime = System.nanoTime();
             if (level >= 6) return;
 
-            ENEMY_LIMIT += 5;
-            ENEMY_PER_LAP ++;
-            SPAWN_INTERVAL -= 10;
-            POWERUP_INTERVAL += 10;
-            BULLET_INTERVAL -= 20;
+            enemyLimit += 5;
+            enemyPerLap++;
+            spawnInterval -= 10;
+            powerupInterval += 10;
+            bulletInterval -= 20;
         }
     }
 }

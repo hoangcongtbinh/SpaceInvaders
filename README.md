@@ -69,6 +69,11 @@
     <img src="img/HighScore.png" alt="Scoreboard" style="height: 600px; width: auto;">
 </p>
 
+## ⛓️ UML Diagram
+<p align="center" style="cursor: pointer;">
+    <img src="img/UML.png" alt="Scoreboard" style="height: 600px; width: auto;">
+</p>
+
 
 ## 💻 Requirements
 - JDK 17 or higher.

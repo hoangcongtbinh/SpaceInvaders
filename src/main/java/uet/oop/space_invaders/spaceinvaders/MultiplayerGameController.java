@@ -132,7 +132,7 @@ public class MultiplayerGameController extends GameController {
             player.setMoveBackward(pressedKeys.contains(KeyCode.S));
             player.setMoveLeft(pressedKeys.contains(KeyCode.A));
             player.setMoveRight(pressedKeys.contains(KeyCode.D));
-            if (pressedKeys.contains(KeyCode.SPACE) && bulletCount < BULLET_LIMIT && (time - lastTime > FIRE_INTERVAL)) {
+            if (pressedKeys.contains(KeyCode.SPACE) && bulletCount < BULLET_LIMIT && (time - lastTime > fireInterval)) {
                 lastTime = time;
                 player.shoot(gameObjects, bulletPool);
                 bulletCount++;
@@ -144,7 +144,7 @@ public class MultiplayerGameController extends GameController {
             player2.setMoveBackward(pressedKeys.contains(KeyCode.DOWN));
             player2.setMoveLeft(pressedKeys.contains(KeyCode.LEFT));
             player2.setMoveRight(pressedKeys.contains(KeyCode.RIGHT));
-            if (pressedKeys.contains(KeyCode.ENTER) && bulletCount < BULLET_LIMIT && (time - last2Time > FIRE_INTERVAL)) {
+            if (pressedKeys.contains(KeyCode.ENTER) && bulletCount < BULLET_LIMIT && (time - last2Time > fireInterval)) {
                 last2Time = time;
                 player2.shoot(gameObjects, bulletPool);
                 bulletCount++;
@@ -294,10 +294,10 @@ public class MultiplayerGameController extends GameController {
                         score_player2 += 100;
                     }
                 } else if (reward <= 8) {
-                    if (FIRE_INTERVAL > 3) {
-                        FIRE_INTERVAL--;
+                    if (fireInterval > 3) {
+                        fireInterval--;
                         pushNotification(String.format("Fire Rate +%.0f%%",
-                                (1.0 / FIRE_INTERVAL) * 100), "lightgreen");
+                                (1.0 / fireInterval) * 100), "lightgreen");
                     } else {
                         pushNotification("Fire Rate limit reached!", "orange");
                     }
@@ -305,10 +305,10 @@ public class MultiplayerGameController extends GameController {
                     if (player.health < 3) {
                         setHealth(health + 1, player);
                         pushNotification(String.format("Health + 1",
-                                (1 / FIRE_INTERVAL)), "lightgreen");
+                                (1 / fireInterval)), "lightgreen");
                     } else {
                         pushNotification(String.format("Health limit reached!",
-                                (1 / FIRE_INTERVAL)), "orange");
+                                (1 / fireInterval)), "orange");
                     }
                 }
 
@@ -319,7 +319,7 @@ public class MultiplayerGameController extends GameController {
             }
 
             // Enemy side
-            if (object instanceof Bullet) {
+            if (object instanceof Bullet && !(object instanceof EnemyBullet)) {
                 for (GameObject enemy: gameObjects) {
                     if (enemy instanceof BossEnemy && enemy.isColliding(object) && !object.isDead()){
                         if (!muted) target.play();

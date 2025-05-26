@@ -11,18 +11,18 @@ import javafx.scene.paint.Color;
 public class PowerUp extends GameObject {
 
     // Dimensions of the power-up
-    public static final int WIDTH = 25;
-    public static final int HEIGHT = 25;
+    protected static final int WIDTH = 25;
+    protected static final int HEIGHT = 25;
 
     // Fall speed of the power-up
     private static final double SPEED = 2;
 
+    // Player image
+    private final Image POWERUP_IMAGE = new Image(getClass().getResource("/powerup.png").toString());
+
     public PowerUp() {
         this(0, 0);
     }
-
-    // Player image
-    private final Image POWERUP_IMAGE = new Image(getClass().getResource("/powerup.png").toString());
 
     /**
      * Constructs a uet.oop.space_invaders.spaceinvaders.PowerUp at the given position.
@@ -41,7 +41,7 @@ public class PowerUp extends GameObject {
      *
      * @param x coordinate.
      */
-    void setX(int x) {
+    void setX(double x) {
         this.x = x;
     }
 
@@ -50,7 +50,7 @@ public class PowerUp extends GameObject {
      *
      * @param y coordinate.
      */
-    void setY(int y) {
+    void setY(double y) {
         this.y = y;
     }
 

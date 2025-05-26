@@ -19,7 +19,7 @@ public class HighScore {
 
     private static Path path = Paths.get(System.getProperty("user.home"), "AppData", "Roaming", "SpaceShooter", "score.txt");
 
-    private static void createFile(Path path) throws IOException {
+    private void createFile(Path path) throws IOException {
         Files.createDirectories(path.getParent()); // tạo thư mục nếu chưa có
         List<String> lines = List.of(
                 "Player 1,0",

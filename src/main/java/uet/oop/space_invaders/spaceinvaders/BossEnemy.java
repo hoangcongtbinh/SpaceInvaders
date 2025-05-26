@@ -15,8 +15,8 @@ public class BossEnemy extends Enemy {
     private int health;
 
     // Hitbox dimensions
-    private static final int WIDTH = 146;
-    private static final int HEIGHT = 105;
+    private static final double WIDTH = 146;
+    private static final double HEIGHT = 105;
 
     // Horizontal movement speed
     private double horizontalSpeed;

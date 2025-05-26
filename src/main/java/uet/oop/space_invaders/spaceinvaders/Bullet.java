@@ -50,6 +50,12 @@ public class Bullet extends GameObject {
         this.player = player;
     }
 
+    public Bullet(double x, double y, double WIDTH, double HEIGHT) {
+        super(x, y, WIDTH, HEIGHT);
+        this.velocityY = -SPEED;
+        this.dead = false;
+    }
+
     /**
      * Set X coordinate for Bullet, supporting BulletPool.
      *

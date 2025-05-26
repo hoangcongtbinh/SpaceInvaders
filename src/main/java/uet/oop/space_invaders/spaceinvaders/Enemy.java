@@ -15,7 +15,7 @@ public class Enemy extends GameObject {
     protected static final int HEIGHT = 30;
 
     // Movement speed
-    public static double SPEED = 1;
+    private static final double SPEED = 1;
 
 
     // Enemy image
@@ -42,7 +42,7 @@ public class Enemy extends GameObject {
      *
      * @param x coordinate.
      */
-    void setX(int x) {
+    void setX(double x) {
         this.x = x;
     }
 
@@ -51,7 +51,7 @@ public class Enemy extends GameObject {
      *
      * @param y coordinate.
      */
-    void setY(int y) {
+    void setY(double y) {
         this.y = y;
     }
 
