@@ -9,7 +9,7 @@
 ## 📐 Rules
 - Avoid enemies **reaching the bottom** of the screen or **colliding with your ship**.
 - You have only **three** chances of colliding with a bullet. After that, it's game over.
-- Collect power-ups to boost firepower, increase score and keep health bar full.
+- Collect power-ups to boost firepower, increase score, and keep health bar full.
 - The game ends when **all lives are lost**, but you can start over by resetting the game.
 
 

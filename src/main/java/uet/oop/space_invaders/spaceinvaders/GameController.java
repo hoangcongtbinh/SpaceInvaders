@@ -32,7 +32,7 @@ public class GameController {
     public static final int BULLET_LIMIT = 25;
     public static final int EXPLOSION_EDGE = 60;
     public static final int NOTIFICATION_TIMEOUT = 240;
-    public static final int LEVEL_TIME = 60; // in seconds
+    public static final int LEVEL_TIME = 30; // in seconds
 
     protected int enemyLimit = 10;
     protected int powerupLimit = 3;
@@ -54,6 +54,9 @@ public class GameController {
     protected ObjectPool<Bullet> bulletPool;
     protected ObjectPool<EnemyBullet> enemyBulletPool;
     protected ObjectPool<PowerUp> powerUpPool;
+
+    /* Avoid stick */
+    Set<Integer> X = new HashSet<>();
 
     // gun soundEffect in Player.java
     protected SoundEffect explosion = new SoundEffect("/explosion.wav");
@@ -194,12 +197,28 @@ public class GameController {
             int enemyCreated = 0;
             while (time % spawnInterval == 0 && enemyCount < enemyLimit && enemyCreated < enemyPerLap) {
                 Enemy enemy = enemyPool.get();
-                enemy.x = r.nextInt(480 - Enemy.WIDTH);
-                enemy.y = r.nextInt(10);
+                int spawnX = 0;
+
+                while (true) {
+                    spawnX = r.nextInt(480 - Enemy.WIDTH);
+                    boolean tooClose = false;
+                    for (int x : X) {
+                        if (Math.abs(spawnX - x) < 50) {
+                            tooClose = true;
+                            break;
+                        }
+                    }
+                    if (!tooClose) break;
+                }
+
+                X.add(spawnX);
+                enemy.x = spawnX;
+                enemy.y = r.nextInt(20);
                 gameObjects.add(enemy);
                 enemyCreated++;
                 enemyCount++;
             }
+            X.clear();
         } else if (!isBossSpawned && !isBossCalled) {
             pushNotification("Boss is Coming...", "orange");
             lastPowerupInterval = powerupInterval;
